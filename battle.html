@@ -105,6 +105,13 @@
             margin-top: 10px;
         }
 
+        @media screen and (max-width: 768px) {
+            .selected-dragon {
+                border-width: 2px;
+                border-radius: 6px;
+            }
+        }
+
         .selected-dragon img {
             width: 100%;
             max-width: 250px;
@@ -313,6 +320,13 @@
             text-align: center;
         }
 
+        @media screen and (max-width: 768px) {
+            .battle-dragon-card {
+                border-width: 2px;
+                border-radius: 8px;
+            }
+        }
+
         /* Attack Summary Styles */
         .attack-summary-container {
             flex: 0 0 300px;
@@ -323,6 +337,13 @@
             text-align: center;
             display: flex;
             flex-direction: column;
+        }
+
+        @media screen and (max-width: 768px) {
+            .attack-summary-container {
+                border-width: 2px;
+                border-radius: 8px;
+            }
         }
 
         .attack-summary-title {
@@ -545,6 +566,15 @@
             padding: 10px;
         }
 
+        @media screen and (max-width: 768px) {
+            .battle-log-container {
+                margin: 3px auto;
+                padding: 3px;
+                border-width: 2px;
+                border-radius: 8px;
+            }
+        }
+
         .battle-log-title {
             color: #FFD700;
             font-size: 18px;
@@ -745,65 +775,113 @@
         @media screen and (max-width: 768px) {
             /* Ensure minimum touch target sizes */
             button, select, .battle-button, .back-link {
-                min-height: 44px;
-                min-width: 44px;
+                min-height: 32px;
+                min-width: 32px;
             }
             .battle-container {
-                padding: 5px;
-                margin: 5px auto;
+                padding: 2px;
+                margin: 2px auto;
+            }
+
+            .battle-header {
+                margin-bottom: 4px;
             }
 
             .battle-header h1 {
-                font-size: 24px;
+                font-size: 14px;
+                margin: 2px 0;
             }
 
             .battle-header p {
-                font-size: 14px;
+                font-size: 9px;
+                margin: 1px 0;
             }
 
             .battle-arena {
                 flex-direction: column;
-                gap: 15px;
+                gap: 4px;
+                margin-bottom: 4px;
             }
 
             .battle-side {
                 min-width: 100%;
             }
 
+            .battle-side h2 {
+                font-size: 11px;
+                margin-bottom: 3px;
+            }
+
             .dragon-selector {
-                font-size: 16px;
-                padding: 12px;
+                font-size: 10px;
+                padding: 4px;
+                margin-bottom: 3px;
             }
 
             .selected-dragon {
-                padding: 8px;
+                padding: 3px;
+                margin-top: 3px;
             }
 
             .selected-dragon img {
-                max-width: 100%;
+                max-width: 100px;
+                margin: 3px auto;
+            }
+
+            .selected-dragon h3 {
+                font-size: 10px;
+                margin: 3px 0 2px 0;
+            }
+
+            .selected-dragon .element {
+                font-size: 9px;
+                margin: 2px 0;
+            }
+
+            .selected-dragon h4 {
+                font-size: 9px;
+                margin-top: 4px;
+                margin-bottom: 2px;
+            }
+
+            .selected-dragon ol {
+                font-size: 8px;
+                line-height: 1.1;
+                padding-left: 15px;
+                margin: 2px 0;
+            }
+
+            .selected-dragon ol li {
+                margin-bottom: 1px;
+            }
+
+            .battle-button-container {
+                margin: 4px 0;
             }
 
             .battle-button {
-                font-size: 16px;
-                padding: 15px 25px;
+                font-size: 10px;
+                padding: 5px 12px;
                 width: 100%;
-                max-width: 300px;
+                max-width: 200px;
             }
 
             .active-battle-arena {
                 flex-direction: column;
-                gap: 15px;
+                gap: 4px;
+                margin-bottom: 4px;
             }
 
             .battle-dragon-card {
                 min-width: 100%;
-                padding: 8px;
+                padding: 3px;
             }
 
             .attack-summary-container {
                 flex: 1;
                 min-width: 100%;
                 order: 2;
+                padding: 3px;
             }
 
             .active-battle-arena .battle-dragon-card:first-of-type {
@@ -818,108 +896,158 @@
                 order: 3;
             }
 
-            .battle-dragon-image {
-                max-width: 150px;
-            }
-
-            .battle-dragon-name {
-                font-size: 16px;
-            }
-
-            .battle-dragon-element {
-                font-size: 12px;
-            }
-
-            .power-dropdown {
-                font-size: 14px;
-                padding: 10px;
+            .health-bar-container {
+                margin-bottom: 3px;
             }
 
             .health-bar-label {
-                font-size: 12px;
+                font-size: 8px;
+                margin-bottom: 2px;
             }
 
             .health-bar {
-                height: 18px;
+                height: 12px;
             }
 
             .health-bar-fill {
-                font-size: 11px;
+                font-size: 8px;
+            }
+
+            .battle-dragon-image {
+                max-width: 70px;
+                margin: 3px auto;
+            }
+
+            .battle-dragon-name {
+                font-size: 10px;
+                margin: 3px 0 2px 0;
+            }
+
+            .battle-dragon-element {
+                font-size: 8px;
+                margin: 2px 0 3px 0;
+            }
+
+            .battle-powers-section {
+                margin-top: 3px;
+            }
+
+            .battle-powers-section h3 {
+                font-size: 9px;
+                margin-bottom: 2px;
+            }
+
+            .power-dropdown {
+                font-size: 8px;
+                padding: 3px;
+                margin-bottom: 2px;
             }
 
             .attack-summary-title {
-                font-size: 16px;
+                font-size: 10px;
+                margin: 0 0 3px 0;
             }
 
             .attack-summary {
-                font-size: 12px;
-                min-height: 80px;
-                padding: 8px;
+                font-size: 8px;
+                min-height: 40px;
+                padding: 3px;
+                line-height: 1.2;
+            }
+
+            .attack-summary p {
+                margin: 1px 0;
+                padding: 1px;
             }
 
             .battle-log-container {
-                padding: 8px;
-                margin: 10px 5px;
+                padding: 2px;
+                margin: 3px 1px;
+                border-width: 2px;
             }
 
             .battle-log-title {
-                font-size: 16px;
+                font-size: 9px;
+                margin-bottom: 2px;
             }
 
             .battle-log {
-                font-size: 11px;
-                max-height: 100px;
-                padding: 8px;
+                font-size: 7px;
+                max-height: 50px;
+                padding: 3px;
+                line-height: 1.2;
             }
 
-            .fight-button {
-                font-size: 18px;
-                padding: 15px 30px;
-                width: 100%;
-                max-width: 300px;
-                letter-spacing: 1px;
+            .battle-log p {
+                margin: 2px 0;
+                padding: 2px;
+                padding-left: 6px;
+                font-size: 7px;
             }
 
             .fight-button-container {
-                margin: 10px 0;
+                margin: 4px 0;
+            }
+
+            .fight-button {
+                font-size: 11px;
+                padding: 5px 15px;
+                width: 100%;
+                max-width: 200px;
+                letter-spacing: 0.3px;
+            }
+
+            .battle-view-header {
+                margin-bottom: 4px;
+                padding-top: 30px;
             }
 
             .battle-view-header h1 {
-                font-size: 22px;
+                font-size: 12px;
+                margin: 2px 0;
             }
 
             .hp-control-toggle {
-                top: 5px;
-                right: 5px;
+                top: 2px;
+                right: 2px;
                 flex-direction: column;
-                gap: 5px;
-                font-size: 12px;
+                gap: 2px;
+                font-size: 7px;
             }
 
             .hp-control-toggle label {
-                font-size: 12px;
+                font-size: 7px;
+            }
+
+            .hp-control-toggle input[type="checkbox"] {
+                width: 12px;
+                height: 12px;
             }
 
             .hp-set-button {
-                top: 5px;
-                left: 5px;
-                font-size: 14px;
-                padding: 8px 15px;
+                top: 2px;
+                left: 2px;
+                font-size: 9px;
+                padding: 4px 8px;
             }
 
             .new-battle-button {
-                font-size: 14px;
-                padding: 10px 20px;
+                font-size: 9px;
+                padding: 4px 10px;
                 width: 100%;
-                max-width: 200px;
-                margin: 5px 0;
+                max-width: 120px;
+                margin: 2px 0;
+            }
+
+            .back-link-container {
+                margin-top: 4px;
             }
 
             .back-link {
-                font-size: 12px;
-                padding: 8px 16px;
+                font-size: 8px;
+                padding: 4px 10px;
                 display: block;
-                margin: 5px auto;
+                margin: 2px auto;
                 width: fit-content;
             }
 
@@ -927,78 +1055,162 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 10px;
+                gap: 3px;
+                margin-top: 4px;
             }
 
             .winner-content {
-                padding: 20px;
+                padding: 10px;
                 max-width: 90%;
                 margin: 0 10px;
             }
 
             .winner-title {
-                font-size: 24px;
+                font-size: 14px;
+                margin: 0 0 5px 0;
             }
 
             .winner-message {
-                font-size: 16px;
+                font-size: 10px;
+                margin: 6px 0 10px 0;
             }
 
             .new-game-button {
-                font-size: 16px;
-                padding: 12px 25px;
+                font-size: 10px;
+                padding: 6px 15px;
                 width: 100%;
-                max-width: 250px;
-            }
-
-            .battle-powers-section h3 {
-                font-size: 14px;
-            }
-
-            .battle-view-header {
-                padding-top: 40px;
+                max-width: 150px;
             }
         }
 
         @media screen and (max-width: 480px) {
+            .battle-container {
+                padding: 1px;
+                margin: 1px auto;
+            }
+
             .battle-header h1 {
-                font-size: 20px;
+                font-size: 12px;
+                margin: 1px 0;
+            }
+
+            .battle-header p {
+                font-size: 8px;
+                margin: 1px 0;
             }
 
             .battle-button {
-                font-size: 14px;
-                padding: 12px 20px;
+                font-size: 9px;
+                padding: 4px 10px;
+                max-width: 150px;
             }
 
             .fight-button {
-                font-size: 16px;
-                padding: 12px 25px;
+                font-size: 10px;
+                padding: 4px 12px;
+                max-width: 150px;
             }
 
             .battle-dragon-image {
-                max-width: 120px;
+                max-width: 50px;
             }
 
             .attack-summary {
-                font-size: 11px;
-                min-height: 70px;
+                font-size: 7px;
+                min-height: 30px;
+                padding: 2px;
             }
 
             .battle-log {
-                font-size: 10px;
-                max-height: 80px;
+                font-size: 6px;
+                max-height: 40px;
+                padding: 2px;
+            }
+
+            .battle-log p {
+                font-size: 6px;
+                margin: 1px 0;
+                padding: 1px;
+                padding-left: 4px;
+            }
+
+            .selected-dragon {
+                padding: 2px;
+            }
+
+            .selected-dragon img {
+                max-width: 70px;
             }
 
             .selected-dragon h3 {
-                font-size: 16px;
+                font-size: 9px;
             }
 
             .selected-dragon h4 {
-                font-size: 14px;
+                font-size: 8px;
             }
 
             .selected-dragon ol {
-                font-size: 11px;
+                font-size: 7px;
+            }
+
+            .battle-dragon-name {
+                font-size: 9px;
+            }
+
+            .battle-dragon-element {
+                font-size: 7px;
+            }
+
+            .health-bar-label {
+                font-size: 7px;
+            }
+
+            .health-bar {
+                height: 10px;
+            }
+
+            .health-bar-fill {
+                font-size: 7px;
+            }
+
+            .power-dropdown {
+                font-size: 7px;
+                padding: 2px;
+            }
+
+            .battle-view-header {
+                padding-top: 25px;
+            }
+
+            .battle-view-header h1 {
+                font-size: 10px;
+            }
+
+            .winner-title {
+                font-size: 12px;
+            }
+
+            .winner-message {
+                font-size: 9px;
+            }
+
+            .new-game-button {
+                font-size: 9px;
+                padding: 5px 12px;
+            }
+
+            .hp-control-toggle {
+                font-size: 6px;
+            }
+
+            .hp-control-toggle label {
+                font-size: 6px;
+            }
+
+            .hp-set-button {
+                font-size: 8px;
+                padding: 3px 6px;
             }
         }
     </style>
@@ -1708,16 +1920,18 @@
                     
                     if (isHealing1) {
                         // Dragon 1 is using healing - heal themselves
-                        const newHP1 = Math.min(battleState.dragon1HP + difference, maxHP);
-                        const actualHeal = newHP1 - battleState.dragon1HP;
+                        const oldHP1 = battleState.dragon1HP;
+                        const newHP1 = Math.min(oldHP1 + difference, maxHP);
+                        const actualHeal = newHP1 - oldHP1;
                         updateHealthBar(1, newHP1);
                         
                         logMessage += '<p class="result-message">' + battleState.dragon1.name + ' wins this round! (' + power1 + ' vs ' + power2 + ')</p>';
                         if (actualHeal > 0) {
-                            logMessage += '<p style="color: #44FF44; font-weight: bold;">' + battleState.dragon1.name + ' heals ' + actualHeal + ' HP! (' + battleState.dragon1HP + ' -> ' + newHP1 + ' HP)</p>';
+                            logMessage += '<p style="color: #44FF44; font-weight: bold;">' + battleState.dragon1.name + ' heals ' + actualHeal + ' HP! (' + oldHP1 + ' -> ' + newHP1 + ' HP)</p>';
                         } else {
                             logMessage += '<p>' + battleState.dragon1.name + ' is already at full health!</p>';
                         }
+                        logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + newHP1 + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
                         
                         // Update attack summary with result
                         const attackSummary = document.getElementById('attack-summary');
@@ -1726,11 +1940,12 @@
                         }
                     } else {
                         // Dragon 1 is using damage - deal damage to Dragon 2
-                        const newHP2 = battleState.dragon2HP - difference;
+                        const newHP2 = Math.max(0, battleState.dragon2HP - difference);
                         updateHealthBar(2, newHP2);
                         
                         logMessage += '<p class="result-message">' + battleState.dragon1.name + ' wins this round! (' + power1 + ' vs ' + power2 + ')</p>';
                         logMessage += '<p class="damage-message">' + battleState.dragon1.name + ' deals ' + difference + ' damage to ' + battleState.dragon2.name + '!</p>';
+                        logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + newHP2 + ' HP</p>';
                         
                         // Update attack summary with result
                         const attackSummary = document.getElementById('attack-summary');
@@ -1738,10 +1953,9 @@
                             attackSummary.innerHTML = logMessage;
                         }
                         
-                        // Check if battle is over
-                        if (battleState.dragon2HP <= 0) {
+                        // Check if battle is over (use newHP2, not battleState which may not be updated yet)
+                        if (newHP2 <= 0) {
                             battleLog.innerHTML += logMessage;
-                            battleLog.innerHTML += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
                             setTimeout(function() {
                                 showWinner();
                             }, 1500);
@@ -1754,16 +1968,18 @@
                     
                     if (isHealing2) {
                         // Dragon 2 is using healing - heal themselves
-                        const newHP2 = Math.min(battleState.dragon2HP + difference, maxHP);
-                        const actualHeal = newHP2 - battleState.dragon2HP;
+                        const oldHP2 = battleState.dragon2HP;
+                        const newHP2 = Math.min(oldHP2 + difference, maxHP);
+                        const actualHeal = newHP2 - oldHP2;
                         updateHealthBar(2, newHP2);
                         
                         logMessage += '<p class="result-message">' + battleState.dragon2.name + ' wins this round! (' + power2 + ' vs ' + power1 + ')</p>';
                         if (actualHeal > 0) {
-                            logMessage += '<p style="color: #44FF44; font-weight: bold;">' + battleState.dragon2.name + ' heals ' + actualHeal + ' HP! (' + battleState.dragon2HP + ' -> ' + newHP2 + ' HP)</p>';
+                            logMessage += '<p style="color: #44FF44; font-weight: bold;">' + battleState.dragon2.name + ' heals ' + actualHeal + ' HP! (' + oldHP2 + ' -> ' + newHP2 + ' HP)</p>';
                         } else {
                             logMessage += '<p>' + battleState.dragon2.name + ' is already at full health!</p>';
                         }
+                        logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + newHP2 + ' HP</p>';
                         
                         // Update attack summary with result
                         const attackSummary = document.getElementById('attack-summary');
@@ -1772,11 +1988,12 @@
                         }
                     } else {
                         // Dragon 2 is using damage - deal damage to Dragon 1
-                        const newHP1 = battleState.dragon1HP - difference;
+                        const newHP1 = Math.max(0, battleState.dragon1HP - difference);
                         updateHealthBar(1, newHP1);
                         
                         logMessage += '<p class="result-message">' + battleState.dragon2.name + ' wins this round! (' + power2 + ' vs ' + power1 + ')</p>';
                         logMessage += '<p class="damage-message">' + battleState.dragon2.name + ' deals ' + difference + ' damage to ' + battleState.dragon1.name + '!</p>';
+                        logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + newHP1 + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
                         
                         // Update attack summary with result
                         const attackSummary = document.getElementById('attack-summary');
@@ -1784,10 +2001,9 @@
                             attackSummary.innerHTML = logMessage;
                         }
                         
-                        // Check if battle is over
-                        if (battleState.dragon1HP <= 0) {
+                        // Check if battle is over (use newHP1, not battleState which may not be updated yet)
+                        if (newHP1 <= 0) {
                             battleLog.innerHTML += logMessage;
-                            battleLog.innerHTML += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
                             setTimeout(function() {
                                 showWinner();
                             }, 1500);
@@ -1795,8 +2011,10 @@
                         }
                     }
                 } else {
-                    // Draw - no effect
+                    // Draw - no effect, no damage or healing applied
+                    // IMPORTANT: Do NOT call updateHealthBar on draw - HP must remain unchanged
                     logMessage += '<p class="draw-message">It\'s a draw! Both dragons have equal power (' + power1 + ' vs ' + power2 + '). No effect!</p>';
+                    logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
                 }
 
                 // Update attack summary with result
@@ -1805,7 +2023,11 @@
                     attackSummary.innerHTML = logMessage;
                 }
 
-                logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                // Add HP log for win/loss cases (draw already has it)
+                if (logMessage.indexOf('draw') === -1) {
+                    // For win/loss, HP is already in logMessage from the win/loss branches
+                    // No need to add again
+                }
                 battleLog.innerHTML += logMessage;
 
                 // Reset for next round - but keep the dropdowns selected
