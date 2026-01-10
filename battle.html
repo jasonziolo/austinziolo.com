@@ -157,6 +157,10 @@
             text-align: center;
             margin: 15px 0;
             background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
         .battle-button {
@@ -176,6 +180,50 @@
         .battle-button:hover {
             background-color: #DD2222;
             box-shadow: 0 6px 12px rgba(255, 68, 68, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .single-player-button {
+            background-color: #44AA44 !important;
+            color: #FFFFFF !important;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 30px;
+            border: 3px solid #66DD66 !important;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(68, 170, 68, 0.4);
+            opacity: 1 !important;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .single-player-button:hover {
+            background-color: #338833 !important;
+            box-shadow: 0 6px 12px rgba(68, 170, 68, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .single-player-button {
+            background-color: #44AA44 !important;
+            color: #FFFFFF !important;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 30px;
+            border: 3px solid #66DD66 !important;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(68, 170, 68, 0.4);
+            text-decoration: none;
+            display: inline-block;
+            opacity: 1 !important;
+        }
+
+        .single-player-button:hover {
+            background-color: #338833;
+            box-shadow: 0 6px 12px rgba(68, 170, 68, 0.6);
             transform: translateY(-2px);
         }
 
@@ -348,7 +396,7 @@
 
         .attack-summary-title {
             color: #FFD700;
-            font-size: 18px;
+            font-size: 22px;
             margin: 0 0 10px 0;
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
@@ -360,11 +408,12 @@
             padding: 10px;
             min-height: 100px;
             color: #E0E0E0;
-            font-size: 13px;
+            font-size: 20px;
             line-height: 1.5;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            font-weight: bold;
         }
 
         .attack-summary p {
@@ -904,6 +953,13 @@
                 max-width: 200px;
             }
 
+            .single-player-button {
+                font-size: 14px;
+                padding: 5px 12px;
+                width: 100%;
+                max-width: 200px;
+            }
+
             .active-battle-arena {
                 flex-direction: column;
                 gap: 4px;
@@ -982,15 +1038,16 @@
             }
 
             .attack-summary-title {
-                font-size: 14px;
+                font-size: 18px;
                 margin: 0 0 3px 0;
             }
 
             .attack-summary {
-                font-size: 12px;
+                font-size: 18px;
                 min-height: 40px;
                 padding: 3px;
                 line-height: 1.3;
+                font-weight: bold;
             }
 
             .attack-summary p {
@@ -1153,10 +1210,16 @@
                 max-width: 50px;
             }
 
+            .attack-summary-title {
+                font-size: 16px;
+                margin: 0 0 3px 0;
+            }
+
             .attack-summary {
-                font-size: 11px;
+                font-size: 16px;
                 min-height: 30px;
                 padding: 2px;
+                font-weight: bold;
             }
 
             .battle-log {
@@ -1310,6 +1373,7 @@
 
                 <div class="battle-button-container">
                     <button id="battle-button" class="battle-button" disabled>Start the Battle!</button>
+                    <a href="singleplayer.html" class="single-player-button">Single Player</a>
                 </div>
 
                 <div class="back-link-container">
@@ -2065,11 +2129,8 @@
             
             battleLog.innerHTML += logMessage;
             
-            // Update attack summary with what just happened (will be updated with result after battle)
-            const attackSummary = document.getElementById('attack-summary');
-            if (attackSummary) {
-                attackSummary.innerHTML = '<p class="attack-message">' + battleState.dragon1.name + ' uses ' + battleState.dragon1Power.name + ' (Power: ' + power1 + ')</p><p class="attack-message">' + battleState.dragon2.name + ' uses ' + battleState.dragon2Power.name + ' (Power: ' + power2 + ')</p>';
-            }
+            // Attack summary will be updated with final result after battle resolves
+            // (no initial power usage display)
 
             // Compare power values - same logic regardless of power type
             setTimeout(function() {

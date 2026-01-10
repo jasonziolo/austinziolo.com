@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Player - Austin's Dragon Lair</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            background-image: url('images/header.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                background-attachment: scroll;
+            }
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        .single-player-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .single-player-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .single-player-header h1 {
+            color: #FFD700;
+            font-size: 36px;
+            margin: 10px 0;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        .single-player-header p {
+            color: #E0E0E0;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .dragon-selection-area {
+            background-color: #1a1a1a;
+            border: 3px solid #0080FF;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .dragon-selection-area h2 {
+            color: #FFD700;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .dragon-selector {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #2a2a2a;
+            color: #FFFFFF;
+            border: 2px solid #0080FF;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .dragon-selector:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .selected-dragon-display {
+            background-color: #1a1a1a;
+            border: 3px solid #0080FF;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .selected-dragon-display img {
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid #0080FF;
+            border-radius: 8px;
+            margin: 15px auto;
+            display: block;
+        }
+
+        .selected-dragon-display h3 {
+            color: #FFD700;
+            font-size: 24px;
+            text-align: center;
+            margin: 15px 0 10px 0;
+        }
+
+        .selected-dragon-display .element {
+            text-align: center;
+            font-size: 18px;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #66B3FF;
+        }
+
+        .selected-dragon-display h4 {
+            color: #66B3FF;
+            font-size: 20px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .selected-dragon-display ol {
+            color: #E0E0E0;
+            line-height: 1.6;
+            padding-left: 30px;
+            font-size: 14px;
+        }
+
+        .selected-dragon-display ol li {
+            margin-bottom: 8px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .start-button {
+            background-color: #44AA44 !important;
+            color: #FFFFFF !important;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px 40px;
+            border: 3px solid #66DD66 !important;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(68, 170, 68, 0.4);
+            opacity: 1 !important;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .start-button:hover:not(:disabled) {
+            background-color: #338833;
+            box-shadow: 0 6px 12px rgba(68, 170, 68, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .start-button:disabled {
+            background-color: #666666;
+            border-color: #888888;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .back-link-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link {
+            color: #FFFFFF;
+            font-size: 16px;
+            text-decoration: none;
+            background-color: #66AAFF;
+            border: 2px solid #88CCFF;
+            padding: 10px 25px;
+            border-radius: 8px;
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(102, 170, 255, 0.4);
+        }
+
+        .back-link:hover {
+            background-color: #4488FF;
+            border-color: #66AAFF;
+            box-shadow: 0 4px 8px rgba(102, 170, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Element-specific colors */
+        .selected-dragon-display.fire { border-color: #FF4444; }
+        .selected-dragon-display.fire h3 { color: #FF6666; }
+        .selected-dragon-display.fire .element { color: #FF6666; }
+        .selected-dragon-display.fire img { border-color: #FF4444; }
+
+        .selected-dragon-display.water { border-color: #4488FF; }
+        .selected-dragon-display.water h3 { color: #66AAFF; }
+        .selected-dragon-display.water .element { color: #66AAFF; }
+        .selected-dragon-display.water img { border-color: #4488FF; }
+
+        .selected-dragon-display.lightning { border-color: #FFDD00; }
+        .selected-dragon-display.lightning h3 { color: #FFEE44; }
+        .selected-dragon-display.lightning .element { color: #FFEE44; }
+        .selected-dragon-display.lightning img { border-color: #FFDD00; }
+
+        .selected-dragon-display.earth { border-color: #8B6F47; }
+        .selected-dragon-display.earth h3 { color: #CCAA66; }
+        .selected-dragon-display.earth .element { color: #CCAA66; }
+        .selected-dragon-display.earth img { border-color: #8B6F47; }
+
+        .selected-dragon-display.air { border-color: #88CCFF; }
+        .selected-dragon-display.air h3 { color: #AAEEFF; }
+        .selected-dragon-display.air .element { color: #AAEEFF; }
+        .selected-dragon-display.air img { border-color: #88CCFF; }
+
+        .selected-dragon-display.ice { border-color: #88EEFF; }
+        .selected-dragon-display.ice h3 { color: #AAFFFF; }
+        .selected-dragon-display.ice .element { color: #AAFFFF; }
+        .selected-dragon-display.ice img { border-color: #88EEFF; }
+
+        .selected-dragon-display.shadow { border-color: #8844AA; }
+        .selected-dragon-display.shadow h3 { color: #BB88DD; }
+        .selected-dragon-display.shadow .element { color: #BB88DD; }
+        .selected-dragon-display.shadow img { border-color: #8844AA; }
+
+        .selected-dragon-display.light { border-color: #FFD700; }
+        .selected-dragon-display.light h3 { color: #FFEE88; }
+        .selected-dragon-display.light .element { color: #FFEE88; }
+        .selected-dragon-display.light img { border-color: #FFD700; }
+
+        .selected-dragon-display.nature { border-color: #44AA44; }
+        .selected-dragon-display.nature h3 { color: #66DD66; }
+        .selected-dragon-display.nature .element { color: #66DD66; }
+        .selected-dragon-display.nature img { border-color: #44AA44; }
+
+        .selected-dragon-display.metal { border-color: #AAAAAA; }
+        .selected-dragon-display.metal h3 { color: #DDDDDD; }
+        .selected-dragon-display.metal .element { color: #DDDDDD; }
+        .selected-dragon-display.metal img { border-color: #AAAAAA; }
+
+        .selected-dragon-display.crystal { border-color: #BB66FF; }
+        .selected-dragon-display.crystal h3 { color: #DD99FF; }
+        .selected-dragon-display.crystal .element { color: #DD99FF; }
+        .selected-dragon-display.crystal img { border-color: #BB66FF; }
+
+        .selected-dragon-display.chaos { border-color: #FF44AA; }
+        .selected-dragon-display.chaos h3 { color: #FF88DD; }
+        .selected-dragon-display.chaos .element { color: #FF88DD; }
+        .selected-dragon-display.chaos img { border-color: #FF44AA; }
+
+        /* Mobile Responsive */
+        @media screen and (max-width: 768px) {
+            .single-player-container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+
+            .single-player-header h1 {
+                font-size: 24px;
+            }
+
+            .single-player-header p {
+                font-size: 14px;
+            }
+
+            .dragon-selection-area {
+                padding: 15px;
+            }
+
+            .dragon-selection-area h2 {
+                font-size: 18px;
+            }
+
+            .dragon-selector {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .selected-dragon-display h3 {
+                font-size: 18px;
+            }
+
+            .selected-dragon-display .element {
+                font-size: 14px;
+            }
+
+            .selected-dragon-display h4 {
+                font-size: 16px;
+            }
+
+            .selected-dragon-display ol {
+                font-size: 12px;
+            }
+
+            .start-button {
+                font-size: 16px;
+                padding: 12px 30px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .single-player-header h1 {
+                font-size: 20px;
+            }
+
+            .single-player-header p {
+                font-size: 12px;
+            }
+
+            .dragon-selection-area h2 {
+                font-size: 16px;
+            }
+
+            .dragon-selector {
+                font-size: 12px;
+            }
+
+            .selected-dragon-display h3 {
+                font-size: 16px;
+            }
+
+            .start-button {
+                font-size: 14px;
+                padding: 10px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="single-player-container">
+            <div class="single-player-header">
+                <h1>SINGLE PLAYER</h1>
+                <p>Choose your dragon!</p>
+            </div>
+
+            <div class="dragon-selection-area">
+                <h2>Select Your Dragon</h2>
+                <select id="dragon-select" class="dragon-selector">
+                    <option value="">-- Choose Your Dragon --</option>
+                    <option value="breezeflight">Breezeflight the Windwhisper</option>
+                    <option value="chaosflare">Chaosflare the Stormbringer</option>
+                    <option value="crystalwing">Crystalwing the Prismkeeper</option>
+                    <option value="earthheart">Earthheart the Stonekeeper</option>
+                    <option value="flamethorn">Flamethorn the Firebringer</option>
+                    <option value="frostbite">Frostbite the Iceweaver</option>
+                    <option value="radiant">Radiant the Sunbeam</option>
+                    <option value="stormwing">Stormwing the Skybreaker</option>
+                    <option value="metalbeak">Metalbeak the Forgeguard</option>
+                    <option value="vineclaw">Vineclaw the Lifegiver</option>
+                    <option value="shadowmaw">Shadowmaw the Nightstalker</option>
+                    <option value="aquaris">Aquaris the Depthcaller</option>
+                </select>
+                <div id="dragon-display"></div>
+            </div>
+
+            <div class="button-container">
+                <button id="start-button" class="start-button" disabled>Start Single Player</button>
+            </div>
+
+            <div class="back-link-container">
+                <a href="battle.html" class="back-link">← Back to Battle Royale</a>
+                <a href="index.html" class="back-link" style="margin-left: 10px;">← Back to Dragon Lair</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Dragon data (same as battle.html)
+        const dragonData = {
+            breezeflight: {
+                name: "Breezeflight the Windwhisper",
+                element: "Air",
+                image: "images/breezeflight.jpg",
+                powers: [
+                    { name: "Wind Messenger", description: "Breezeflight can create air currents that carry sounds and messages throughout the entire lair, making him the perfect messenger between dragons and across great distances." },
+                    { name: "Gust Speed", description: "By riding and manipulating air currents, Breezeflight can achieve incredible speeds, becoming a silver-white blur that moves faster than any other dragon." },
+                    { name: "Whisper Network", description: "He can hear and understand the language of the winds, allowing him to listen to conversations carried on air currents from miles away." },
+                    { name: "Gentle Levitation", description: "Breezeflight can create powerful upward air currents that allow him to lift objects, creatures, or even other dragons without causing harm, using the gentlest of breezes." },
+                    { name: "Pollination Wind", description: "By controlling precise air currents, he can spread seeds and pollen across vast distances, helping Vineclaw's gardens flourish throughout the entire lair." },
+                    { name: "Refreshing Breeze (Healing)", description: "Breezeflight can channel pure, revitalizing air currents that flow through his body, healing wounds and restoring his strength with the gentle touch of the wind.", isHealing: true },
+                    { name: "Air Barrier (Shield)", description: "Breezeflight can create a protective barrier of compressed air currents that deflects attacks and shields him from incoming damage.", isShield: true }
+                ]
+            },
+            chaosflare: {
+                name: "Chaosflare the Stormbringer",
+                element: "Chaos",
+                image: "images/chaosflare.jpg",
+                powers: [
+                    { name: "Elemental Fusion", description: "Chaosflare can mix elements together, creating new hybrid powers like frozen fire, electric water, or shadowy light that no other dragon can master." },
+                    { name: "Reality Distortion", description: "His very presence bends reality slightly, causing unpredictable color shifts in his scales and making nearby objects behave in strange ways." },
+                    { name: "Chaos Blast", description: "He can unleash bursts of pure chaos energy that scramble elemental powers, temporarily disrupting other dragons' abilities in unexpected ways." },
+                    { name: "Pattern Randomization", description: "Chaosflare can create beautiful, unpredictable patterns of light, energy, and color that defy logic and mesmerize those who watch them." },
+                    { name: "Unpredictable Teleportation", description: "Through chaotic space manipulation, he can instantly appear anywhere in the lair, though the destination is often slightly different from where he intended." },
+                    { name: "Chaotic Regeneration (Healing)", description: "Chaosflare can channel the unpredictable nature of chaos itself to twist reality around his wounds, causing them to heal in wild and unexpected ways that restore his vitality.", isHealing: true },
+                    { name: "Chaos Barrier (Shield)", description: "Chaosflare can create a swirling barrier of chaotic energy that warps and deflects incoming attacks, making him unpredictable and hard to hit.", isShield: true }
+                ]
+            },
+            crystalwing: {
+                name: "Crystalwing the Prismkeeper",
+                element: "Crystal",
+                image: "images/crystalwing.jpg",
+                powers: [
+                    { name: "Memory Crystals", description: "Crystalwing can store memories and visions inside crystals she creates, allowing the lair to have a visual history of everything that happens." },
+                    { name: "Prism Light Refraction", description: "Her transparent scales refract light into beautiful rainbow displays, creating stunning visual effects that can illuminate entire chambers." },
+                    { name: "Crystal Growth", description: "She can grow crystals from any surface, creating structures, tools, or decorations that are both beautiful and functional." },
+                    { name: "Vision Projection", description: "By touching one of her memory crystals, Crystalwing can project stored memories as visible images, allowing others to see past events." },
+                    { name: "Prismatic Shield", description: "She can create crystal barriers that refract attacks, splitting incoming energy or projectiles into harmless fragments." },
+                    { name: "Crystalline Restoration (Healing)", description: "Crystalwing can form healing crystals that grow from her wounds, sealing them with pure crystal that restores her vitality and makes her scales shine even brighter.", isHealing: true },
+                    { name: "Crystal Barrier (Shield)", description: "Crystalwing can grow a protective crystal barrier around herself that refracts and reflects incoming attacks, shielding her with brilliant prismatic defenses.", isShield: true }
+                ]
+            },
+            earthheart: {
+                name: "Earthheart the Stonekeeper",
+                element: "Earth",
+                image: "images/earthheart.jpg",
+                powers: [
+                    { name: "Stone Shaping", description: "Earthheart can shape stone with his claws, creating new tunnels and rooms in the lair by simply touching the walls, reshaping the very foundation of the lair." },
+                    { name: "Moss Armor", description: "His scales naturally grow moss and lichen that provide extra protection and allow him to blend seamlessly with stone surfaces." },
+                    { name: "Ground Tremor", description: "By stomping his powerful feet, Earthheart can create controlled tremors that reshape terrain or serve as a warning to other dragons." },
+                    { name: "Earthen Shield", description: "He can raise walls of stone from the ground to protect himself and others, creating instant fortifications when needed." },
+                    { name: "Mineral Sensing", description: "Earthheart can sense valuable minerals and ores deep underground, helping Metalbeak locate the finest materials for forging." },
+                    { name: "Earthen Regeneration (Healing)", description: "Earthheart can draw strength from the very earth beneath him, causing his stone-like scales to repair themselves and his wounds to seal with rich, healing soil and minerals.", isHealing: true },
+                    { name: "Stone Barrier (Shield)", description: "Earthheart can raise an impenetrable wall of solid stone around himself, creating a protective barrier that absorbs and blocks incoming damage.", isShield: true }
+                ]
+            },
+            flamethorn: {
+                name: "Flamethorn the Firebringer",
+                element: "Fire",
+                image: "images/flamethorn.jpg",
+                powers: [
+                    { name: "Eternal Flame", description: "Flamethorn can breathe fire that never burns out, creating eternal torches that light up the darkest corners of the lair without ever needing refueling." },
+                    { name: "Ember Creation", description: "His wings create sparks and embers with every beat, leaving trails of glowing embers that can ignite fires or create beautiful light displays." },
+                    { name: "Heat Manipulation", description: "Flamethorn can control the intensity of his flames, from gentle warmth that comforts to scorching blasts that can melt the hardest metals." },
+                    { name: "Forge Fire", description: "He can produce specialized flames perfect for Metalbeak's forge work, creating fires that burn at precise temperatures for metalworking." },
+                    { name: "Fire Shield", description: "Flamethorn can surround himself or others with protective walls of flame that burn enemies while keeping allies safe from the heat." },
+                    { name: "Fiery Restoration (Healing)", description: "Flamethorn can channel his eternal flames inward, using their purifying heat to cauterize wounds and reignite his inner fire, restoring his strength and vitality.", isHealing: true },
+                    { name: "Blazing Barrier (Shield)", description: "Flamethorn can create a protective wall of eternal flames that burns away incoming attacks, shielding him with unquenchable fire that destroys anything that touches it.", isShield: true }
+                ]
+            },
+            frostbite: {
+                name: "Frostbite the Iceweaver",
+                element: "Ice",
+                image: "images/frostbite.jpg",
+                powers: [
+                    { name: "Time Freeze", description: "Frostbite can freeze time in small areas, creating frozen moments that she can examine and then release, perfect for protecting treasures or preventing disasters." },
+                    { name: "Ice Sculpture", description: "Her breath creates beautiful ice sculptures that capture moments in time, forming intricate frozen artworks that never melt." },
+                    { name: "Permafrost Breath", description: "Frostbite can breathe ice so cold that it creates permanent ice formations, even in the presence of heat, protecting important areas." },
+                    { name: "Crystalline Shield", description: "She can create walls of ice that are harder than diamond, providing protection that reflects and refracts attacks." },
+                    { name: "Flash Freeze", description: "Frostbite can instantly freeze water, objects, or even small areas of space, preserving them in perfect condition for eternity." },
+                    { name: "Icy Rejuvenation (Healing)", description: "Frostbite can freeze her wounds solid, preventing further damage while her pure ice scales slowly regenerate and restore her health with the power of eternal winter.", isHealing: true },
+                    { name: "Glacial Barrier (Shield)", description: "Frostbite can create an unbreakable wall of permafrost ice around herself, forming a protective barrier of eternal cold that freezes and shatters incoming attacks.", isShield: true }
+                ]
+            },
+            radiant: {
+                name: "Radiant the Sunbeam",
+                element: "Light",
+                image: "images/radiant.jpg",
+                powers: [
+                    { name: "Solid Light Constructs", description: "Radiant can create solid light constructs - bridges, stairs, and walls made entirely of pure light that last for hours, building structures of pure radiance." },
+                    { name: "Prismatic Wings", description: "Her wings create beautiful rainbow displays when they catch the light, producing prismatic effects that can dazzle and inspire." },
+                    { name: "Guiding Light", description: "Radiant can create beams of light that guide others through darkness, leading them safely to their destination." },
+                    { name: "Solar Growth", description: "She can focus her light to accelerate plant growth, helping Vineclaw's gardens flourish with enhanced photosynthesis." },
+                    { name: "Light Healing", description: "Radiant's warm, golden light has gentle healing properties that can soothe wounds and restore energy to those who bask in her radiance." },
+                    { name: "Solar Restoration (Healing)", description: "Radiant can channel pure sunlight into her body, filling every wound with warm, healing radiance that restores her health and makes her golden scales shine with renewed brilliance.", isHealing: true },
+                    { name: "Radiant Barrier (Shield)", description: "Radiant can create a barrier of solid golden light that surrounds her, forming a protective shield of pure radiance that blinds and deflects incoming attacks.", isShield: true }
+                ]
+            },
+            stormwing: {
+                name: "Stormwing the Skybreaker",
+                element: "Lightning",
+                image: "images/stormwing.jpg",
+                powers: [
+                    { name: "Electrical Grid", description: "Stormwing can channel lightning through his wings to power crystals throughout the lair, creating a natural electrical grid that provides energy to all." },
+                    { name: "Lightning Strike", description: "He can call down bolts of lightning from the sky, directing them with precision to strike targets from great distances." },
+                    { name: "Thunder Clap", description: "Stormwing can create thunderous booms that shake the very foundations of the lair, serving as warnings or displays of power." },
+                    { name: "Electric Conductivity", description: "His scales can store and channel electricity, allowing him to power devices or create electrical weapons on demand." },
+                    { name: "Storm Summoning", description: "Stormwing can create localized storms around himself, generating powerful winds, lightning, and thunder that protect and defend." },
+                    { name: "Electric Restoration (Healing)", description: "Stormwing can channel lightning through his own body, using the electrical energy to stimulate his cells and regenerate damaged tissue, restoring his health with the power of the storm.", isHealing: true },
+                    { name: "Lightning Barrier (Shield)", description: "Stormwing can create a crackling barrier of electrical energy around himself, forming a protective shield of lightning that zaps and redirects incoming attacks.", isShield: true }
+                ]
+            },
+            metalbeak: {
+                name: "Metalbeak the Forgeguard",
+                element: "Metal",
+                image: "images/metalbeak.jpg",
+                powers: [
+                    { name: "Metal Shaping", description: "Metalbeak can reshape metal with his heat alone, crafting weapons and tools without ever needing a forge or hammer, molding metal with just his touch." },
+                    { name: "Unbreakable Claws", description: "His claws can cut through any material, from the hardest stone to the most resilient crystal, making him the lair's ultimate craftsman." },
+                    { name: "Bell Resonance", description: "His steel-gray scales ring like bells when struck, creating beautiful musical tones that can be used for communication or celebration." },
+                    { name: "Alloy Creation", description: "Metalbeak can combine different metals using his body heat, creating new alloys with unique properties never seen before." },
+                    { name: "Metal Sensing", description: "He can detect and locate metal ores and deposits deep underground, working with Earthheart to mine the finest materials for forging." },
+                    { name: "Metallic Repair (Healing)", description: "Metalbeak can heat his scales to forge-like temperatures, using his mastery over metal to repair damaged scales and seal wounds with molten steel that cools into perfect healing armor.", isHealing: true },
+                    { name: "Steel Barrier (Shield)", description: "Metalbeak can forge an unbreakable shield of pure steel around himself, creating a protective barrier of solid metal that blocks and absorbs incoming damage.", isShield: true }
+                ]
+            },
+            vineclaw: {
+                name: "Vineclaw the Lifegiver",
+                element: "Nature",
+                image: "images/vineclaw.jpg",
+                powers: [
+                    { name: "Living Gardens", description: "Vineclaw can create living gardens anywhere in the lair, growing food-bearing plants that never need water or sunlight, providing sustenance for all." },
+                    { name: "Instant Growth", description: "Her claws can instantly grow plants from any surface, creating vines, flowers, or trees in seconds wherever she touches." },
+                    { name: "Moss Armor", description: "Her scales are covered in living moss and flowers that provide natural camouflage and allow her to blend with any garden environment." },
+                    { name: "Healing Pollen", description: "Vineclaw can release pollen from her flowers that has gentle healing properties, restoring energy and soothing wounds." },
+                    { name: "Seed Spreading", description: "She can create and scatter seeds that grow into any plant she imagines, populating barren areas with lush vegetation in moments." },
+                    { name: "Life Force Regeneration (Healing)", description: "Vineclaw can channel the very essence of life itself, causing healing vines and flowers to sprout from her wounds, drawing upon nature's infinite vitality to restore her health.", isHealing: true },
+                    { name: "Thorny Barrier (Shield)", description: "Vineclaw can instantly grow a protective barrier of thick, thorny vines and brambles around herself, creating a natural shield that blocks and entangles incoming attacks.", isShield: true }
+                ]
+            },
+            shadowmaw: {
+                name: "Shadowmaw the Nightstalker",
+                element: "Shadow",
+                image: "images/shadowmaw.jpg",
+                powers: [
+                    { name: "Shadow Meld", description: "Shadowmaw can merge with shadows to become completely invisible, allowing him to move undetected through even the brightest areas." },
+                    { name: "Absolute Darkness", description: "He can create darkness so deep that even dragon fire cannot penetrate it, forming impenetrable shadow barriers." },
+                    { name: "Shadow Teleportation", description: "By traveling through shadows, Shadowmaw can instantly move from one shadowed area to another anywhere in the lair." },
+                    { name: "Light Absorption", description: "His scales absorb light around him, creating pockets of darkness that make nearby areas dimmer and more shadowy." },
+                    { name: "Shadow Form", description: "Shadowmaw can transform parts of his body into pure shadow, allowing him to pass through small spaces or become intangible." },
+                    { name: "Shadow Regeneration (Healing)", description: "Shadowmaw can merge his wounds with the darkness itself, causing them to become intangible shadows that slowly fade away as he draws strength from the endless void to restore his health.", isHealing: true },
+                    { name: "Shadow Barrier (Shield)", description: "Shadowmaw can create a barrier of absolute darkness around himself, forming an impenetrable shadow shield that makes incoming attacks pass harmlessly through the void.", isShield: true }
+                ]
+            },
+            aquaris: {
+                name: "Aquaris the Depthcaller",
+                element: "Water",
+                image: "images/aquaris.jpg",
+                powers: [
+                    { name: "Gravity-Defying Water", description: "Aquaris can breathe water that flows upward, creating waterfalls that defy gravity and fill the lair's pools from below." },
+                    { name: "Whirlpool Tail", description: "Her tail can create powerful whirlpools with a single flick, capable of controlling water flow or creating defensive water barriers." },
+                    { name: "Healing Waters", description: "Aquaris's water has gentle healing properties, restoring energy and soothing wounds when dragons bathe in her pools." },
+                    { name: "Water Breathing", description: "She can create bubbles of breathable water, allowing other dragons to breathe underwater or survive in flooded areas." },
+                    { name: "Current Control", description: "Aquaris can manipulate water currents with precision, creating flowing streams for transportation or powerful jets for defense." },
+                    { name: "Aquatic Restoration (Healing)", description: "Aquaris can channel pure, life-giving water through her body, causing her wounds to wash clean and heal as if bathed in the most pristine healing springs of the deepest ocean.", isHealing: true },
+                    { name: "Aquatic Barrier (Shield)", description: "Aquaris can create a protective barrier of swirling water around herself, forming a shield of flowing currents that redirects and absorbs incoming attacks with fluid grace.", isShield: true }
+                ]
+            }
+        };
+
+        // Function to get element class name
+        function getElementClass(element) {
+            const elementMap = {
+                'fire': 'fire',
+                'water': 'water',
+                'lightning': 'lightning',
+                'earth': 'earth',
+                'air': 'air',
+                'ice': 'ice',
+                'shadow': 'shadow',
+                'light': 'light',
+                'nature': 'nature',
+                'metal': 'metal',
+                'crystal': 'crystal',
+                'chaos': 'chaos'
+            };
+            return elementMap[element.toLowerCase()] || '';
+        }
+
+        // Function to display selected dragon
+        function displayDragon(dragonId) {
+            const displayDiv = document.getElementById('dragon-display');
+            const dragon = dragonData[dragonId];
+            
+            if (!dragon) {
+                displayDiv.innerHTML = '';
+                return;
+            }
+
+            let powersHTML = '<h4>Powers</h4><ol>';
+            dragon.powers.forEach(function(power) {
+                powersHTML += '<li><strong>' + power.name + ':</strong> ' + power.description + '</li>';
+            });
+            powersHTML += '</ol>';
+
+            // Get element class for proper styling
+            const elementClass = getElementClass(dragon.element);
+            
+            displayDiv.innerHTML = `
+                <div class="selected-dragon-display ${elementClass}">
+                    <img src="${dragon.image}" alt="${dragon.name}" />
+                    <h3>${dragon.name}</h3>
+                    <p class="element">Element: ${dragon.element}</p>
+                    ${powersHTML}
+                </div>
+            `;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const dragonSelect = document.getElementById('dragon-select');
+            const startButton = document.getElementById('start-button');
+
+            // Dragon selection
+            dragonSelect.addEventListener('change', function() {
+                const selected = this.value;
+                if (selected) {
+                    displayDragon(selected);
+                    startButton.disabled = false;
+                } else {
+                    document.getElementById('dragon-display').innerHTML = '';
+                    startButton.disabled = true;
+                }
+            });
+
+            // Start button (for now, just shows an alert - can be expanded later)
+            startButton.addEventListener('click', function() {
+                const selectedDragon = dragonSelect.value;
+                if (selectedDragon) {
+                    alert('Single Player mode selected for ' + dragonData[selectedDragon].name + '!\n(This feature can be expanded with battle functionality later.)');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
