@@ -1,0 +1,600 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+.header-image {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+.header-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.battle-button-container {
+    text-align: center;
+    padding: 30px 20px;
+    background-color: #000000;
+}
+
+.battle-button {
+    display: inline-block;
+    padding: 25px 60px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background: linear-gradient(135deg, #FF4444 0%, #FF8800 50%, #FFDD00 100%);
+    border: 4px solid #FFD700;
+    border-radius: 15px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    box-shadow: 0 8px 16px rgba(255, 68, 68, 0.5), 0 0 30px rgba(255, 215, 0, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.battle-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(255, 68, 68, 0.7), 0 0 40px rgba(255, 215, 0, 0.6);
+    background: linear-gradient(135deg, #FF6600 0%, #FFAA00 50%, #FFFF00 100%);
+}
+
+.battle-button:active {
+    transform: scale(0.98);
+}
+
+.dragons-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.dragon {
+    background-color: #1a1a1a;
+    border: 2px solid #0080FF;
+    border-radius: 8px;
+    margin: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 128, 255, 0.3);
+    overflow: hidden;
+}
+
+/* Fire Element - Red/Orange */
+.dragon.fire {
+    border-color: #FF4444;
+    box-shadow: 0 4px 8px rgba(255, 68, 68, 0.3);
+}
+
+/* Water Element - Blue */
+.dragon.water {
+    border-color: #4488FF;
+    box-shadow: 0 4px 8px rgba(68, 136, 255, 0.3);
+}
+
+/* Lightning Element - Yellow/Electric */
+.dragon.lightning {
+    border-color: #FFDD00;
+    box-shadow: 0 4px 8px rgba(255, 221, 0, 0.5);
+}
+
+/* Earth Element - Brown/Green */
+.dragon.earth {
+    border-color: #8B6F47;
+    box-shadow: 0 4px 8px rgba(139, 111, 71, 0.3);
+}
+
+/* Air Element - Light Blue/White */
+.dragon.air {
+    border-color: #88CCFF;
+    box-shadow: 0 4px 8px rgba(136, 204, 255, 0.3);
+}
+
+/* Ice Element - Cyan/White */
+.dragon.ice {
+    border-color: #88EEFF;
+    box-shadow: 0 4px 8px rgba(136, 238, 255, 0.3);
+}
+
+/* Shadow Element - Purple/Black */
+.dragon.shadow {
+    border-color: #8844AA;
+    box-shadow: 0 4px 8px rgba(136, 68, 170, 0.3);
+}
+
+/* Light Element - Gold/Yellow */
+.dragon.light {
+    border-color: #FFD700;
+    box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);
+}
+
+/* Nature Element - Green */
+.dragon.nature {
+    border-color: #44AA44;
+    box-shadow: 0 4px 8px rgba(68, 170, 68, 0.3);
+}
+
+/* Metal Element - Silver/Gray */
+.dragon.metal {
+    border-color: #AAAAAA;
+    box-shadow: 0 4px 8px rgba(170, 170, 170, 0.3);
+}
+
+/* Crystal Element - Purple/Pink */
+.dragon.crystal {
+    border-color: #BB66FF;
+    box-shadow: 0 4px 8px rgba(187, 102, 255, 0.3);
+}
+
+/* Chaos Element - Multicolor */
+.dragon.chaos {
+    border-color: #FF44AA;
+    box-shadow: 0 4px 8px rgba(255, 68, 170, 0.4);
+}
+
+.dragon-header {
+    background-color: #252525;
+    padding: 15px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.dragon.fire .dragon-header {
+    border-bottom: 2px solid #FF4444;
+}
+
+.dragon.water .dragon-header {
+    border-bottom: 2px solid #4488FF;
+}
+
+.dragon.lightning .dragon-header {
+    border-bottom: 2px solid #FFDD00;
+}
+
+.dragon.earth .dragon-header {
+    border-bottom: 2px solid #8B6F47;
+}
+
+.dragon.air .dragon-header {
+    border-bottom: 2px solid #88CCFF;
+}
+
+.dragon.ice .dragon-header {
+    border-bottom: 2px solid #88EEFF;
+}
+
+.dragon.shadow .dragon-header {
+    border-bottom: 2px solid #8844AA;
+}
+
+.dragon.light .dragon-header {
+    border-bottom: 2px solid #FFD700;
+}
+
+.dragon.nature .dragon-header {
+    border-bottom: 2px solid #44AA44;
+}
+
+.dragon.metal .dragon-header {
+    border-bottom: 2px solid #AAAAAA;
+}
+
+.dragon.crystal .dragon-header {
+    border-bottom: 2px solid #BB66FF;
+}
+
+.dragon.chaos .dragon-header {
+    border-bottom: 2px solid #FF44AA;
+}
+
+.dragon-header:hover {
+    background-color: #2a2a2a;
+}
+
+.dragon.fire .dragon-header:hover {
+    background-color: #3a1a1a;
+}
+
+.dragon.water .dragon-header:hover {
+    background-color: #1a1a3a;
+}
+
+.dragon.lightning .dragon-header:hover {
+    background-color: #3a3a1a;
+}
+
+.dragon.earth .dragon-header:hover {
+    background-color: #2a251a;
+}
+
+.dragon.air .dragon-header:hover {
+    background-color: #1a2a3a;
+}
+
+.dragon.ice .dragon-header:hover {
+    background-color: #1a2a3a;
+}
+
+.dragon.shadow .dragon-header:hover {
+    background-color: #2a1a3a;
+}
+
+.dragon.light .dragon-header:hover {
+    background-color: #3a3a1a;
+}
+
+.dragon.nature .dragon-header:hover {
+    background-color: #1a2a1a;
+}
+
+.dragon.metal .dragon-header:hover {
+    background-color: #2a2a2a;
+}
+
+.dragon.crystal .dragon-header:hover {
+    background-color: #2a1a3a;
+}
+
+.dragon.chaos .dragon-header:hover {
+    background-color: #3a1a2a;
+}
+
+.dragon.fire .dragon-header.active {
+    background-color: #4a1a1a;
+}
+
+.dragon.water .dragon-header.active {
+    background-color: #1a1a4a;
+}
+
+.dragon.lightning .dragon-header.active {
+    background-color: #4a4a1a;
+}
+
+.dragon.earth .dragon-header.active {
+    background-color: #3a2a1a;
+}
+
+.dragon.air .dragon-header.active {
+    background-color: #1a2a4a;
+}
+
+.dragon.ice .dragon-header.active {
+    background-color: #1a2a4a;
+}
+
+.dragon.shadow .dragon-header.active {
+    background-color: #2a1a4a;
+}
+
+.dragon.light .dragon-header.active {
+    background-color: #4a4a1a;
+}
+
+.dragon.nature .dragon-header.active {
+    background-color: #1a3a1a;
+}
+
+.dragon.metal .dragon-header.active {
+    background-color: #3a3a3a;
+}
+
+.dragon.crystal .dragon-header.active {
+    background-color: #3a1a4a;
+}
+
+.dragon.chaos .dragon-header.active {
+    background-color: #4a1a2a;
+}
+
+.element-icon {
+    font-size: 40px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dragon.fire .element-icon {
+    border: 2px solid #FF4444;
+    background-color: rgba(255, 68, 68, 0.2);
+}
+
+.dragon.water .element-icon {
+    border: 2px solid #4488FF;
+    background-color: rgba(68, 136, 255, 0.2);
+}
+
+.dragon.lightning .element-icon {
+    border: 2px solid #FFDD00;
+    background-color: rgba(255, 221, 0, 0.2);
+}
+
+.dragon.earth .element-icon {
+    border: 2px solid #8B6F47;
+    background-color: rgba(139, 111, 71, 0.2);
+}
+
+.dragon.air .element-icon {
+    border: 2px solid #88CCFF;
+    background-color: rgba(136, 204, 255, 0.2);
+}
+
+.dragon.ice .element-icon {
+    border: 2px solid #88EEFF;
+    background-color: rgba(136, 238, 255, 0.2);
+}
+
+.dragon.shadow .element-icon {
+    border: 2px solid #8844AA;
+    background-color: rgba(136, 68, 170, 0.2);
+}
+
+.dragon.light .element-icon {
+    border: 2px solid #FFD700;
+    background-color: rgba(255, 215, 0, 0.2);
+}
+
+.dragon.nature .element-icon {
+    border: 2px solid #44AA44;
+    background-color: rgba(68, 170, 68, 0.2);
+}
+
+.dragon.metal .element-icon {
+    border: 2px solid #AAAAAA;
+    background-color: rgba(170, 170, 170, 0.2);
+}
+
+.dragon.crystal .element-icon {
+    border: 2px solid #BB66FF;
+    background-color: rgba(187, 102, 255, 0.2);
+}
+
+.dragon.chaos .element-icon {
+    border: 2px solid #FF44AA;
+    background-color: rgba(255, 68, 170, 0.2);
+}
+
+.dragon-header h2 {
+    color: #0080FF;
+    margin: 0;
+    font-size: 24px;
+    flex: 1;
+}
+
+.dragon-header h2 a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    display: block;
+    transition: opacity 0.2s;
+}
+
+.dragon-header h2 a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+.dragon.fire .dragon-header h2 {
+    color: #FF6666;
+}
+
+.dragon.water .dragon-header h2 {
+    color: #66AAFF;
+}
+
+.dragon.lightning .dragon-header h2 {
+    color: #FFEE44;
+}
+
+.dragon.earth .dragon-header h2 {
+    color: #CCAA66;
+}
+
+.dragon.air .dragon-header h2 {
+    color: #AAEEFF;
+}
+
+.dragon.ice .dragon-header h2 {
+    color: #AAFFFF;
+}
+
+.dragon.shadow .dragon-header h2 {
+    color: #BB88DD;
+}
+
+.dragon.light .dragon-header h2 {
+    color: #FFEE88;
+}
+
+.dragon.nature .dragon-header h2 {
+    color: #66DD66;
+}
+
+.dragon.metal .dragon-header h2 {
+    color: #DDDDDD;
+}
+
+.dragon.crystal .dragon-header h2 {
+    color: #DD99FF;
+}
+
+.dragon.chaos .dragon-header h2 {
+    color: #FF88DD;
+}
+
+.accordion-icon {
+    color: #0080FF;
+    font-size: 24px;
+    transition: transform 0.3s;
+}
+
+.dragon.fire .accordion-icon {
+    color: #FF6666;
+}
+
+.dragon.water .accordion-icon {
+    color: #66AAFF;
+}
+
+.dragon.lightning .accordion-icon {
+    color: #FFEE44;
+}
+
+.dragon.earth .accordion-icon {
+    color: #CCAA66;
+}
+
+.dragon.air .accordion-icon {
+    color: #AAEEFF;
+}
+
+.dragon.ice .accordion-icon {
+    color: #AAFFFF;
+}
+
+.dragon.shadow .accordion-icon {
+    color: #BB88DD;
+}
+
+.dragon.light .accordion-icon {
+    color: #FFEE88;
+}
+
+.dragon.nature .accordion-icon {
+    color: #66DD66;
+}
+
+.dragon.metal .accordion-icon {
+    color: #DDDDDD;
+}
+
+.dragon.crystal .accordion-icon {
+    color: #DD99FF;
+}
+
+.dragon.chaos .accordion-icon {
+    color: #FF88DD;
+}
+
+.dragon-header.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.dragon-body {
+    display: none;
+    padding: 20px;
+}
+
+.dragon-body.active {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.dragon-body img {
+    max-width: 300px;
+    width: 100%;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.dragon.fire .dragon-body img {
+    border: 2px solid #FF4444;
+    box-shadow: 0 4px 8px rgba(255, 68, 68, 0.4);
+}
+
+.dragon.water .dragon-body img {
+    border: 2px solid #4488FF;
+    box-shadow: 0 4px 8px rgba(68, 136, 255, 0.4);
+}
+
+.dragon.lightning .dragon-body img {
+    border: 2px solid #FFDD00;
+    box-shadow: 0 4px 8px rgba(255, 221, 0, 0.5);
+}
+
+.dragon.earth .dragon-body img {
+    border: 2px solid #8B6F47;
+    box-shadow: 0 4px 8px rgba(139, 111, 71, 0.4);
+}
+
+.dragon.air .dragon-body img {
+    border: 2px solid #88CCFF;
+    box-shadow: 0 4px 8px rgba(136, 204, 255, 0.4);
+}
+
+.dragon.ice .dragon-body img {
+    border: 2px solid #88EEFF;
+    box-shadow: 0 4px 8px rgba(136, 238, 255, 0.4);
+}
+
+.dragon.shadow .dragon-body img {
+    border: 2px solid #8844AA;
+    box-shadow: 0 4px 8px rgba(136, 68, 170, 0.4);
+}
+
+.dragon.light .dragon-body img {
+    border: 2px solid #FFD700;
+    box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);
+}
+
+.dragon.nature .dragon-body img {
+    border: 2px solid #44AA44;
+    box-shadow: 0 4px 8px rgba(68, 170, 68, 0.4);
+}
+
+.dragon.metal .dragon-body img {
+    border: 2px solid #AAAAAA;
+    box-shadow: 0 4px 8px rgba(170, 170, 170, 0.4);
+}
+
+.dragon.crystal .dragon-body img {
+    border: 2px solid #BB66FF;
+    box-shadow: 0 4px 8px rgba(187, 102, 255, 0.4);
+}
+
+.dragon.chaos .dragon-body img {
+    border: 2px solid #FF44AA;
+    box-shadow: 0 4px 8px rgba(255, 68, 170, 0.4);
+}
+
+.dragon-content {
+    flex: 1;
+}
+
+.dragon-content h3 {
+    color: #66B3FF;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.dragon-content p {
+    color: #E0E0E0;
+    line-height: 1.6;
+}
+
+.dragon-content .measurements {
+    color: #B0B0B0;
+    font-style: italic;
+}
+
+.dragon-content .element {
+    color: #FFFFFF;
+    font-weight: bold;
+}
+

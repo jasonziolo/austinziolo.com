@@ -293,6 +293,7 @@
             display: flex;
             gap: 20px;
             justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 15px;
         }
 
@@ -304,6 +305,44 @@
             border-radius: 15px;
             padding: 10px;
             text-align: center;
+        }
+
+        /* Attack Summary Styles */
+        .attack-summary-container {
+            flex: 0 0 300px;
+            background-color: #1a1a1a;
+            border: 3px solid #FFD700;
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .attack-summary-title {
+            color: #FFD700;
+            font-size: 18px;
+            margin: 0 0 10px 0;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .attack-summary {
+            background-color: #0a0a0a;
+            border: 2px solid #333333;
+            border-radius: 10px;
+            padding: 10px;
+            min-height: 100px;
+            color: #E0E0E0;
+            font-size: 13px;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .attack-summary p {
+            margin: 5px 0;
+            padding: 5px;
         }
 
         .health-bar-container {
@@ -795,6 +834,14 @@
                         </div>
                     </div>
 
+                    <!-- Attack Summary Box -->
+                    <div id="attack-summary-container" class="attack-summary-container">
+                        <h3 class="attack-summary-title">Attack Summary</h3>
+                        <div id="attack-summary" class="attack-summary">
+                            <p style="color: #88CCFF; font-weight: bold;">Select powers and click FIGHT!</p>
+                        </div>
+                    </div>
+
                     <!-- Dragon 2 Battle Card -->
                     <div id="battle-dragon2-card" class="battle-dragon-card">
                         <div class="health-bar-container">
@@ -1238,6 +1285,12 @@
 
             // Clear battle log
             document.getElementById('battle-log').innerHTML = '<p style="color: #88CCFF; font-weight: bold;">Battle begins! Select powers for both dragons and click FIGHT!!!!</p>';
+            
+            // Initialize attack summary
+            const attackSummary = document.getElementById('attack-summary');
+            if (attackSummary) {
+                attackSummary.innerHTML = '<p style="color: #88CCFF; font-weight: bold;">Select powers and click FIGHT!</p>';
+            }
 
             // Reset fight button
             const fightButton = document.getElementById('fight-button');
@@ -1370,6 +1423,12 @@
             logMessage += '<p>' + createBattleMessage(battleState.dragon2.name, battleState.dragon2Power) + ' (Power: ' + power2 + ')</p>';
             
             battleLog.innerHTML += logMessage;
+            
+            // Update attack summary with what just happened
+            const attackSummary = document.getElementById('attack-summary');
+            if (attackSummary) {
+                attackSummary.innerHTML = '<p class="attack-message">' + battleState.dragon1.name + ' uses ' + battleState.dragon1Power.name + ' (Power: ' + power1 + ')</p><p class="attack-message">' + battleState.dragon2.name + ' uses ' + battleState.dragon2Power.name + ' (Power: ' + power2 + ')</p>';
+            }
 
             // Compare power values - same logic regardless of power type
             setTimeout(function() {
@@ -1392,6 +1451,12 @@
                         } else {
                             logMessage += '<p>' + battleState.dragon1.name + ' is already at full health!</p>';
                         }
+                        
+                        // Update attack summary with result
+                        const attackSummary = document.getElementById('attack-summary');
+                        if (attackSummary) {
+                            attackSummary.innerHTML = logMessage;
+                        }
                     } else {
                         // Dragon 1 is using damage - deal damage to Dragon 2
                         const newHP2 = battleState.dragon2HP - difference;
@@ -1399,6 +1464,12 @@
                         
                         logMessage += '<p class="result-message">' + battleState.dragon1.name + ' wins this round! (' + power1 + ' vs ' + power2 + ')</p>';
                         logMessage += '<p class="damage-message">' + battleState.dragon1.name + ' deals ' + difference + ' damage to ' + battleState.dragon2.name + '!</p>';
+                        
+                        // Update attack summary with result
+                        const attackSummary = document.getElementById('attack-summary');
+                        if (attackSummary) {
+                            attackSummary.innerHTML = logMessage;
+                        }
                         
                         // Check if battle is over
                         if (battleState.dragon2HP <= 0) {
@@ -1426,6 +1497,12 @@
                         } else {
                             logMessage += '<p>' + battleState.dragon2.name + ' is already at full health!</p>';
                         }
+                        
+                        // Update attack summary with result
+                        const attackSummary = document.getElementById('attack-summary');
+                        if (attackSummary) {
+                            attackSummary.innerHTML = logMessage;
+                        }
                     } else {
                         // Dragon 2 is using damage - deal damage to Dragon 1
                         const newHP1 = battleState.dragon1HP - difference;
@@ -1433,6 +1510,12 @@
                         
                         logMessage += '<p class="result-message">' + battleState.dragon2.name + ' wins this round! (' + power2 + ' vs ' + power1 + ')</p>';
                         logMessage += '<p class="damage-message">' + battleState.dragon2.name + ' deals ' + difference + ' damage to ' + battleState.dragon1.name + '!</p>';
+                        
+                        // Update attack summary with result
+                        const attackSummary = document.getElementById('attack-summary');
+                        if (attackSummary) {
+                            attackSummary.innerHTML = logMessage;
+                        }
                         
                         // Check if battle is over
                         if (battleState.dragon1HP <= 0) {
@@ -1449,6 +1532,12 @@
                     logMessage += '<p class="draw-message">It\'s a draw! Both dragons have equal power (' + power1 + ' vs ' + power2 + '). No effect!</p>';
                 }
 
+                // Update attack summary with result
+                const attackSummary = document.getElementById('attack-summary');
+                if (attackSummary) {
+                    attackSummary.innerHTML = logMessage;
+                }
+
                 logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
                 battleLog.innerHTML += logMessage;
 
@@ -1457,6 +1546,12 @@
                     // Re-enable fight button if powers are still selected
                     checkFightButtonState();
                     battleLog.innerHTML += '<p style="color: #88CCFF; font-weight: bold; margin-top: 10px;">Select new powers for the next round (or use the same ones)!</p>';
+                    // Keep attack summary visible longer before clearing
+                    if (attackSummary) {
+                        setTimeout(function() {
+                            attackSummary.innerHTML = '<p style="color: #88CCFF; font-weight: bold;">Select new powers and click FIGHT!</p>';
+                        }, 5000); // Keep result visible for 5 more seconds (7 seconds total from battle result)
+                    }
                 }, 2000);
             }, 1500);
         }
