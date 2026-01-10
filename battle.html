@@ -414,6 +414,44 @@
             background: linear-gradient(90deg, #FFAA44 0%, #DD8822 100%);
         }
 
+        .shield-label {
+            color: #8888FF;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .shield-use-label {
+            color: #AAAAFF;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        @media screen and (max-width: 768px) {
+            .shield-label {
+                font-size: 9px;
+                margin-top: 3px;
+            }
+            .shield-use-label {
+                font-size: 9px;
+                margin-top: 3px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .shield-label {
+                font-size: 8px;
+                margin-top: 2px;
+            }
+            .shield-use-label {
+                font-size: 8px;
+                margin-top: 2px;
+            }
+        }
+
         .battle-dragon-image {
             width: 100%;
             max-width: 200px;
@@ -1301,6 +1339,8 @@
                             <div class="health-bar">
                                 <div id="hp1-bar" class="health-bar-fill" style="width: 100%;">10 HP</div>
                             </div>
+                            <div class="shield-label" id="shield1-label" style="display: none;">Shield: <span id="shield1-display">0</span></div>
+                            <div class="shield-use-label">Shield Uses: <span id="shield1-uses-display">0</span>/3</div>
                         </div>
                         <img id="battle-dragon1-image" class="battle-dragon-image" src="" alt="" />
                         <h2 id="battle-dragon1-name" class="battle-dragon-name"></h2>
@@ -1328,6 +1368,8 @@
                             <div class="health-bar">
                                 <div id="hp2-bar" class="health-bar-fill" style="width: 100%;">10 HP</div>
                             </div>
+                            <div class="shield-label" id="shield2-label" style="display: none;">Shield: <span id="shield2-display">0</span></div>
+                            <div class="shield-use-label">Shield Uses: <span id="shield2-uses-display">0</span>/3</div>
                         </div>
                         <img id="battle-dragon2-image" class="battle-dragon-image" src="" alt="" />
                         <h2 id="battle-dragon2-name" class="battle-dragon-name"></h2>
@@ -1382,7 +1424,8 @@
                     { name: "Whisper Network", description: "He can hear and understand the language of the winds, allowing him to listen to conversations carried on air currents from miles away." },
                     { name: "Gentle Levitation", description: "Breezeflight can create powerful upward air currents that allow him to lift objects, creatures, or even other dragons without causing harm, using the gentlest of breezes." },
                     { name: "Pollination Wind", description: "By controlling precise air currents, he can spread seeds and pollen across vast distances, helping Vineclaw's gardens flourish throughout the entire lair." },
-                    { name: "Refreshing Breeze (Healing)", description: "Breezeflight can channel pure, revitalizing air currents that flow through his body, healing wounds and restoring his strength with the gentle touch of the wind.", isHealing: true }
+                    { name: "Refreshing Breeze (Healing)", description: "Breezeflight can channel pure, revitalizing air currents that flow through his body, healing wounds and restoring his strength with the gentle touch of the wind.", isHealing: true },
+                    { name: "Air Barrier (Shield)", description: "Breezeflight can create a protective barrier of compressed air currents that deflects attacks and shields him from incoming damage.", isShield: true }
                 ]
             },
             chaosflare: {
@@ -1395,7 +1438,8 @@
                     { name: "Chaos Blast", description: "He can unleash bursts of pure chaos energy that scramble elemental powers, temporarily disrupting other dragons' abilities in unexpected ways." },
                     { name: "Pattern Randomization", description: "Chaosflare can create beautiful, unpredictable patterns of light, energy, and color that defy logic and mesmerize those who watch them." },
                     { name: "Unpredictable Teleportation", description: "Through chaotic space manipulation, he can instantly appear anywhere in the lair, though the destination is often slightly different from where he intended." },
-                    { name: "Chaotic Regeneration (Healing)", description: "Chaosflare can channel the unpredictable nature of chaos itself to twist reality around his wounds, causing them to heal in wild and unexpected ways that restore his vitality.", isHealing: true }
+                    { name: "Chaotic Regeneration (Healing)", description: "Chaosflare can channel the unpredictable nature of chaos itself to twist reality around his wounds, causing them to heal in wild and unexpected ways that restore his vitality.", isHealing: true },
+                    { name: "Chaos Barrier (Shield)", description: "Chaosflare can create a swirling barrier of chaotic energy that warps and deflects incoming attacks, making him unpredictable and hard to hit.", isShield: true }
                 ]
             },
             crystalwing: {
@@ -1408,7 +1452,8 @@
                     { name: "Crystal Growth", description: "She can grow crystals from any surface, creating structures, tools, or decorations that are both beautiful and functional." },
                     { name: "Vision Projection", description: "By touching one of her memory crystals, Crystalwing can project stored memories as visible images, allowing others to see past events." },
                     { name: "Prismatic Shield", description: "She can create crystal barriers that refract attacks, splitting incoming energy or projectiles into harmless fragments." },
-                    { name: "Crystalline Restoration (Healing)", description: "Crystalwing can form healing crystals that grow from her wounds, sealing them with pure crystal that restores her vitality and makes her scales shine even brighter.", isHealing: true }
+                    { name: "Crystalline Restoration (Healing)", description: "Crystalwing can form healing crystals that grow from her wounds, sealing them with pure crystal that restores her vitality and makes her scales shine even brighter.", isHealing: true },
+                    { name: "Crystal Barrier (Shield)", description: "Crystalwing can grow a protective crystal barrier around herself that refracts and reflects incoming attacks, shielding her with brilliant prismatic defenses.", isShield: true }
                 ]
             },
             earthheart: {
@@ -1421,7 +1466,8 @@
                     { name: "Ground Tremor", description: "By stomping his powerful feet, Earthheart can create controlled tremors that reshape terrain or serve as a warning to other dragons." },
                     { name: "Earthen Shield", description: "He can raise walls of stone from the ground to protect himself and others, creating instant fortifications when needed." },
                     { name: "Mineral Sensing", description: "Earthheart can sense valuable minerals and ores deep underground, helping Metalbeak locate the finest materials for forging." },
-                    { name: "Earthen Regeneration (Healing)", description: "Earthheart can draw strength from the very earth beneath him, causing his stone-like scales to repair themselves and his wounds to seal with rich, healing soil and minerals.", isHealing: true }
+                    { name: "Earthen Regeneration (Healing)", description: "Earthheart can draw strength from the very earth beneath him, causing his stone-like scales to repair themselves and his wounds to seal with rich, healing soil and minerals.", isHealing: true },
+                    { name: "Stone Barrier (Shield)", description: "Earthheart can raise an impenetrable wall of solid stone around himself, creating a protective barrier that absorbs and blocks incoming damage.", isShield: true }
                 ]
             },
             flamethorn: {
@@ -1434,7 +1480,8 @@
                     { name: "Heat Manipulation", description: "Flamethorn can control the intensity of his flames, from gentle warmth that comforts to scorching blasts that can melt the hardest metals." },
                     { name: "Forge Fire", description: "He can produce specialized flames perfect for Metalbeak's forge work, creating fires that burn at precise temperatures for metalworking." },
                     { name: "Fire Shield", description: "Flamethorn can surround himself or others with protective walls of flame that burn enemies while keeping allies safe from the heat." },
-                    { name: "Fiery Restoration (Healing)", description: "Flamethorn can channel his eternal flames inward, using their purifying heat to cauterize wounds and reignite his inner fire, restoring his strength and vitality.", isHealing: true }
+                    { name: "Fiery Restoration (Healing)", description: "Flamethorn can channel his eternal flames inward, using their purifying heat to cauterize wounds and reignite his inner fire, restoring his strength and vitality.", isHealing: true },
+                    { name: "Blazing Barrier (Shield)", description: "Flamethorn can create a protective wall of eternal flames that burns away incoming attacks, shielding him with unquenchable fire that destroys anything that touches it.", isShield: true }
                 ]
             },
             frostbite: {
@@ -1447,7 +1494,8 @@
                     { name: "Permafrost Breath", description: "Frostbite can breathe ice so cold that it creates permanent ice formations, even in the presence of heat, protecting important areas." },
                     { name: "Crystalline Shield", description: "She can create walls of ice that are harder than diamond, providing protection that reflects and refracts attacks." },
                     { name: "Flash Freeze", description: "Frostbite can instantly freeze water, objects, or even small areas of space, preserving them in perfect condition for eternity." },
-                    { name: "Icy Rejuvenation (Healing)", description: "Frostbite can freeze her wounds solid, preventing further damage while her pure ice scales slowly regenerate and restore her health with the power of eternal winter.", isHealing: true }
+                    { name: "Icy Rejuvenation (Healing)", description: "Frostbite can freeze her wounds solid, preventing further damage while her pure ice scales slowly regenerate and restore her health with the power of eternal winter.", isHealing: true },
+                    { name: "Glacial Barrier (Shield)", description: "Frostbite can create an unbreakable wall of permafrost ice around herself, forming a protective barrier of eternal cold that freezes and shatters incoming attacks.", isShield: true }
                 ]
             },
             radiant: {
@@ -1460,7 +1508,8 @@
                     { name: "Guiding Light", description: "Radiant can create beams of light that guide others through darkness, leading them safely to their destination." },
                     { name: "Solar Growth", description: "She can focus her light to accelerate plant growth, helping Vineclaw's gardens flourish with enhanced photosynthesis." },
                     { name: "Light Healing", description: "Radiant's warm, golden light has gentle healing properties that can soothe wounds and restore energy to those who bask in her radiance." },
-                    { name: "Solar Restoration (Healing)", description: "Radiant can channel pure sunlight into her body, filling every wound with warm, healing radiance that restores her health and makes her golden scales shine with renewed brilliance.", isHealing: true }
+                    { name: "Solar Restoration (Healing)", description: "Radiant can channel pure sunlight into her body, filling every wound with warm, healing radiance that restores her health and makes her golden scales shine with renewed brilliance.", isHealing: true },
+                    { name: "Radiant Barrier (Shield)", description: "Radiant can create a barrier of solid golden light that surrounds her, forming a protective shield of pure radiance that blinds and deflects incoming attacks.", isShield: true }
                 ]
             },
             stormwing: {
@@ -1473,7 +1522,8 @@
                     { name: "Thunder Clap", description: "Stormwing can create thunderous booms that shake the very foundations of the lair, serving as warnings or displays of power." },
                     { name: "Electric Conductivity", description: "His scales can store and channel electricity, allowing him to power devices or create electrical weapons on demand." },
                     { name: "Storm Summoning", description: "Stormwing can create localized storms around himself, generating powerful winds, lightning, and thunder that protect and defend." },
-                    { name: "Electric Restoration (Healing)", description: "Stormwing can channel lightning through his own body, using the electrical energy to stimulate his cells and regenerate damaged tissue, restoring his health with the power of the storm.", isHealing: true }
+                    { name: "Electric Restoration (Healing)", description: "Stormwing can channel lightning through his own body, using the electrical energy to stimulate his cells and regenerate damaged tissue, restoring his health with the power of the storm.", isHealing: true },
+                    { name: "Lightning Barrier (Shield)", description: "Stormwing can create a crackling barrier of electrical energy around himself, forming a protective shield of lightning that zaps and redirects incoming attacks.", isShield: true }
                 ]
             },
             metalbeak: {
@@ -1486,7 +1536,8 @@
                     { name: "Bell Resonance", description: "His steel-gray scales ring like bells when struck, creating beautiful musical tones that can be used for communication or celebration." },
                     { name: "Alloy Creation", description: "Metalbeak can combine different metals using his body heat, creating new alloys with unique properties never seen before." },
                     { name: "Metal Sensing", description: "He can detect and locate metal ores and deposits deep underground, working with Earthheart to mine the finest materials for forging." },
-                    { name: "Metallic Repair (Healing)", description: "Metalbeak can heat his scales to forge-like temperatures, using his mastery over metal to repair damaged scales and seal wounds with molten steel that cools into perfect healing armor.", isHealing: true }
+                    { name: "Metallic Repair (Healing)", description: "Metalbeak can heat his scales to forge-like temperatures, using his mastery over metal to repair damaged scales and seal wounds with molten steel that cools into perfect healing armor.", isHealing: true },
+                    { name: "Steel Barrier (Shield)", description: "Metalbeak can forge an unbreakable shield of pure steel around himself, creating a protective barrier of solid metal that blocks and absorbs incoming damage.", isShield: true }
                 ]
             },
             vineclaw: {
@@ -1499,7 +1550,8 @@
                     { name: "Moss Armor", description: "Her scales are covered in living moss and flowers that provide natural camouflage and allow her to blend with any garden environment." },
                     { name: "Healing Pollen", description: "Vineclaw can release pollen from her flowers that has gentle healing properties, restoring energy and soothing wounds." },
                     { name: "Seed Spreading", description: "She can create and scatter seeds that grow into any plant she imagines, populating barren areas with lush vegetation in moments." },
-                    { name: "Life Force Regeneration (Healing)", description: "Vineclaw can channel the very essence of life itself, causing healing vines and flowers to sprout from her wounds, drawing upon nature's infinite vitality to restore her health.", isHealing: true }
+                    { name: "Life Force Regeneration (Healing)", description: "Vineclaw can channel the very essence of life itself, causing healing vines and flowers to sprout from her wounds, drawing upon nature's infinite vitality to restore her health.", isHealing: true },
+                    { name: "Thorny Barrier (Shield)", description: "Vineclaw can instantly grow a protective barrier of thick, thorny vines and brambles around herself, creating a natural shield that blocks and entangles incoming attacks.", isShield: true }
                 ]
             },
             shadowmaw: {
@@ -1512,7 +1564,8 @@
                     { name: "Shadow Teleportation", description: "By traveling through shadows, Shadowmaw can instantly move from one shadowed area to another anywhere in the lair." },
                     { name: "Light Absorption", description: "His scales absorb light around him, creating pockets of darkness that make nearby areas dimmer and more shadowy." },
                     { name: "Shadow Form", description: "Shadowmaw can transform parts of his body into pure shadow, allowing him to pass through small spaces or become intangible." },
-                    { name: "Shadow Regeneration (Healing)", description: "Shadowmaw can merge his wounds with the darkness itself, causing them to become intangible shadows that slowly fade away as he draws strength from the endless void to restore his health.", isHealing: true }
+                    { name: "Shadow Regeneration (Healing)", description: "Shadowmaw can merge his wounds with the darkness itself, causing them to become intangible shadows that slowly fade away as he draws strength from the endless void to restore his health.", isHealing: true },
+                    { name: "Shadow Barrier (Shield)", description: "Shadowmaw can create a barrier of absolute darkness around himself, forming an impenetrable shadow shield that makes incoming attacks pass harmlessly through the void.", isShield: true }
                 ]
             },
             aquaris: {
@@ -1525,7 +1578,8 @@
                     { name: "Healing Waters", description: "Aquaris's water has gentle healing properties, restoring energy and soothing wounds when dragons bathe in her pools." },
                     { name: "Water Breathing", description: "She can create bubbles of breathable water, allowing other dragons to breathe underwater or survive in flooded areas." },
                     { name: "Current Control", description: "Aquaris can manipulate water currents with precision, creating flowing streams for transportation or powerful jets for defense." },
-                    { name: "Aquatic Restoration (Healing)", description: "Aquaris can channel pure, life-giving water through her body, causing her wounds to wash clean and heal as if bathed in the most pristine healing springs of the deepest ocean.", isHealing: true }
+                    { name: "Aquatic Restoration (Healing)", description: "Aquaris can channel pure, life-giving water through her body, causing her wounds to wash clean and heal as if bathed in the most pristine healing springs of the deepest ocean.", isHealing: true },
+                    { name: "Aquatic Barrier (Shield)", description: "Aquaris can create a protective barrier of swirling water around herself, forming a shield of flowing currents that redirects and absorbs incoming attacks with fluid grace.", isShield: true }
                 ]
             }
         };
@@ -1700,6 +1754,7 @@
                     // Set both dragons' HP to 5
                     updateHealthBar(1, 5);
                     updateHealthBar(2, 5);
+                    // Note: Shields remain unchanged when using HP button
                 });
             }
         });
@@ -1712,6 +1767,10 @@
             dragon2Id: null,
             dragon1HP: 10,
             dragon2HP: 10,
+            dragon1Shield: 0,
+            dragon2Shield: 0,
+            dragon1ShieldUses: 0,
+            dragon2ShieldUses: 0,
             dragon1Power: null,
             dragon2Power: null
         };
@@ -1740,6 +1799,10 @@
                 dragon2Id: dragon2Id,
                 dragon1HP: 10,
                 dragon2HP: 10,
+                dragon1Shield: 0,
+                dragon2Shield: 0,
+                dragon1ShieldUses: 0,
+                dragon2ShieldUses: 0,
                 dragon1Power: null,
                 dragon2Power: null
             };
@@ -1758,9 +1821,13 @@
             // Display Dragon 2
             displayBattleDragon(dragon2, 2);
 
-            // Initialize health bars at 10 HP
+            // Initialize health bars at 10 HP and reset shields
             updateHealthBar(1, 10);
             updateHealthBar(2, 10);
+            updateShieldDisplay(1, 0);
+            updateShieldDisplay(2, 0);
+            updateShieldUseDisplay(1, 0);
+            updateShieldUseDisplay(2, 0);
 
             // Clear battle log
             document.getElementById('battle-log').innerHTML = '<p style="color: #88CCFF; font-weight: bold;">Battle begins! Select powers for both dragons and click FIGHT!!!!</p>';
@@ -1805,6 +1872,16 @@
                 const option = document.createElement('option');
                 option.value = index;
                 option.textContent = power.name;
+                
+                // Disable shield powers if they've been used 3 times
+                if (power.isShield === true) {
+                    const shieldUses = sideNumber === 1 ? battleState.dragon1ShieldUses : battleState.dragon2ShieldUses;
+                    if (shieldUses >= 3) {
+                        option.disabled = true;
+                        option.textContent = power.name + ' (Used 3/3)';
+                    }
+                }
+                
                 powersDropdown.appendChild(option);
             });
         }
@@ -1838,6 +1915,52 @@
             }
         }
 
+        // Function to update shield display
+        function updateShieldDisplay(sideNumber, shieldValue) {
+            const shieldLabel = document.getElementById('shield' + sideNumber + '-label');
+            const shieldDisplay = document.getElementById('shield' + sideNumber + '-display');
+            
+            if (shieldValue > 0) {
+                shieldLabel.style.display = 'block';
+                shieldDisplay.textContent = shieldValue;
+                
+                // Update battle state
+                if (sideNumber === 1) {
+                    battleState.dragon1Shield = shieldValue;
+                } else {
+                    battleState.dragon2Shield = shieldValue;
+                }
+            } else {
+                shieldLabel.style.display = 'none';
+                shieldDisplay.textContent = '0';
+                
+                // Update battle state
+                if (sideNumber === 1) {
+                    battleState.dragon1Shield = 0;
+                } else {
+                    battleState.dragon2Shield = 0;
+                }
+            }
+        }
+
+        // Function to update shield use count display
+        function updateShieldUseDisplay(sideNumber, shieldUses) {
+            const shieldUseDisplay = document.getElementById('shield' + sideNumber + '-uses-display');
+            if (shieldUseDisplay) {
+                shieldUseDisplay.textContent = shieldUses;
+                
+                // Change color based on uses
+                const shieldUseLabel = shieldUseDisplay.parentElement;
+                if (shieldUses >= 3) {
+                    shieldUseLabel.style.color = '#FF8888'; // Red when maxed out
+                } else if (shieldUses >= 2) {
+                    shieldUseLabel.style.color = '#FFAA88'; // Orange when getting close
+                } else {
+                    shieldUseLabel.style.color = '#AAAAFF'; // Default blue
+                }
+            }
+        }
+
         // Set up power selection listeners
         function setupPowerSelectionListeners() {
             const power1Select = document.getElementById('battle-dragon1-powers');
@@ -1847,7 +1970,16 @@
             power1Select.addEventListener('change', function() {
                 const powerIndex = parseInt(this.value);
                 if (powerIndex >= 0 && battleState.dragon1) {
-                    battleState.dragon1Power = battleState.dragon1.powers[powerIndex];
+                    const selectedPower = battleState.dragon1.powers[powerIndex];
+                    // Check if this is a shield power that has been used 3 times
+                    if (selectedPower.isShield === true && battleState.dragon1ShieldUses >= 3) {
+                        // Reset to empty if trying to select a shield power that's been used 3 times
+                        this.value = '';
+                        battleState.dragon1Power = null;
+                        alert('Shield power has been used 3 times and cannot be used again!');
+                    } else {
+                        battleState.dragon1Power = selectedPower;
+                    }
                 } else {
                     battleState.dragon1Power = null;
                 }
@@ -1857,7 +1989,16 @@
             power2Select.addEventListener('change', function() {
                 const powerIndex = parseInt(this.value);
                 if (powerIndex >= 0 && battleState.dragon2) {
-                    battleState.dragon2Power = battleState.dragon2.powers[powerIndex];
+                    const selectedPower = battleState.dragon2.powers[powerIndex];
+                    // Check if this is a shield power that has been used 3 times
+                    if (selectedPower.isShield === true && battleState.dragon2ShieldUses >= 3) {
+                        // Reset to empty if trying to select a shield power that's been used 3 times
+                        this.value = '';
+                        battleState.dragon2Power = null;
+                        alert('Shield power has been used 3 times and cannot be used again!');
+                    } else {
+                        battleState.dragon2Power = selectedPower;
+                    }
                 } else {
                     battleState.dragon2Power = null;
                 }
@@ -1887,9 +2028,30 @@
             // Disable fight button during battle
             document.getElementById('fight-button').disabled = true;
 
-            // Check if powers are healing powers
-            const isHealing1 = battleState.dragon1Power.isHealing === true;
-            const isHealing2 = battleState.dragon2Power.isHealing === true;
+            // Check if powers are healing or shield powers
+            const isHealing1 = battleState.dragon1Power && battleState.dragon1Power.isHealing === true;
+            const isHealing2 = battleState.dragon2Power && battleState.dragon2Power.isHealing === true;
+            let isShield1 = battleState.dragon1Power && battleState.dragon1Power.isShield === true;
+            let isShield2 = battleState.dragon2Power && battleState.dragon2Power.isShield === true;
+            
+            // Prevent using shield power if it's been used 3 times
+            if (isShield1 && battleState.dragon1ShieldUses >= 3) {
+                battleLog.innerHTML += '<p style="color: #FF4444; font-weight: bold;">' + battleState.dragon1.name + ' cannot use shield power - it has been used 3 times already!</p>';
+                document.getElementById('battle-dragon1-powers').value = '';
+                battleState.dragon1Power = null;
+                checkFightButtonState();
+                document.getElementById('fight-button').disabled = false;
+                return;
+            }
+            
+            if (isShield2 && battleState.dragon2ShieldUses >= 3) {
+                battleLog.innerHTML += '<p style="color: #FF4444; font-weight: bold;">' + battleState.dragon2.name + ' cannot use shield power - it has been used 3 times already!</p>';
+                document.getElementById('battle-dragon2-powers').value = '';
+                battleState.dragon2Power = null;
+                checkFightButtonState();
+                document.getElementById('fight-button').disabled = false;
+                return;
+            }
 
             // Get power values (1-3 random) for each dragon
             const power1 = Math.floor(Math.random() * 3) + 1;
@@ -1932,6 +2094,55 @@
                             logMessage += '<p>' + battleState.dragon1.name + ' is already at full health!</p>';
                         }
                         logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + newHP1 + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                        if (battleState.dragon1Shield > 0 || battleState.dragon2Shield > 0) {
+                            let shieldInfo = '';
+                            if (battleState.dragon1Shield > 0) {
+                                shieldInfo += battleState.dragon1.name + ' (Shield: ' + battleState.dragon1Shield + ')';
+                            }
+                            if (battleState.dragon2Shield > 0) {
+                                if (shieldInfo) shieldInfo += ' | ';
+                                shieldInfo += battleState.dragon2.name + ' (Shield: ' + battleState.dragon2Shield + ')';
+                            }
+                            if (shieldInfo) {
+                                logMessage += '<p style="color: #8888FF;">' + shieldInfo + '</p>';
+                            }
+                        }
+                        
+                        // Update attack summary with result
+                        const attackSummary = document.getElementById('attack-summary');
+                        if (attackSummary) {
+                            attackSummary.innerHTML = logMessage;
+                        }
+                    } else if (isShield1) {
+                        // Dragon 1 is using shield - gain shield points instead of dealing damage
+                        battleState.dragon1Shield += difference;
+                        battleState.dragon1ShieldUses++;
+                        updateShieldDisplay(1, battleState.dragon1Shield);
+                        updateShieldUseDisplay(1, battleState.dragon1ShieldUses);
+                        
+                        // Update dropdown to disable shield power if limit reached
+                        if (battleState.dragon1ShieldUses >= 3) {
+                            const powerDropdown1 = document.getElementById('battle-dragon1-powers');
+                            const currentPowerIndex = battleState.dragon1.powers.indexOf(battleState.dragon1Power);
+                            for (let i = 0; i < powerDropdown1.options.length; i++) {
+                                const optionValue = powerDropdown1.options[i].value;
+                                if (optionValue && parseInt(optionValue) === currentPowerIndex) {
+                                    powerDropdown1.options[i].disabled = true;
+                                    powerDropdown1.options[i].textContent = battleState.dragon1Power.name + ' (Used 3/3)';
+                                    break;
+                                }
+                            }
+                            // Clear selection if this shield power was currently selected
+                            if (powerDropdown1.value && parseInt(powerDropdown1.value) === currentPowerIndex) {
+                                powerDropdown1.value = '';
+                                battleState.dragon1Power = null;
+                                checkFightButtonState();
+                            }
+                        }
+                        
+                        logMessage += '<p class="result-message">' + battleState.dragon1.name + ' wins this round! (' + power1 + ' vs ' + power2 + ')</p>';
+                        logMessage += '<p style="color: #8888FF; font-weight: bold;">' + battleState.dragon1.name + ' gains ' + difference + ' shield points! (Shield: ' + battleState.dragon1Shield + ') [' + battleState.dragon1ShieldUses + '/3 uses]</p>';
+                        logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
                         
                         // Update attack summary with result
                         const attackSummary = document.getElementById('attack-summary');
@@ -1939,13 +2150,40 @@
                             attackSummary.innerHTML = logMessage;
                         }
                     } else {
-                        // Dragon 1 is using damage - deal damage to Dragon 2
-                        const newHP2 = Math.max(0, battleState.dragon2HP - difference);
+                        // Dragon 1 is using damage - deal damage to Dragon 2 (shields block first)
+                        let remainingDamage = difference;
+                        
+                        // Shield blocks damage first
+                        if (battleState.dragon2Shield > 0) {
+                            const shieldBlocked = Math.min(battleState.dragon2Shield, remainingDamage);
+                            battleState.dragon2Shield -= shieldBlocked;
+                            remainingDamage -= shieldBlocked;
+                            updateShieldDisplay(2, battleState.dragon2Shield);
+                            logMessage += '<p style="color: #8888FF;">' + battleState.dragon2.name + '\'s shield blocks ' + shieldBlocked + ' damage!</p>';
+                        }
+                        
+                        // Remaining damage goes to HP
+                        const newHP2 = Math.max(0, battleState.dragon2HP - remainingDamage);
                         updateHealthBar(2, newHP2);
                         
                         logMessage += '<p class="result-message">' + battleState.dragon1.name + ' wins this round! (' + power1 + ' vs ' + power2 + ')</p>';
-                        logMessage += '<p class="damage-message">' + battleState.dragon1.name + ' deals ' + difference + ' damage to ' + battleState.dragon2.name + '!</p>';
+                        if (remainingDamage > 0) {
+                            logMessage += '<p class="damage-message">' + battleState.dragon1.name + ' deals ' + remainingDamage + ' damage to ' + battleState.dragon2.name + '!</p>';
+                        }
                         logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + newHP2 + ' HP</p>';
+                        if (battleState.dragon1Shield > 0 || battleState.dragon2Shield > 0) {
+                            let shieldInfo = '';
+                            if (battleState.dragon1Shield > 0) {
+                                shieldInfo += battleState.dragon1.name + ' (Shield: ' + battleState.dragon1Shield + ')';
+                            }
+                            if (battleState.dragon2Shield > 0) {
+                                if (shieldInfo) shieldInfo += ' | ';
+                                shieldInfo += battleState.dragon2.name + ' (Shield: ' + battleState.dragon2Shield + ')';
+                            }
+                            if (shieldInfo) {
+                                logMessage += '<p style="color: #8888FF;">' + shieldInfo + '</p>';
+                            }
+                        }
                         
                         // Update attack summary with result
                         const attackSummary = document.getElementById('attack-summary');
@@ -1980,6 +2218,68 @@
                             logMessage += '<p>' + battleState.dragon2.name + ' is already at full health!</p>';
                         }
                         logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + newHP2 + ' HP</p>';
+                        if (battleState.dragon1Shield > 0 || battleState.dragon2Shield > 0) {
+                            let shieldInfo = '';
+                            if (battleState.dragon1Shield > 0) {
+                                shieldInfo += battleState.dragon1.name + ' (Shield: ' + battleState.dragon1Shield + ')';
+                            }
+                            if (battleState.dragon2Shield > 0) {
+                                if (shieldInfo) shieldInfo += ' | ';
+                                shieldInfo += battleState.dragon2.name + ' (Shield: ' + battleState.dragon2Shield + ')';
+                            }
+                            if (shieldInfo) {
+                                logMessage += '<p style="color: #8888FF;">' + shieldInfo + '</p>';
+                            }
+                        }
+                        
+                        // Update attack summary with result
+                        const attackSummary = document.getElementById('attack-summary');
+                        if (attackSummary) {
+                            attackSummary.innerHTML = logMessage;
+                        }
+                    } else if (isShield2) {
+                        // Dragon 2 is using shield - gain shield points instead of dealing damage
+                        battleState.dragon2Shield += difference;
+                        battleState.dragon2ShieldUses++;
+                        updateShieldDisplay(2, battleState.dragon2Shield);
+                        updateShieldUseDisplay(2, battleState.dragon2ShieldUses);
+                        
+                        // Update dropdown to disable shield power if limit reached
+                        if (battleState.dragon2ShieldUses >= 3) {
+                            const powerDropdown2 = document.getElementById('battle-dragon2-powers');
+                            const currentPowerIndex = battleState.dragon2.powers.indexOf(battleState.dragon2Power);
+                            for (let i = 0; i < powerDropdown2.options.length; i++) {
+                                const optionValue = powerDropdown2.options[i].value;
+                                if (optionValue && parseInt(optionValue) === currentPowerIndex) {
+                                    powerDropdown2.options[i].disabled = true;
+                                    powerDropdown2.options[i].textContent = battleState.dragon2Power.name + ' (Used 3/3)';
+                                    break;
+                                }
+                            }
+                            // Clear selection if this shield power was currently selected
+                            if (powerDropdown2.value && parseInt(powerDropdown2.value) === currentPowerIndex) {
+                                powerDropdown2.value = '';
+                                battleState.dragon2Power = null;
+                                checkFightButtonState();
+                            }
+                        }
+                        
+                        logMessage += '<p class="result-message">' + battleState.dragon2.name + ' wins this round! (' + power2 + ' vs ' + power1 + ')</p>';
+                        logMessage += '<p style="color: #8888FF; font-weight: bold;">' + battleState.dragon2.name + ' gains ' + difference + ' shield points! (Shield: ' + battleState.dragon2Shield + ') [' + battleState.dragon2ShieldUses + '/3 uses]</p>';
+                        logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                        if (battleState.dragon1Shield > 0 || battleState.dragon2Shield > 0) {
+                            let shieldInfo = '';
+                            if (battleState.dragon1Shield > 0) {
+                                shieldInfo += battleState.dragon1.name + ' (Shield: ' + battleState.dragon1Shield + ')';
+                            }
+                            if (battleState.dragon2Shield > 0) {
+                                if (shieldInfo) shieldInfo += ' | ';
+                                shieldInfo += battleState.dragon2.name + ' (Shield: ' + battleState.dragon2Shield + ')';
+                            }
+                            if (shieldInfo) {
+                                logMessage += '<p style="color: #8888FF;">' + shieldInfo + '</p>';
+                            }
+                        }
                         
                         // Update attack summary with result
                         const attackSummary = document.getElementById('attack-summary');
@@ -1987,13 +2287,40 @@
                             attackSummary.innerHTML = logMessage;
                         }
                     } else {
-                        // Dragon 2 is using damage - deal damage to Dragon 1
-                        const newHP1 = Math.max(0, battleState.dragon1HP - difference);
+                        // Dragon 2 is using damage - deal damage to Dragon 1 (shields block first)
+                        let remainingDamage = difference;
+                        
+                        // Shield blocks damage first
+                        if (battleState.dragon1Shield > 0) {
+                            const shieldBlocked = Math.min(battleState.dragon1Shield, remainingDamage);
+                            battleState.dragon1Shield -= shieldBlocked;
+                            remainingDamage -= shieldBlocked;
+                            updateShieldDisplay(1, battleState.dragon1Shield);
+                            logMessage += '<p style="color: #8888FF;">' + battleState.dragon1.name + '\'s shield blocks ' + shieldBlocked + ' damage!</p>';
+                        }
+                        
+                        // Remaining damage goes to HP
+                        const newHP1 = Math.max(0, battleState.dragon1HP - remainingDamage);
                         updateHealthBar(1, newHP1);
                         
                         logMessage += '<p class="result-message">' + battleState.dragon2.name + ' wins this round! (' + power2 + ' vs ' + power1 + ')</p>';
-                        logMessage += '<p class="damage-message">' + battleState.dragon2.name + ' deals ' + difference + ' damage to ' + battleState.dragon1.name + '!</p>';
+                        if (remainingDamage > 0) {
+                            logMessage += '<p class="damage-message">' + battleState.dragon2.name + ' deals ' + remainingDamage + ' damage to ' + battleState.dragon1.name + '!</p>';
+                        }
                         logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + newHP1 + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                        if (battleState.dragon1Shield > 0 || battleState.dragon2Shield > 0) {
+                            let shieldInfo = '';
+                            if (battleState.dragon1Shield > 0) {
+                                shieldInfo += battleState.dragon1.name + ' (Shield: ' + battleState.dragon1Shield + ')';
+                            }
+                            if (battleState.dragon2Shield > 0) {
+                                if (shieldInfo) shieldInfo += ' | ';
+                                shieldInfo += battleState.dragon2.name + ' (Shield: ' + battleState.dragon2Shield + ')';
+                            }
+                            if (shieldInfo) {
+                                logMessage += '<p style="color: #8888FF;">' + shieldInfo + '</p>';
+                            }
+                        }
                         
                         // Update attack summary with result
                         const attackSummary = document.getElementById('attack-summary');
@@ -2011,10 +2338,23 @@
                         }
                     }
                 } else {
-                    // Draw - no effect, no damage or healing applied
-                    // IMPORTANT: Do NOT call updateHealthBar on draw - HP must remain unchanged
+                    // Draw - no effect, no damage or healing or shields applied
+                    // IMPORTANT: Do NOT call updateHealthBar or updateShieldDisplay on draw - HP and shields must remain unchanged
                     logMessage += '<p class="draw-message">It\'s a draw! Both dragons have equal power (' + power1 + ' vs ' + power2 + '). No effect!</p>';
                     logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                    if (battleState.dragon1Shield > 0 || battleState.dragon2Shield > 0) {
+                        let shieldInfo = '';
+                        if (battleState.dragon1Shield > 0) {
+                            shieldInfo += battleState.dragon1.name + ' (Shield: ' + battleState.dragon1Shield + ')';
+                        }
+                        if (battleState.dragon2Shield > 0) {
+                            if (shieldInfo) shieldInfo += ' | ';
+                            shieldInfo += battleState.dragon2.name + ' (Shield: ' + battleState.dragon2Shield + ')';
+                        }
+                        if (shieldInfo) {
+                            logMessage += '<p style="color: #8888FF;">' + shieldInfo + '</p>';
+                        }
+                    }
                 }
 
                 // Update attack summary with result
@@ -2025,7 +2365,7 @@
 
                 // Add HP log for win/loss cases (draw already has it)
                 if (logMessage.indexOf('draw') === -1) {
-                    // For win/loss, HP is already in logMessage from the win/loss branches
+                    // For win/loss, HP and shields are already in logMessage from the win/loss branches
                     // No need to add again
                 }
                 battleLog.innerHTML += logMessage;
@@ -2205,6 +2545,10 @@
                 dragon2Id: null,
                 dragon1HP: 10,
                 dragon2HP: 10,
+                dragon1Shield: 0,
+                dragon2Shield: 0,
+                dragon1ShieldUses: 0,
+                dragon2ShieldUses: 0,
                 dragon1Power: null,
                 dragon2Power: null
             };
