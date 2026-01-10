@@ -34,7 +34,7 @@ git commit -m "$COMMIT_MSG"
 
 # Push to GitHub
 echo -e "${BLUE}Pushing to GitHub...${NC}"
-git push origin main
+git push origin master
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✓ Successfully deployed!${NC}"
