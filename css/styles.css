@@ -598,3 +598,130 @@ body {
     font-weight: bold;
 }
 
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+    .dragons-container {
+        padding: 10px;
+    }
+
+    .dragon-header {
+        padding: 12px 15px;
+        gap: 10px;
+    }
+
+    .dragon-header h2 {
+        font-size: 18px;
+    }
+
+    .element-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+    }
+
+    .accordion-icon {
+        font-size: 20px;
+    }
+
+    .dragon-body {
+        padding: 15px;
+    }
+
+    .dragon-body.active {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .dragon-body img {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .dragon-content {
+        width: 100%;
+    }
+
+    .dragon-content h3 {
+        font-size: 16px;
+    }
+
+    .dragon-content p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .dragon-content .measurements {
+        font-size: 12px;
+    }
+
+    .dragon-content .element {
+        font-size: 14px;
+    }
+
+    .battle-button-container {
+        padding: 20px 15px;
+    }
+
+    .battle-button {
+        font-size: 20px;
+        padding: 15px 30px;
+        letter-spacing: 2px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .dragons-container {
+        padding: 8px;
+    }
+
+    .dragon-header {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .dragon-header h2 {
+        font-size: 16px;
+    }
+
+    .element-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+
+    .accordion-icon {
+        font-size: 18px;
+    }
+
+    .dragon-body {
+        padding: 12px;
+    }
+
+    .dragon-body.active {
+        gap: 12px;
+    }
+
+    .dragon-content h3 {
+        font-size: 15px;
+    }
+
+    .dragon-content p {
+        font-size: 13px;
+    }
+
+    .dragon-content .measurements {
+        font-size: 11px;
+    }
+
+    .battle-button {
+        font-size: 18px;
+        padding: 12px 20px;
+        letter-spacing: 1px;
+    }
+}
+

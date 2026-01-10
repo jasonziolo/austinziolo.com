@@ -25,6 +25,12 @@
             z-index: -1;
         }
 
+        @media screen and (max-width: 768px) {
+            body {
+                background-attachment: scroll;
+            }
+        }
+
         main {
             position: relative;
             z-index: 1;
@@ -733,6 +739,267 @@
 
         .hp-set-button.hidden {
             display: none;
+        }
+
+        /* Mobile Responsive Styles */
+        @media screen and (max-width: 768px) {
+            /* Ensure minimum touch target sizes */
+            button, select, .battle-button, .back-link {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            .battle-container {
+                padding: 5px;
+                margin: 5px auto;
+            }
+
+            .battle-header h1 {
+                font-size: 24px;
+            }
+
+            .battle-header p {
+                font-size: 14px;
+            }
+
+            .battle-arena {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .battle-side {
+                min-width: 100%;
+            }
+
+            .dragon-selector {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            .selected-dragon {
+                padding: 8px;
+            }
+
+            .selected-dragon img {
+                max-width: 100%;
+            }
+
+            .battle-button {
+                font-size: 16px;
+                padding: 15px 25px;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .active-battle-arena {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .battle-dragon-card {
+                min-width: 100%;
+                padding: 8px;
+            }
+
+            .attack-summary-container {
+                flex: 1;
+                min-width: 100%;
+                order: 2;
+            }
+
+            .active-battle-arena .battle-dragon-card:first-of-type {
+                order: 1;
+            }
+
+            .active-battle-arena .attack-summary-container {
+                order: 2;
+            }
+
+            .active-battle-arena .battle-dragon-card:last-of-type {
+                order: 3;
+            }
+
+            .battle-dragon-image {
+                max-width: 150px;
+            }
+
+            .battle-dragon-name {
+                font-size: 16px;
+            }
+
+            .battle-dragon-element {
+                font-size: 12px;
+            }
+
+            .power-dropdown {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .health-bar-label {
+                font-size: 12px;
+            }
+
+            .health-bar {
+                height: 18px;
+            }
+
+            .health-bar-fill {
+                font-size: 11px;
+            }
+
+            .attack-summary-title {
+                font-size: 16px;
+            }
+
+            .attack-summary {
+                font-size: 12px;
+                min-height: 80px;
+                padding: 8px;
+            }
+
+            .battle-log-container {
+                padding: 8px;
+                margin: 10px 5px;
+            }
+
+            .battle-log-title {
+                font-size: 16px;
+            }
+
+            .battle-log {
+                font-size: 11px;
+                max-height: 100px;
+                padding: 8px;
+            }
+
+            .fight-button {
+                font-size: 18px;
+                padding: 15px 30px;
+                width: 100%;
+                max-width: 300px;
+                letter-spacing: 1px;
+            }
+
+            .fight-button-container {
+                margin: 10px 0;
+            }
+
+            .battle-view-header h1 {
+                font-size: 22px;
+            }
+
+            .hp-control-toggle {
+                top: 5px;
+                right: 5px;
+                flex-direction: column;
+                gap: 5px;
+                font-size: 12px;
+            }
+
+            .hp-control-toggle label {
+                font-size: 12px;
+            }
+
+            .hp-set-button {
+                top: 5px;
+                left: 5px;
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+
+            .new-battle-button {
+                font-size: 14px;
+                padding: 10px 20px;
+                width: 100%;
+                max-width: 200px;
+                margin: 5px 0;
+            }
+
+            .back-link {
+                font-size: 12px;
+                padding: 8px 16px;
+                display: block;
+                margin: 5px auto;
+                width: fit-content;
+            }
+
+            .battle-actions {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .winner-content {
+                padding: 20px;
+                max-width: 90%;
+                margin: 0 10px;
+            }
+
+            .winner-title {
+                font-size: 24px;
+            }
+
+            .winner-message {
+                font-size: 16px;
+            }
+
+            .new-game-button {
+                font-size: 16px;
+                padding: 12px 25px;
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .battle-powers-section h3 {
+                font-size: 14px;
+            }
+
+            .battle-view-header {
+                padding-top: 40px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .battle-header h1 {
+                font-size: 20px;
+            }
+
+            .battle-button {
+                font-size: 14px;
+                padding: 12px 20px;
+            }
+
+            .fight-button {
+                font-size: 16px;
+                padding: 12px 25px;
+            }
+
+            .battle-dragon-image {
+                max-width: 120px;
+            }
+
+            .attack-summary {
+                font-size: 11px;
+                min-height: 70px;
+            }
+
+            .battle-log {
+                font-size: 10px;
+                max-height: 80px;
+            }
+
+            .selected-dragon h3 {
+                font-size: 16px;
+            }
+
+            .selected-dragon h4 {
+                font-size: 14px;
+            }
+
+            .selected-dragon ol {
+                font-size: 11px;
+            }
         }
     </style>
 </head>
