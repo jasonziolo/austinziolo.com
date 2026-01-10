@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Royale - Austin's Dragon Lair</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            background-image: url('images/header.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        .battle-container {
+            max-width: 1400px;
+            margin: 10px auto;
+            padding: 10px;
+        }
+
+        .battle-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .battle-header h1 {
+            color: #FFD700;
+            font-size: 32px;
+            margin: 5px 0;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        .battle-header p {
+            color: #E0E0E0;
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .battle-arena {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .battle-side {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .battle-side h2 {
+            text-align: center;
+            color: #FFD700;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .dragon-selector {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            background-color: #1a1a1a;
+            color: #FFFFFF;
+            border: 2px solid #0080FF;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .dragon-selector:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .selected-dragon {
+            background-color: #1a1a1a;
+            border: 3px solid #0080FF;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .selected-dragon img {
+            width: 100%;
+            max-width: 250px;
+            border: 2px solid #0080FF;
+            border-radius: 8px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        .selected-dragon h3 {
+            color: #FFD700;
+            font-size: 18px;
+            text-align: center;
+            margin: 10px 0 5px 0;
+        }
+
+        .selected-dragon .element {
+            text-align: center;
+            font-size: 14px;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+
+        .selected-dragon h4 {
+            color: #66B3FF;
+            font-size: 16px;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+
+        .selected-dragon ol {
+            color: #E0E0E0;
+            line-height: 1.4;
+            padding-left: 20px;
+            font-size: 12px;
+        }
+
+        .selected-dragon ol li {
+            margin-bottom: 5px;
+        }
+
+        .battle-button-container {
+            text-align: center;
+            margin: 15px 0;
+            background-color: transparent;
+        }
+
+        .battle-button {
+            background-color: #FF4444 !important;
+            color: #FFFFFF !important;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 30px;
+            border: 3px solid #FF6666 !important;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(255, 68, 68, 0.4);
+            opacity: 1 !important;
+        }
+
+        .battle-button:hover {
+            background-color: #DD2222;
+            box-shadow: 0 6px 12px rgba(255, 68, 68, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .battle-button:disabled {
+            background-color: #666666;
+            border-color: #888888;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .back-link-container {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back-link {
+            color: #FFFFFF;
+            font-size: 14px;
+            text-decoration: none;
+            background-color: #66AAFF;
+            border: 2px solid #88CCFF;
+            padding: 8px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(102, 170, 255, 0.4);
+        }
+
+        .back-link:hover {
+            background-color: #4488FF;
+            border-color: #66AAFF;
+            box-shadow: 0 4px 8px rgba(102, 170, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Element-specific colors for selected dragons */
+        .selected-dragon.fire { border-color: #FF4444; }
+        .selected-dragon.fire h3 { color: #FF6666; }
+        .selected-dragon.fire .element { color: #FF6666; }
+        .selected-dragon.fire img { border-color: #FF4444; }
+
+        .selected-dragon.water { border-color: #4488FF; }
+        .selected-dragon.water h3 { color: #66AAFF; }
+        .selected-dragon.water .element { color: #66AAFF; }
+        .selected-dragon.water img { border-color: #4488FF; }
+
+        .selected-dragon.lightning { border-color: #FFDD00; }
+        .selected-dragon.lightning h3 { color: #FFEE44; }
+        .selected-dragon.lightning .element { color: #FFEE44; }
+        .selected-dragon.lightning img { border-color: #FFDD00; }
+
+        .selected-dragon.earth { border-color: #8B6F47; }
+        .selected-dragon.earth h3 { color: #CCAA66; }
+        .selected-dragon.earth .element { color: #CCAA66; }
+        .selected-dragon.earth img { border-color: #8B6F47; }
+
+        .selected-dragon.air { border-color: #88CCFF; }
+        .selected-dragon.air h3 { color: #AAEEFF; }
+        .selected-dragon.air .element { color: #AAEEFF; }
+        .selected-dragon.air img { border-color: #88CCFF; }
+
+        .selected-dragon.ice { border-color: #88EEFF; }
+        .selected-dragon.ice h3 { color: #AAFFFF; }
+        .selected-dragon.ice .element { color: #AAFFFF; }
+        .selected-dragon.ice img { border-color: #88EEFF; }
+
+        .selected-dragon.shadow { border-color: #8844AA; }
+        .selected-dragon.shadow h3 { color: #BB88DD; }
+        .selected-dragon.shadow .element { color: #BB88DD; }
+        .selected-dragon.shadow img { border-color: #8844AA; }
+
+        .selected-dragon.light { border-color: #FFD700; }
+        .selected-dragon.light h3 { color: #FFEE88; }
+        .selected-dragon.light .element { color: #FFEE88; }
+        .selected-dragon.light img { border-color: #FFD700; }
+
+        .selected-dragon.nature { border-color: #44AA44; }
+        .selected-dragon.nature h3 { color: #66DD66; }
+        .selected-dragon.nature .element { color: #66DD66; }
+        .selected-dragon.nature img { border-color: #44AA44; }
+
+        .selected-dragon.metal { border-color: #AAAAAA; }
+        .selected-dragon.metal h3 { color: #DDDDDD; }
+        .selected-dragon.metal .element { color: #DDDDDD; }
+        .selected-dragon.metal img { border-color: #AAAAAA; }
+
+        .selected-dragon.crystal { border-color: #BB66FF; }
+        .selected-dragon.crystal h3 { color: #DD99FF; }
+        .selected-dragon.crystal .element { color: #DD99FF; }
+        .selected-dragon.crystal img { border-color: #BB66FF; }
+
+        .selected-dragon.chaos { border-color: #FF44AA; }
+        .selected-dragon.chaos h3 { color: #FF88DD; }
+        .selected-dragon.chaos .element { color: #FF88DD; }
+        .selected-dragon.chaos img { border-color: #FF44AA; }
+
+        /* Battle View Styles */
+        .selection-area {
+            display: block;
+        }
+
+        .selection-area.hidden {
+            display: none;
+        }
+
+        .battle-view {
+            display: none;
+        }
+
+        .battle-view.active {
+            display: block;
+        }
+
+        .battle-view-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .battle-view-header h1 {
+            color: #FFD700;
+            font-size: 28px;
+            margin: 5px 0;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        .active-battle-arena {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .battle-dragon-card {
+            flex: 1;
+            min-width: 250px;
+            background-color: #1a1a1a;
+            border: 3px solid #0080FF;
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .health-bar-container {
+            margin-bottom: 10px;
+        }
+
+        .health-bar-label {
+            color: #E0E0E0;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .health-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #333333;
+            border: 2px solid #0080FF;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .health-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #44FF44 0%, #22DD22 100%);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .health-bar-fill.low {
+            background: linear-gradient(90deg, #FF4444 0%, #DD2222 100%);
+            color: #FFFFFF;
+        }
+
+        .health-bar-fill.medium {
+            background: linear-gradient(90deg, #FFAA44 0%, #DD8822 100%);
+        }
+
+        .battle-dragon-image {
+            width: 100%;
+            max-width: 200px;
+            margin: 10px auto;
+            display: block;
+            border: 3px solid #0080FF;
+            border-radius: 10px;
+        }
+
+        .battle-dragon-name {
+            color: #FFD700;
+            font-size: 18px;
+            margin: 10px 0 5px 0;
+            text-align: center;
+        }
+
+        .battle-dragon-element {
+            color: #66B3FF;
+            font-size: 14px;
+            margin: 5px 0 10px 0;
+            font-weight: bold;
+        }
+
+        .battle-powers-section {
+            margin-top: 10px;
+        }
+
+        .battle-powers-section h3 {
+            color: #FFD700;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .power-dropdown {
+            width: 100%;
+            padding: 8px;
+            font-size: 12px;
+            background-color: #2a2a2a;
+            color: #FFFFFF;
+            border: 2px solid #0080FF;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .power-dropdown:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .power-dropdown option {
+            background-color: #1a1a1a;
+            color: #FFFFFF;
+        }
+
+        .battle-actions {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .new-battle-button {
+            background-color: #66AAFF;
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 25px;
+            border: 3px solid #88CCFF;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(102, 170, 255, 0.4);
+            margin: 0 10px;
+        }
+
+        .new-battle-button:hover {
+            background-color: #4488FF;
+            box-shadow: 0 6px 12px rgba(102, 170, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Element-specific colors for battle cards */
+        .battle-dragon-card.fire { border-color: #FF4444; }
+        .battle-dragon-card.fire .battle-dragon-name { color: #FF6666; }
+        .battle-dragon-card.fire .battle-dragon-element { color: #FF6666; }
+        .battle-dragon-card.fire .battle-dragon-image { border-color: #FF4444; }
+
+        .battle-dragon-card.water { border-color: #4488FF; }
+        .battle-dragon-card.water .battle-dragon-name { color: #66AAFF; }
+        .battle-dragon-card.water .battle-dragon-element { color: #66AAFF; }
+        .battle-dragon-card.water .battle-dragon-image { border-color: #4488FF; }
+
+        .battle-dragon-card.lightning { border-color: #FFDD00; }
+        .battle-dragon-card.lightning .battle-dragon-name { color: #FFEE44; }
+        .battle-dragon-card.lightning .battle-dragon-element { color: #FFEE44; }
+        .battle-dragon-card.lightning .battle-dragon-image { border-color: #FFDD00; }
+
+        .battle-dragon-card.earth { border-color: #8B6F47; }
+        .battle-dragon-card.earth .battle-dragon-name { color: #CCAA66; }
+        .battle-dragon-card.earth .battle-dragon-element { color: #CCAA66; }
+        .battle-dragon-card.earth .battle-dragon-image { border-color: #8B6F47; }
+
+        .battle-dragon-card.air { border-color: #88CCFF; }
+        .battle-dragon-card.air .battle-dragon-name { color: #AAEEFF; }
+        .battle-dragon-card.air .battle-dragon-element { color: #AAEEFF; }
+        .battle-dragon-card.air .battle-dragon-image { border-color: #88CCFF; }
+
+        .battle-dragon-card.ice { border-color: #88EEFF; }
+        .battle-dragon-card.ice .battle-dragon-name { color: #AAFFFF; }
+        .battle-dragon-card.ice .battle-dragon-element { color: #AAFFFF; }
+        .battle-dragon-card.ice .battle-dragon-image { border-color: #88EEFF; }
+
+        .battle-dragon-card.shadow { border-color: #8844AA; }
+        .battle-dragon-card.shadow .battle-dragon-name { color: #BB88DD; }
+        .battle-dragon-card.shadow .battle-dragon-element { color: #BB88DD; }
+        .battle-dragon-card.shadow .battle-dragon-image { border-color: #8844AA; }
+
+        .battle-dragon-card.light { border-color: #FFD700; }
+        .battle-dragon-card.light .battle-dragon-name { color: #FFEE88; }
+        .battle-dragon-card.light .battle-dragon-element { color: #FFEE88; }
+        .battle-dragon-card.light .battle-dragon-image { border-color: #FFD700; }
+
+        .battle-dragon-card.nature { border-color: #44AA44; }
+        .battle-dragon-card.nature .battle-dragon-name { color: #66DD66; }
+        .battle-dragon-card.nature .battle-dragon-element { color: #66DD66; }
+        .battle-dragon-card.nature .battle-dragon-image { border-color: #44AA44; }
+
+        .battle-dragon-card.metal { border-color: #AAAAAA; }
+        .battle-dragon-card.metal .battle-dragon-name { color: #DDDDDD; }
+        .battle-dragon-card.metal .battle-dragon-element { color: #DDDDDD; }
+        .battle-dragon-card.metal .battle-dragon-image { border-color: #AAAAAA; }
+
+        .battle-dragon-card.crystal { border-color: #BB66FF; }
+        .battle-dragon-card.crystal .battle-dragon-name { color: #DD99FF; }
+        .battle-dragon-card.crystal .battle-dragon-element { color: #DD99FF; }
+        .battle-dragon-card.crystal .battle-dragon-image { border-color: #BB66FF; }
+
+        .battle-dragon-card.chaos { border-color: #FF44AA; }
+        .battle-dragon-card.chaos .battle-dragon-name { color: #FF88DD; }
+        .battle-dragon-card.chaos .battle-dragon-element { color: #FF88DD; }
+        .battle-dragon-card.chaos .battle-dragon-image { border-color: #FF44AA; }
+
+        /* Battle Log Styles */
+        .battle-log-container {
+            margin: 15px auto;
+            max-width: 1200px;
+            background-color: #1a1a1a;
+            border: 3px solid #0080FF;
+            border-radius: 15px;
+            padding: 10px;
+        }
+
+        .battle-log-title {
+            color: #FFD700;
+            font-size: 18px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .battle-log {
+            background-color: #0a0a0a;
+            border: 2px solid #333333;
+            border-radius: 10px;
+            padding: 10px;
+            max-height: 120px;
+            overflow-y: auto;
+            color: #E0E0E0;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .battle-log p {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #0080FF;
+            padding-left: 10px;
+        }
+
+        .battle-log .attack-message {
+            color: #FF6666;
+            font-weight: bold;
+        }
+
+        .battle-log .damage-message {
+            color: #FFAA44;
+        }
+
+        .battle-log .result-message {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .battle-log .draw-message {
+            color: #88CCFF;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        /* Fight Button Styles */
+        .fight-button-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .fight-button {
+            background-color: #FF4444 !important;
+            color: #FFFFFF !important;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 12px 40px;
+            border: 4px solid #FF6666 !important;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 12px rgba(255, 68, 68, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 1 !important;
+        }
+
+        .fight-button:hover:not(:disabled) {
+            background-color: #DD2222;
+            box-shadow: 0 8px 16px rgba(255, 68, 68, 0.8);
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .fight-button:disabled {
+            background-color: #666666;
+            border-color: #888888;
+            cursor: not-allowed;
+            opacity: 0.5;
+            transform: none;
+        }
+
+        /* Winner Screen Styles */
+        .winner-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .winner-screen.hidden {
+            display: none;
+        }
+
+        .winner-content {
+            background-color: #1a1a1a;
+            border: 5px solid #FFD700;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+        }
+
+        .winner-title {
+            color: #FFD700;
+            font-size: 32px;
+            margin: 0 0 10px 0;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        .winner-message {
+            color: #E0E0E0;
+            font-size: 18px;
+            margin: 15px 0 20px 0;
+            line-height: 1.4;
+        }
+
+        .new-game-button {
+            background-color: #44AA44;
+            color: #FFFFFF;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 30px;
+            border: 3px solid #66DD66;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(68, 170, 68, 0.6);
+        }
+
+        .new-game-button:hover {
+            background-color: #338833;
+            box-shadow: 0 6px 12px rgba(68, 170, 68, 0.8);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content Section -->
+    <main>
+        <div class="battle-container">
+            <!-- Selection Area -->
+            <div id="selection-area" class="selection-area">
+                <div class="battle-header">
+                    <h1>BATTLE ROYALE</h1>
+                    <p>Choose two dragons to battle!</p>
+                </div>
+
+                <div class="battle-arena">
+                    <!-- Left Side -->
+                    <div class="battle-side">
+                        <h2>Dragon 1</h2>
+                        <select id="dragon1-select" class="dragon-selector">
+                            <option value="">-- Choose Dragon 1 --</option>
+                            <option value="breezeflight">Breezeflight the Windwhisper</option>
+                            <option value="chaosflare">Chaosflare the Stormbringer</option>
+                            <option value="crystalwing">Crystalwing the Prismkeeper</option>
+                            <option value="earthheart">Earthheart the Stonekeeper</option>
+                            <option value="flamethorn">Flamethorn the Firebringer</option>
+                            <option value="frostbite">Frostbite the Iceweaver</option>
+                            <option value="radiant">Radiant the Sunbeam</option>
+                            <option value="stormwing">Stormwing the Skybreaker</option>
+                            <option value="metalbeak">Metalbeak the Forgeguard</option>
+                            <option value="vineclaw">Vineclaw the Lifegiver</option>
+                            <option value="shadowmaw">Shadowmaw the Nightstalker</option>
+                            <option value="aquaris">Aquaris the Depthcaller</option>
+                        </select>
+                        <div id="dragon1-display"></div>
+                    </div>
+
+                    <!-- Right Side -->
+                    <div class="battle-side">
+                        <h2>Dragon 2</h2>
+                        <select id="dragon2-select" class="dragon-selector">
+                            <option value="">-- Choose Dragon 2 --</option>
+                            <option value="breezeflight">Breezeflight the Windwhisper</option>
+                            <option value="chaosflare">Chaosflare the Stormbringer</option>
+                            <option value="crystalwing">Crystalwing the Prismkeeper</option>
+                            <option value="earthheart">Earthheart the Stonekeeper</option>
+                            <option value="flamethorn">Flamethorn the Firebringer</option>
+                            <option value="frostbite">Frostbite the Iceweaver</option>
+                            <option value="radiant">Radiant the Sunbeam</option>
+                            <option value="stormwing">Stormwing the Skybreaker</option>
+                            <option value="metalbeak">Metalbeak the Forgeguard</option>
+                            <option value="vineclaw">Vineclaw the Lifegiver</option>
+                            <option value="shadowmaw">Shadowmaw the Nightstalker</option>
+                            <option value="aquaris">Aquaris the Depthcaller</option>
+                        </select>
+                        <div id="dragon2-display"></div>
+                    </div>
+                </div>
+
+                <div class="battle-button-container">
+                    <button id="battle-button" class="battle-button" disabled>Start the Battle!</button>
+                </div>
+
+                <div class="back-link-container">
+                    <a href="index.html" class="back-link">← Back to Dragon Lair</a>
+                </div>
+            </div>
+
+            <!-- Battle View (hidden initially) -->
+            <div id="battle-view" class="battle-view">
+                <div class="battle-view-header">
+                    <h1>BATTLE IN PROGRESS</h1>
+                </div>
+
+                <div class="active-battle-arena">
+                    <!-- Dragon 1 Battle Card -->
+                    <div id="battle-dragon1-card" class="battle-dragon-card">
+                        <div class="health-bar-container">
+                            <div class="health-bar-label">Hitpoints: <span id="hp1-display">10</span>/10</div>
+                            <div class="health-bar">
+                                <div id="hp1-bar" class="health-bar-fill" style="width: 100%;">10 HP</div>
+                            </div>
+                        </div>
+                        <img id="battle-dragon1-image" class="battle-dragon-image" src="" alt="" />
+                        <h2 id="battle-dragon1-name" class="battle-dragon-name"></h2>
+                        <p id="battle-dragon1-element" class="battle-dragon-element"></p>
+                        <div class="battle-powers-section">
+                            <h3>Powers</h3>
+                            <select id="battle-dragon1-powers" class="power-dropdown">
+                                <option value="">-- Select a Power --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dragon 2 Battle Card -->
+                    <div id="battle-dragon2-card" class="battle-dragon-card">
+                        <div class="health-bar-container">
+                            <div class="health-bar-label">Hitpoints: <span id="hp2-display">10</span>/10</div>
+                            <div class="health-bar">
+                                <div id="hp2-bar" class="health-bar-fill" style="width: 100%;">10 HP</div>
+                            </div>
+                        </div>
+                        <img id="battle-dragon2-image" class="battle-dragon-image" src="" alt="" />
+                        <h2 id="battle-dragon2-name" class="battle-dragon-name"></h2>
+                        <p id="battle-dragon2-element" class="battle-dragon-element"></p>
+                        <div class="battle-powers-section">
+                            <h3>Powers</h3>
+                            <select id="battle-dragon2-powers" class="power-dropdown">
+                                <option value="">-- Select a Power --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Battle Log -->
+                <div id="battle-log-container" class="battle-log-container">
+                    <h3 class="battle-log-title">Battle Log</h3>
+                    <div id="battle-log" class="battle-log"></div>
+                </div>
+
+                <!-- Fight Button -->
+                <div class="fight-button-container">
+                    <button id="fight-button" class="fight-button" disabled>FIGHT!!!!</button>
+                </div>
+
+                <!-- Winner Screen (hidden initially) -->
+                <div id="winner-screen" class="winner-screen hidden">
+                    <div class="winner-content">
+                        <h1 id="winner-title" class="winner-title"></h1>
+                        <p id="winner-message" class="winner-message"></p>
+                        <button id="new-game-button" class="new-game-button">Start New Game</button>
+                    </div>
+                </div>
+
+                <div class="battle-actions">
+                    <button id="new-battle-button" class="new-battle-button">New Battle</button>
+                    <a href="index.html" class="back-link">← Back to Dragon Lair</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Dragon data with all information
+        const dragonData = {
+            breezeflight: {
+                name: "Breezeflight the Windwhisper",
+                element: "Air",
+                image: "images/breezeflight.jpg",
+                powers: [
+                    { name: "Wind Messenger", description: "Breezeflight can create air currents that carry sounds and messages throughout the entire lair, making him the perfect messenger between dragons and across great distances." },
+                    { name: "Gust Speed", description: "By riding and manipulating air currents, Breezeflight can achieve incredible speeds, becoming a silver-white blur that moves faster than any other dragon." },
+                    { name: "Whisper Network", description: "He can hear and understand the language of the winds, allowing him to listen to conversations carried on air currents from miles away." },
+                    { name: "Gentle Levitation", description: "Breezeflight can create powerful upward air currents that allow him to lift objects, creatures, or even other dragons without causing harm, using the gentlest of breezes." },
+                    { name: "Pollination Wind", description: "By controlling precise air currents, he can spread seeds and pollen across vast distances, helping Vineclaw's gardens flourish throughout the entire lair." }
+                ]
+            },
+            chaosflare: {
+                name: "Chaosflare the Stormbringer",
+                element: "Chaos",
+                image: "images/chaosflare.jpg",
+                powers: [
+                    { name: "Elemental Fusion", description: "Chaosflare can mix elements together, creating new hybrid powers like frozen fire, electric water, or shadowy light that no other dragon can master." },
+                    { name: "Reality Distortion", description: "His very presence bends reality slightly, causing unpredictable color shifts in his scales and making nearby objects behave in strange ways." },
+                    { name: "Chaos Blast", description: "He can unleash bursts of pure chaos energy that scramble elemental powers, temporarily disrupting other dragons' abilities in unexpected ways." },
+                    { name: "Pattern Randomization", description: "Chaosflare can create beautiful, unpredictable patterns of light, energy, and color that defy logic and mesmerize those who watch them." },
+                    { name: "Unpredictable Teleportation", description: "Through chaotic space manipulation, he can instantly appear anywhere in the lair, though the destination is often slightly different from where he intended." }
+                ]
+            },
+            crystalwing: {
+                name: "Crystalwing the Prismkeeper",
+                element: "Crystal",
+                image: "images/crystalwing.jpg",
+                powers: [
+                    { name: "Memory Crystals", description: "Crystalwing can store memories and visions inside crystals she creates, allowing the lair to have a visual history of everything that happens." },
+                    { name: "Prism Light Refraction", description: "Her transparent scales refract light into beautiful rainbow displays, creating stunning visual effects that can illuminate entire chambers." },
+                    { name: "Crystal Growth", description: "She can grow crystals from any surface, creating structures, tools, or decorations that are both beautiful and functional." },
+                    { name: "Vision Projection", description: "By touching one of her memory crystals, Crystalwing can project stored memories as visible images, allowing others to see past events." },
+                    { name: "Prismatic Shield", description: "She can create crystal barriers that refract attacks, splitting incoming energy or projectiles into harmless fragments." }
+                ]
+            },
+            earthheart: {
+                name: "Earthheart the Stonekeeper",
+                element: "Earth",
+                image: "images/earthheart.jpg",
+                powers: [
+                    { name: "Stone Shaping", description: "Earthheart can shape stone with his claws, creating new tunnels and rooms in the lair by simply touching the walls, reshaping the very foundation of the lair." },
+                    { name: "Moss Armor", description: "His scales naturally grow moss and lichen that provide extra protection and allow him to blend seamlessly with stone surfaces." },
+                    { name: "Ground Tremor", description: "By stomping his powerful feet, Earthheart can create controlled tremors that reshape terrain or serve as a warning to other dragons." },
+                    { name: "Earthen Shield", description: "He can raise walls of stone from the ground to protect himself and others, creating instant fortifications when needed." },
+                    { name: "Mineral Sensing", description: "Earthheart can sense valuable minerals and ores deep underground, helping Metalbeak locate the finest materials for forging." }
+                ]
+            },
+            flamethorn: {
+                name: "Flamethorn the Firebringer",
+                element: "Fire",
+                image: "images/flamethorn.jpg",
+                powers: [
+                    { name: "Eternal Flame", description: "Flamethorn can breathe fire that never burns out, creating eternal torches that light up the darkest corners of the lair without ever needing refueling." },
+                    { name: "Ember Creation", description: "His wings create sparks and embers with every beat, leaving trails of glowing embers that can ignite fires or create beautiful light displays." },
+                    { name: "Heat Manipulation", description: "Flamethorn can control the intensity of his flames, from gentle warmth that comforts to scorching blasts that can melt the hardest metals." },
+                    { name: "Forge Fire", description: "He can produce specialized flames perfect for Metalbeak's forge work, creating fires that burn at precise temperatures for metalworking." },
+                    { name: "Fire Shield", description: "Flamethorn can surround himself or others with protective walls of flame that burn enemies while keeping allies safe from the heat." }
+                ]
+            },
+            frostbite: {
+                name: "Frostbite the Iceweaver",
+                element: "Ice",
+                image: "images/frostbite.jpg",
+                powers: [
+                    { name: "Time Freeze", description: "Frostbite can freeze time in small areas, creating frozen moments that she can examine and then release, perfect for protecting treasures or preventing disasters." },
+                    { name: "Ice Sculpture", description: "Her breath creates beautiful ice sculptures that capture moments in time, forming intricate frozen artworks that never melt." },
+                    { name: "Permafrost Breath", description: "Frostbite can breathe ice so cold that it creates permanent ice formations, even in the presence of heat, protecting important areas." },
+                    { name: "Crystalline Shield", description: "She can create walls of ice that are harder than diamond, providing protection that reflects and refracts attacks." },
+                    { name: "Flash Freeze", description: "Frostbite can instantly freeze water, objects, or even small areas of space, preserving them in perfect condition for eternity." }
+                ]
+            },
+            radiant: {
+                name: "Radiant the Sunbeam",
+                element: "Light",
+                image: "images/radiant.jpg",
+                powers: [
+                    { name: "Solid Light Constructs", description: "Radiant can create solid light constructs - bridges, stairs, and walls made entirely of pure light that last for hours, building structures of pure radiance." },
+                    { name: "Prismatic Wings", description: "Her wings create beautiful rainbow displays when they catch the light, producing prismatic effects that can dazzle and inspire." },
+                    { name: "Guiding Light", description: "Radiant can create beams of light that guide others through darkness, leading them safely to their destination." },
+                    { name: "Solar Growth", description: "She can focus her light to accelerate plant growth, helping Vineclaw's gardens flourish with enhanced photosynthesis." },
+                    { name: "Light Healing", description: "Radiant's warm, golden light has gentle healing properties that can soothe wounds and restore energy to those who bask in her radiance." }
+                ]
+            },
+            stormwing: {
+                name: "Stormwing the Skybreaker",
+                element: "Lightning",
+                image: "images/stormwing.jpg",
+                powers: [
+                    { name: "Electrical Grid", description: "Stormwing can channel lightning through his wings to power crystals throughout the lair, creating a natural electrical grid that provides energy to all." },
+                    { name: "Lightning Strike", description: "He can call down bolts of lightning from the sky, directing them with precision to strike targets from great distances." },
+                    { name: "Thunder Clap", description: "Stormwing can create thunderous booms that shake the very foundations of the lair, serving as warnings or displays of power." },
+                    { name: "Electric Conductivity", description: "His scales can store and channel electricity, allowing him to power devices or create electrical weapons on demand." },
+                    { name: "Storm Summoning", description: "Stormwing can create localized storms around himself, generating powerful winds, lightning, and thunder that protect and defend." }
+                ]
+            },
+            metalbeak: {
+                name: "Metalbeak the Forgeguard",
+                element: "Metal",
+                image: "images/metalbeak.jpg",
+                powers: [
+                    { name: "Metal Shaping", description: "Metalbeak can reshape metal with his heat alone, crafting weapons and tools without ever needing a forge or hammer, molding metal with just his touch." },
+                    { name: "Unbreakable Claws", description: "His claws can cut through any material, from the hardest stone to the most resilient crystal, making him the lair's ultimate craftsman." },
+                    { name: "Bell Resonance", description: "His steel-gray scales ring like bells when struck, creating beautiful musical tones that can be used for communication or celebration." },
+                    { name: "Alloy Creation", description: "Metalbeak can combine different metals using his body heat, creating new alloys with unique properties never seen before." },
+                    { name: "Metal Sensing", description: "He can detect and locate metal ores and deposits deep underground, working with Earthheart to mine the finest materials for forging." }
+                ]
+            },
+            vineclaw: {
+                name: "Vineclaw the Lifegiver",
+                element: "Nature",
+                image: "images/vineclaw.jpg",
+                powers: [
+                    { name: "Living Gardens", description: "Vineclaw can create living gardens anywhere in the lair, growing food-bearing plants that never need water or sunlight, providing sustenance for all." },
+                    { name: "Instant Growth", description: "Her claws can instantly grow plants from any surface, creating vines, flowers, or trees in seconds wherever she touches." },
+                    { name: "Moss Armor", description: "Her scales are covered in living moss and flowers that provide natural camouflage and allow her to blend with any garden environment." },
+                    { name: "Healing Pollen", description: "Vineclaw can release pollen from her flowers that has gentle healing properties, restoring energy and soothing wounds." },
+                    { name: "Seed Spreading", description: "She can create and scatter seeds that grow into any plant she imagines, populating barren areas with lush vegetation in moments." }
+                ]
+            },
+            shadowmaw: {
+                name: "Shadowmaw the Nightstalker",
+                element: "Shadow",
+                image: "images/shadowmaw.jpg",
+                powers: [
+                    { name: "Shadow Meld", description: "Shadowmaw can merge with shadows to become completely invisible, allowing him to move undetected through even the brightest areas." },
+                    { name: "Absolute Darkness", description: "He can create darkness so deep that even dragon fire cannot penetrate it, forming impenetrable shadow barriers." },
+                    { name: "Shadow Teleportation", description: "By traveling through shadows, Shadowmaw can instantly move from one shadowed area to another anywhere in the lair." },
+                    { name: "Light Absorption", description: "His scales absorb light around him, creating pockets of darkness that make nearby areas dimmer and more shadowy." },
+                    { name: "Shadow Form", description: "Shadowmaw can transform parts of his body into pure shadow, allowing him to pass through small spaces or become intangible." }
+                ]
+            },
+            aquaris: {
+                name: "Aquaris the Depthcaller",
+                element: "Water",
+                image: "images/aquaris.jpg",
+                powers: [
+                    { name: "Gravity-Defying Water", description: "Aquaris can breathe water that flows upward, creating waterfalls that defy gravity and fill the lair's pools from below." },
+                    { name: "Whirlpool Tail", description: "Her tail can create powerful whirlpools with a single flick, capable of controlling water flow or creating defensive water barriers." },
+                    { name: "Healing Waters", description: "Aquaris's water has gentle healing properties, restoring energy and soothing wounds when dragons bathe in her pools." },
+                    { name: "Water Breathing", description: "She can create bubbles of breathable water, allowing other dragons to breathe underwater or survive in flooded areas." },
+                    { name: "Current Control", description: "Aquaris can manipulate water currents with precision, creating flowing streams for transportation or powerful jets for defense." }
+                ]
+            }
+        };
+
+        // Function to display selected dragon
+        function displayDragon(dragonId, sideNumber) {
+            const displayDiv = document.getElementById('dragon' + sideNumber + '-display');
+            const dragon = dragonData[dragonId];
+            
+            if (!dragon) {
+                displayDiv.innerHTML = '';
+                return;
+            }
+
+            let powersHTML = '<h4>Powers</h4><ol>';
+            dragon.powers.forEach(function(power) {
+                powersHTML += '<li><strong>' + power.name + ':</strong> ' + power.description + '</li>';
+            });
+            powersHTML += '</ol>';
+
+            // Get element class for proper styling
+            const elementClass = getElementClass(dragon.element);
+            
+            displayDiv.innerHTML = `
+                <div class="selected-dragon ${elementClass}">
+                    <img src="${dragon.image}" alt="${dragon.name}" />
+                    <h3>${dragon.name}</h3>
+                    <p class="element">Element: ${dragon.element}</p>
+                    ${powersHTML}
+                </div>
+            `;
+        }
+
+        // Function to get element class name
+        function getElementClass(element) {
+            const elementMap = {
+                'fire': 'fire',
+                'water': 'water',
+                'lightning': 'lightning',
+                'earth': 'earth',
+                'air': 'air',
+                'ice': 'ice',
+                'shadow': 'shadow',
+                'light': 'light',
+                'nature': 'nature',
+                'metal': 'metal',
+                'crystal': 'crystal',
+                'chaos': 'chaos'
+            };
+            return elementMap[element.toLowerCase()] || '';
+        }
+
+        // Function to update dropdowns to prevent duplicate selection
+        function updateDropdowns() {
+            const dragon1Select = document.getElementById('dragon1-select');
+            const dragon2Select = document.getElementById('dragon2-select');
+            const selected1 = dragon1Select.value;
+            const selected2 = dragon2Select.value;
+
+            // Reset all options availability
+            for (let i = 0; i < dragon1Select.options.length; i++) {
+                dragon1Select.options[i].disabled = false;
+            }
+            for (let i = 0; i < dragon2Select.options.length; i++) {
+                dragon2Select.options[i].disabled = false;
+            }
+
+            // Disable selected dragon in opposite dropdown
+            if (selected1 && selected1 !== '') {
+                for (let i = 0; i < dragon2Select.options.length; i++) {
+                    if (dragon2Select.options[i].value === selected1) {
+                        dragon2Select.options[i].disabled = true;
+                    }
+                }
+            }
+            if (selected2 && selected2 !== '') {
+                for (let i = 0; i < dragon1Select.options.length; i++) {
+                    if (dragon1Select.options[i].value === selected2) {
+                        dragon1Select.options[i].disabled = true;
+                    }
+                }
+            }
+
+            // Enable/disable battle button
+            const battleButton = document.getElementById('battle-button');
+            if (selected1 && selected1 !== '' && selected2 && selected2 !== '' && selected1 !== selected2) {
+                battleButton.disabled = false;
+            } else {
+                battleButton.disabled = true;
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const dragon1Select = document.getElementById('dragon1-select');
+            const dragon2Select = document.getElementById('dragon2-select');
+            const battleButton = document.getElementById('battle-button');
+
+            // Dragon 1 selection
+            dragon1Select.addEventListener('change', function() {
+                const selected = this.value;
+                const otherSelected = dragon2Select.value;
+                
+                // If selecting the same dragon as the other side, clear the other side
+                if (selected && selected === otherSelected) {
+                    dragon2Select.value = '';
+                    document.getElementById('dragon2-display').innerHTML = '';
+                }
+                
+                if (selected) {
+                    displayDragon(selected, 1);
+                } else {
+                    document.getElementById('dragon1-display').innerHTML = '';
+                }
+                updateDropdowns();
+            });
+
+            // Dragon 2 selection
+            dragon2Select.addEventListener('change', function() {
+                const selected = this.value;
+                const otherSelected = dragon1Select.value;
+                
+                // If selecting the same dragon as the other side, clear the other side
+                if (selected && selected === otherSelected) {
+                    dragon1Select.value = '';
+                    document.getElementById('dragon1-display').innerHTML = '';
+                }
+                
+                if (selected) {
+                    displayDragon(selected, 2);
+                } else {
+                    document.getElementById('dragon2-display').innerHTML = '';
+                }
+                updateDropdowns();
+            });
+
+            // Battle button
+            battleButton.addEventListener('click', function() {
+                startBattle();
+            });
+
+            // New Battle button
+            const newBattleButton = document.getElementById('new-battle-button');
+            if (newBattleButton) {
+                newBattleButton.addEventListener('click', function() {
+                    resetBattle();
+                });
+            }
+        });
+
+        // Store battle state
+        let battleState = {
+            dragon1: null,
+            dragon2: null,
+            dragon1Id: null,
+            dragon2Id: null,
+            dragon1HP: 10,
+            dragon2HP: 10,
+            dragon1Power: null,
+            dragon2Power: null
+        };
+
+        // Function to start the battle
+        function startBattle() {
+            const dragon1Id = document.getElementById('dragon1-select').value;
+            const dragon2Id = document.getElementById('dragon2-select').value;
+
+            if (!dragon1Id || !dragon2Id || dragon1Id === dragon2Id) {
+                return;
+            }
+
+            const dragon1 = dragonData[dragon1Id];
+            const dragon2 = dragonData[dragon2Id];
+
+            if (!dragon1 || !dragon2) {
+                return;
+            }
+
+            // Reset battle state
+            battleState = {
+                dragon1: dragon1,
+                dragon2: dragon2,
+                dragon1Id: dragon1Id,
+                dragon2Id: dragon2Id,
+                dragon1HP: 10,
+                dragon2HP: 10,
+                dragon1Power: null,
+                dragon2Power: null
+            };
+
+            // Hide selection area and winner screen
+            document.getElementById('selection-area').classList.add('hidden');
+            document.getElementById('winner-screen').classList.add('hidden');
+            
+            // Show battle view
+            const battleView = document.getElementById('battle-view');
+            battleView.classList.add('active');
+
+            // Display Dragon 1
+            displayBattleDragon(dragon1, 1);
+            
+            // Display Dragon 2
+            displayBattleDragon(dragon2, 2);
+
+            // Initialize health bars at 10 HP
+            updateHealthBar(1, 10);
+            updateHealthBar(2, 10);
+
+            // Clear battle log
+            document.getElementById('battle-log').innerHTML = '<p style="color: #88CCFF; font-weight: bold;">Battle begins! Select powers for both dragons and click FIGHT!!!!</p>';
+
+            // Reset fight button
+            const fightButton = document.getElementById('fight-button');
+            fightButton.disabled = true;
+
+            // Set up power selection listeners
+            setupPowerSelectionListeners();
+        }
+
+        // Function to display dragon in battle view
+        function displayBattleDragon(dragon, sideNumber) {
+            const elementClass = getElementClass(dragon.element);
+            
+            // Update dragon card
+            const card = document.getElementById('battle-dragon' + sideNumber + '-card');
+            card.className = 'battle-dragon-card ' + elementClass;
+            
+            // Update image
+            document.getElementById('battle-dragon' + sideNumber + '-image').src = dragon.image;
+            document.getElementById('battle-dragon' + sideNumber + '-image').alt = dragon.name;
+            
+            // Update name
+            document.getElementById('battle-dragon' + sideNumber + '-name').textContent = dragon.name;
+            
+            // Update element
+            document.getElementById('battle-dragon' + sideNumber + '-element').textContent = 'Element: ' + dragon.element;
+            
+            // Populate powers dropdown
+            const powersDropdown = document.getElementById('battle-dragon' + sideNumber + '-powers');
+            powersDropdown.innerHTML = '<option value="">-- Select a Power --</option>';
+            
+            dragon.powers.forEach(function(power, index) {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = power.name;
+                powersDropdown.appendChild(option);
+            });
+        }
+
+        // Function to update health bar
+        function updateHealthBar(sideNumber, currentHP) {
+            const maxHP = 10;
+            const percentage = Math.max(0, (currentHP / maxHP) * 100);
+            
+            // Update display
+            document.getElementById('hp' + sideNumber + '-display').textContent = Math.max(0, currentHP);
+            
+            // Update health bar
+            const healthBar = document.getElementById('hp' + sideNumber + '-bar');
+            healthBar.style.width = percentage + '%';
+            healthBar.textContent = Math.max(0, currentHP) + ' HP';
+            
+            // Update color based on health
+            healthBar.className = 'health-bar-fill';
+            if (percentage <= 33) {
+                healthBar.classList.add('low');
+            } else if (percentage <= 66) {
+                healthBar.classList.add('medium');
+            }
+
+            // Update battle state
+            if (sideNumber === 1) {
+                battleState.dragon1HP = Math.max(0, currentHP);
+            } else {
+                battleState.dragon2HP = Math.max(0, currentHP);
+            }
+        }
+
+        // Set up power selection listeners
+        function setupPowerSelectionListeners() {
+            const power1Select = document.getElementById('battle-dragon1-powers');
+            const power2Select = document.getElementById('battle-dragon2-powers');
+            const fightButton = document.getElementById('fight-button');
+
+            power1Select.addEventListener('change', function() {
+                const powerIndex = parseInt(this.value);
+                if (powerIndex >= 0 && battleState.dragon1) {
+                    battleState.dragon1Power = battleState.dragon1.powers[powerIndex];
+                } else {
+                    battleState.dragon1Power = null;
+                }
+                checkFightButtonState();
+            });
+
+            power2Select.addEventListener('change', function() {
+                const powerIndex = parseInt(this.value);
+                if (powerIndex >= 0 && battleState.dragon2) {
+                    battleState.dragon2Power = battleState.dragon2.powers[powerIndex];
+                } else {
+                    battleState.dragon2Power = null;
+                }
+                checkFightButtonState();
+            });
+
+            fightButton.addEventListener('click', function() {
+                executeBattle();
+            });
+        }
+
+        // Check if fight button should be enabled
+        function checkFightButtonState() {
+            const fightButton = document.getElementById('fight-button');
+            if (battleState.dragon1Power && battleState.dragon2Power) {
+                fightButton.disabled = false;
+            } else {
+                fightButton.disabled = true;
+            }
+        }
+
+        // Execute the battle
+        function executeBattle() {
+            const battleLog = document.getElementById('battle-log');
+            battleLog.innerHTML = '';
+
+            // Disable fight button during battle
+            document.getElementById('fight-button').disabled = true;
+
+            // Get damage values (1-3 random) for each dragon
+            const damage1 = Math.floor(Math.random() * 3) + 1;
+            const damage2 = Math.floor(Math.random() * 3) + 1;
+
+            // Both dragons use their powers
+            let logMessage = '<p class="attack-message">' + battleState.dragon1.name + ' uses ' + battleState.dragon1Power.name + '!</p>';
+            logMessage += '<p>' + createBattleMessage(battleState.dragon1.name, battleState.dragon1Power) + ' (Power: ' + damage1 + ')</p>';
+            logMessage += '<p class="attack-message">' + battleState.dragon2.name + ' uses ' + battleState.dragon2Power.name + '!</p>';
+            logMessage += '<p>' + createBattleMessage(battleState.dragon2.name, battleState.dragon2Power) + ' (Power: ' + damage2 + ')</p>';
+            
+            battleLog.innerHTML += logMessage;
+
+            // Compare damage values - only the dragon with higher damage deals damage
+            setTimeout(function() {
+                if (damage1 > damage2) {
+                    // Dragon 1 wins - deals damage to Dragon 2
+                    const damageDealt = damage1 - damage2;
+                    const newHP2 = battleState.dragon2HP - damageDealt;
+                    updateHealthBar(2, newHP2);
+                    
+                    logMessage = '<p class="result-message">' + battleState.dragon1.name + ' wins this round! (' + damage1 + ' vs ' + damage2 + ')</p>';
+                    logMessage += '<p class="damage-message">' + battleState.dragon1.name + ' deals ' + damageDealt + ' damage to ' + battleState.dragon2.name + '!</p>';
+                    logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                    
+                    battleLog.innerHTML += logMessage;
+
+                    // Check if battle is over
+                    if (battleState.dragon2HP <= 0) {
+                        setTimeout(function() {
+                            showWinner();
+                        }, 1500);
+                        return;
+                    }
+                } else if (damage2 > damage1) {
+                    // Dragon 2 wins - deals damage to Dragon 1
+                    const damageDealt = damage2 - damage1;
+                    const newHP1 = battleState.dragon1HP - damageDealt;
+                    updateHealthBar(1, newHP1);
+                    
+                    logMessage = '<p class="result-message">' + battleState.dragon2.name + ' wins this round! (' + damage2 + ' vs ' + damage1 + ')</p>';
+                    logMessage += '<p class="damage-message">' + battleState.dragon2.name + ' deals ' + damageDealt + ' damage to ' + battleState.dragon1.name + '!</p>';
+                    logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                    
+                    battleLog.innerHTML += logMessage;
+
+                    // Check if battle is over
+                    if (battleState.dragon1HP <= 0) {
+                        setTimeout(function() {
+                            showWinner();
+                        }, 1500);
+                        return;
+                    }
+                } else {
+                    // Draw - no damage dealt
+                    logMessage = '<p class="draw-message">It\'s a draw! Both dragons have equal power (' + damage1 + ' vs ' + damage2 + '). No damage dealt!</p>';
+                    logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                    battleLog.innerHTML += logMessage;
+                }
+
+                // Reset for next round
+                setTimeout(function() {
+                    battleState.dragon1Power = null;
+                    battleState.dragon2Power = null;
+                    document.getElementById('battle-dragon1-powers').value = '';
+                    document.getElementById('battle-dragon2-powers').value = '';
+                    checkFightButtonState();
+                    battleLog.innerHTML += '<p style="color: #88CCFF; font-weight: bold; margin-top: 10px;">Select new powers for the next round!</p>';
+                }, 2000);
+            }, 1500);
+        }
+
+        // Create battle message from power description
+        function createBattleMessage(dragonName, power) {
+            const description = power.description;
+            // Extract the action part (usually the first sentence before the dragon name reference)
+            // Remove the dragon name and make it about the action
+            let action = description;
+            
+            // Try to extract a meaningful action verb from the description
+            // Look for patterns like "can create", "can breathe", etc.
+            const actionPatterns = [
+                /can (create|breathe|channel|shape|merge|freeze|grow|mix|unleash|store|absorb|transform|summon|focus|surround|lift|spread|hear|detect|combine|release|scatter|travel|call|ring|stomp|raise|sense|produce|surround|manipulate|call down|create localized)/i,
+                /(creates|breathes|channels|shapes|merges|freezes|grows|mixes|unleashes|stores|absorbs|transforms|summons|focuses|surrounds|lifts|spreads|hears|detects|combines|releases|scatters|travels|calls|rings|stomps|raises|senses|produces|manipulates)/i
+            ];
+            
+            for (let pattern of actionPatterns) {
+                const match = description.match(pattern);
+                if (match) {
+                    action = match[0];
+                    break;
+                }
+            }
+            
+            return dragonName + ' ' + action + '!';
+        }
+
+        // Determine winner and apply results
+        function determineWinner() {
+            const battleLog = document.getElementById('battle-log');
+            let logMessage = '';
+
+            if (battleState.dragon1HP > battleState.dragon2HP) {
+                // Dragon 1 wins - apply difference damage to Dragon 2
+                const difference = battleState.dragon1HP - battleState.dragon2HP;
+                const newHP2 = battleState.dragon2HP - difference;
+                updateHealthBar(2, newHP2);
+                
+                logMessage += '<p class="result-message">' + battleState.dragon1.name + ' wins this round!</p>';
+                logMessage += '<p class="damage-message">' + battleState.dragon2.name + ' takes ' + difference + ' additional damage from the loss!</p>';
+                logMessage += '<p>Final HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                
+                battleLog.innerHTML += logMessage;
+
+                // Check if battle is over
+                if (battleState.dragon2HP <= 0) {
+                    setTimeout(function() {
+                        showWinner();
+                    }, 1500);
+                } else {
+                    // Reset for next round
+                    setTimeout(function() {
+                        battleState.dragon1Power = null;
+                        battleState.dragon2Power = null;
+                        document.getElementById('battle-dragon1-powers').value = '';
+                        document.getElementById('battle-dragon2-powers').value = '';
+                        checkFightButtonState();
+                        battleLog.innerHTML += '<p style="color: #88CCFF; margin-top: 20px; font-weight: bold;">Select new powers for the next round!</p>';
+                    }, 1500);
+                }
+            } else if (battleState.dragon2HP > battleState.dragon1HP) {
+                // Dragon 2 wins - apply difference damage to Dragon 1
+                const difference = battleState.dragon2HP - battleState.dragon1HP;
+                const newHP1 = battleState.dragon1HP - difference;
+                updateHealthBar(1, newHP1);
+                
+                logMessage += '<p class="result-message">' + battleState.dragon2.name + ' wins this round!</p>';
+                logMessage += '<p class="damage-message">' + battleState.dragon1.name + ' takes ' + difference + ' additional damage from the loss!</p>';
+                logMessage += '<p>Final HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                
+                battleLog.innerHTML += logMessage;
+
+                // Check if battle is over
+                if (battleState.dragon1HP <= 0) {
+                    setTimeout(function() {
+                        showWinner();
+                    }, 1500);
+                } else {
+                    // Reset for next round
+                    setTimeout(function() {
+                        battleState.dragon1Power = null;
+                        battleState.dragon2Power = null;
+                        document.getElementById('battle-dragon1-powers').value = '';
+                        document.getElementById('battle-dragon2-powers').value = '';
+                        checkFightButtonState();
+                        battleLog.innerHTML += '<p style="color: #88CCFF; margin-top: 20px; font-weight: bold;">Select new powers for the next round!</p>';
+                    }, 1500);
+                }
+            } else {
+                // Draw
+                logMessage += '<p class="draw-message">It\'s a draw! Both dragons remain standing with equal hitpoints.</p>';
+                logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                
+                battleLog.innerHTML += logMessage;
+                
+                // Reset for next round
+                setTimeout(function() {
+                    battleState.dragon1Power = null;
+                    battleState.dragon2Power = null;
+                    document.getElementById('battle-dragon1-powers').value = '';
+                    document.getElementById('battle-dragon2-powers').value = '';
+                    checkFightButtonState();
+                    battleLog.innerHTML += '<p style="color: #88CCFF; margin-top: 20px; font-weight: bold;">Select new powers for the next round!</p>';
+                }, 1500);
+            }
+        }
+
+        // Show winner screen
+        function showWinner() {
+            const winnerScreen = document.getElementById('winner-screen');
+            const winnerTitle = document.getElementById('winner-title');
+            const winnerMessage = document.getElementById('winner-message');
+
+            let winner = null;
+            if (battleState.dragon1HP > battleState.dragon2HP) {
+                winner = battleState.dragon1;
+            } else if (battleState.dragon2HP > battleState.dragon1HP) {
+                winner = battleState.dragon2;
+            } else {
+                winner = null; // Draw
+            }
+
+            if (winner) {
+                winnerTitle.textContent = 'WINNER!';
+                winnerMessage.textContent = winner.name + ' is victorious!';
+            } else {
+                winnerTitle.textContent = 'DRAW!';
+                winnerMessage.textContent = 'Both dragons fought valiantly, but neither could claim victory!';
+            }
+
+            winnerScreen.classList.remove('hidden');
+
+            // Set up new game button
+            const newGameButton = document.getElementById('new-game-button');
+            newGameButton.onclick = function() {
+                resetBattle();
+            };
+        }
+
+        // Function to reset battle and show selection area
+        function resetBattle() {
+            // Hide battle view and winner screen
+            document.getElementById('battle-view').classList.remove('active');
+            document.getElementById('winner-screen').classList.add('hidden');
+            
+            // Show selection area
+            document.getElementById('selection-area').classList.remove('hidden');
+            
+            // Reset selections
+            document.getElementById('dragon1-select').value = '';
+            document.getElementById('dragon2-select').value = '';
+            document.getElementById('dragon1-display').innerHTML = '';
+            document.getElementById('dragon2-display').innerHTML = '';
+            
+            // Reset battle state
+            battleState = {
+                dragon1: null,
+                dragon2: null,
+                dragon1Id: null,
+                dragon2Id: null,
+                dragon1HP: 10,
+                dragon2HP: 10,
+                dragon1Power: null,
+                dragon2Power: null
+            };
+            
+            // Update dropdowns
+            updateDropdowns();
+        }
+    </script>
+</body>
+</html>
