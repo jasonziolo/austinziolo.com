@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Single Player - Austin's Dragon Lair</title>
-    <!-- Updated: 2025-01-10 with bot functionality -->
+    <title>Battle Royale - Austin's Dragon Lair</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
         body {
@@ -556,23 +555,6 @@
         .power-dropdown option {
             background-color: #1a1a1a;
             color: #FFFFFF;
-        }
-
-        .bot-power-text {
-            width: 100%;
-            padding: 8px;
-            font-size: 12px;
-            background-color: #2a2a2a;
-            color: #FFFFFF;
-            border: 2px solid #0080FF;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            text-align: center;
-            font-weight: bold;
-            min-height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .battle-actions {
@@ -1341,16 +1323,16 @@
             <!-- Selection Area -->
             <div id="selection-area" class="selection-area">
                 <div class="battle-header">
-                    <h1>SINGLE PLAYER</h1>
-                    <p>Choose your dragon to battle against a bot!</p>
+                    <h1>BATTLE ROYALE</h1>
+                    <p>Choose two dragons to battle!</p>
                 </div>
 
                 <div class="battle-arena">
-                    <!-- Player Dragon Selection -->
+                    <!-- Left Side -->
                     <div class="battle-side">
-                        <h2>Your Dragon</h2>
+                        <h2>Dragon 1</h2>
                         <select id="dragon1-select" class="dragon-selector">
-                            <option value="">-- Choose Your Dragon --</option>
+                            <option value="">-- Choose Dragon 1 --</option>
                             <option value="breezeflight">Breezeflight the Windwhisper</option>
                             <option value="chaosflare">Chaosflare the Stormbringer</option>
                             <option value="crystalwing">Crystalwing the Prismkeeper</option>
@@ -1366,10 +1348,32 @@
                         </select>
                         <div id="dragon1-display"></div>
                     </div>
+
+                    <!-- Right Side -->
+                    <div class="battle-side">
+                        <h2>Dragon 2</h2>
+                        <select id="dragon2-select" class="dragon-selector">
+                            <option value="">-- Choose Dragon 2 --</option>
+                            <option value="breezeflight">Breezeflight the Windwhisper</option>
+                            <option value="chaosflare">Chaosflare the Stormbringer</option>
+                            <option value="crystalwing">Crystalwing the Prismkeeper</option>
+                            <option value="earthheart">Earthheart the Stonekeeper</option>
+                            <option value="flamethorn">Flamethorn the Firebringer</option>
+                            <option value="frostbite">Frostbite the Iceweaver</option>
+                            <option value="radiant">Radiant the Sunbeam</option>
+                            <option value="stormwing">Stormwing the Skybreaker</option>
+                            <option value="metalbeak">Metalbeak the Forgeguard</option>
+                            <option value="vineclaw">Vineclaw the Lifegiver</option>
+                            <option value="shadowmaw">Shadowmaw the Nightstalker</option>
+                            <option value="aquaris">Aquaris the Depthcaller</option>
+                        </select>
+                        <div id="dragon2-display"></div>
+                    </div>
                 </div>
 
                 <div class="battle-button-container">
-                    <button id="battle-button" class="battle-button" disabled>Start Single Player</button>
+                    <button id="battle-button" class="battle-button" disabled>Start the Battle!</button>
+                    <a href="singleplayer.html" class="single-player-button">Single Player</a>
                 </div>
 
                 <div class="back-link-container">
@@ -1435,8 +1439,10 @@
                         <h2 id="battle-dragon2-name" class="battle-dragon-name"></h2>
                         <p id="battle-dragon2-element" class="battle-dragon-element"></p>
                         <div class="battle-powers-section">
-                            <h3>Power (Bot)</h3>
-                            <div id="battle-dragon2-powers" class="bot-power-text">-- Bot will select power --</div>
+                            <h3>Powers</h3>
+                            <select id="battle-dragon2-powers" class="power-dropdown">
+                                <option value="">-- Select a Power --</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -1690,13 +1696,40 @@
             return elementMap[element.toLowerCase()] || '';
         }
 
-        // Function to enable/disable battle button
-        function updateBattleButton() {
+        // Function to update dropdowns to prevent duplicate selection
+        function updateDropdowns() {
             const dragon1Select = document.getElementById('dragon1-select');
+            const dragon2Select = document.getElementById('dragon2-select');
             const selected1 = dragon1Select.value;
-            const battleButton = document.getElementById('battle-button');
-            
+            const selected2 = dragon2Select.value;
+
+            // Reset all options availability
+            for (let i = 0; i < dragon1Select.options.length; i++) {
+                dragon1Select.options[i].disabled = false;
+            }
+            for (let i = 0; i < dragon2Select.options.length; i++) {
+                dragon2Select.options[i].disabled = false;
+            }
+
+            // Disable selected dragon in opposite dropdown
             if (selected1 && selected1 !== '') {
+                for (let i = 0; i < dragon2Select.options.length; i++) {
+                    if (dragon2Select.options[i].value === selected1) {
+                        dragon2Select.options[i].disabled = true;
+                    }
+                }
+            }
+            if (selected2 && selected2 !== '') {
+                for (let i = 0; i < dragon1Select.options.length; i++) {
+                    if (dragon1Select.options[i].value === selected2) {
+                        dragon1Select.options[i].disabled = true;
+                    }
+                }
+            }
+
+            // Enable/disable battle button
+            const battleButton = document.getElementById('battle-button');
+            if (selected1 && selected1 !== '' && selected2 && selected2 !== '' && selected1 !== selected2) {
                 battleButton.disabled = false;
             } else {
                 battleButton.disabled = true;
@@ -1706,23 +1739,49 @@
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             const dragon1Select = document.getElementById('dragon1-select');
+            const dragon2Select = document.getElementById('dragon2-select');
             const battleButton = document.getElementById('battle-button');
 
-            // Dragon selection (player's dragon only)
+            // Dragon 1 selection
             dragon1Select.addEventListener('change', function() {
                 const selected = this.value;
+                const otherSelected = dragon2Select.value;
+                
+                // If selecting the same dragon as the other side, clear the other side
+                if (selected && selected === otherSelected) {
+                    dragon2Select.value = '';
+                    document.getElementById('dragon2-display').innerHTML = '';
+                }
                 
                 if (selected) {
                     displayDragon(selected, 1);
                 } else {
                     document.getElementById('dragon1-display').innerHTML = '';
                 }
-                updateBattleButton();
+                updateDropdowns();
+            });
+
+            // Dragon 2 selection
+            dragon2Select.addEventListener('change', function() {
+                const selected = this.value;
+                const otherSelected = dragon1Select.value;
+                
+                // If selecting the same dragon as the other side, clear the other side
+                if (selected && selected === otherSelected) {
+                    dragon1Select.value = '';
+                    document.getElementById('dragon1-display').innerHTML = '';
+                }
+                
+                if (selected) {
+                    displayDragon(selected, 2);
+                } else {
+                    document.getElementById('dragon2-display').innerHTML = '';
+                }
+                updateDropdowns();
             });
 
             // Battle button
             battleButton.addEventListener('click', function() {
-                console.log('Start Single Player button clicked!');
                 startBattle();
             });
 
@@ -1783,16 +1842,11 @@
         // Function to start the battle
         function startBattle() {
             const dragon1Id = document.getElementById('dragon1-select').value;
+            const dragon2Id = document.getElementById('dragon2-select').value;
 
-            if (!dragon1Id) {
+            if (!dragon1Id || !dragon2Id || dragon1Id === dragon2Id) {
                 return;
             }
-
-            // Randomly select a bot dragon (different from player's dragon)
-            const allDragonIds = Object.keys(dragonData);
-            const availableDragons = allDragonIds.filter(id => id !== dragon1Id);
-            const randomIndex = Math.floor(Math.random() * availableDragons.length);
-            const dragon2Id = availableDragons[randomIndex];
 
             const dragon1 = dragonData[dragon1Id];
             const dragon2 = dragonData[dragon2Id];
@@ -1854,10 +1908,6 @@
 
             // Set up power selection listeners
             setupPowerSelectionListeners();
-            
-            // Bot automatically selects a power when battle starts
-            botSelectPower();
-            checkFightButtonState();
         }
 
         // Function to display dragon in battle view
@@ -1878,32 +1928,26 @@
             // Update element
             document.getElementById('battle-dragon' + sideNumber + '-element').textContent = 'Element: ' + dragon.element;
             
-            // Populate powers dropdown for player (dragon1) or show text for bot (dragon2)
-            const powersElement = document.getElementById('battle-dragon' + sideNumber + '-powers');
+            // Populate powers dropdown
+            const powersDropdown = document.getElementById('battle-dragon' + sideNumber + '-powers');
+            powersDropdown.innerHTML = '<option value="">-- Select a Power --</option>';
             
-            if (sideNumber === 1) {
-                // Player's dragon - use dropdown
-                powersElement.innerHTML = '<option value="">-- Select a Power --</option>';
-                dragon.powers.forEach(function(power, index) {
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = power.name;
-                    
-                    // Disable shield powers if they've been used 3 times
-                    if (power.isShield === true) {
-                        const shieldUses = battleState.dragon1ShieldUses;
-                        if (shieldUses >= 3) {
-                            option.disabled = true;
-                            option.textContent = power.name + ' (Used 3/3)';
-                        }
+            dragon.powers.forEach(function(power, index) {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = power.name;
+                
+                // Disable shield powers if they've been used 3 times
+                if (power.isShield === true) {
+                    const shieldUses = sideNumber === 1 ? battleState.dragon1ShieldUses : battleState.dragon2ShieldUses;
+                    if (shieldUses >= 3) {
+                        option.disabled = true;
+                        option.textContent = power.name + ' (Used 3/3)';
                     }
-                    
-                    powersElement.appendChild(option);
-                });
-            } else {
-                // Bot's dragon - show as text (will be updated when bot selects power)
-                powersElement.textContent = '-- Bot will select power --';
-            }
+                }
+                
+                powersDropdown.appendChild(option);
+            });
         }
 
         // Function to update health bar
@@ -1981,133 +2025,10 @@
             }
         }
 
-        // Function to make bot select a smart power
-        function botSelectPower() {
-            if (!battleState.dragon2) {
-                return;
-            }
-            
-            // Get available powers (exclude shield powers that have been used 3 times)
-            const availablePowers = [];
-            const healingPowers = [];
-            const shieldPowers = [];
-            const damagePowers = [];
-            
-            battleState.dragon2.powers.forEach(function(power, index) {
-                if (power.isShield === true && battleState.dragon2ShieldUses >= 3) {
-                    // Skip shield powers that have been used 3 times
-                    return;
-                }
-                
-                availablePowers.push({ power: power, index: index });
-                
-                // Categorize powers
-                if (power.isHealing === true) {
-                    healingPowers.push({ power: power, index: index });
-                } else if (power.isShield === true) {
-                    shieldPowers.push({ power: power, index: index });
-                } else {
-                    damagePowers.push({ power: power, index: index });
-                }
-            });
-            
-            if (availablePowers.length === 0) {
-                // No available powers, select first power anyway
-                battleState.dragon2Power = battleState.dragon2.powers[0];
-                document.getElementById('battle-dragon2-powers').textContent = battleState.dragon2.powers[0].name;
-                return;
-            }
-            
-            let selected = null;
-            const botHP = battleState.dragon2HP;
-            const botShield = battleState.dragon2Shield;
-            const playerHP = battleState.dragon1HP;
-            const maxHP = 10;
-            
-            // Smart bot strategy based on HP and shield status:
-            // 1. Critical HP (2 or less): ALWAYS heal if available (survival priority)
-            // 2. Low HP (3-4) with no shield: Use shield first for protection, then heal if shield exists
-            // 3. Low HP (3-4) with shield: Heal to recover
-            // 4. Medium HP (5-7): Use damage, but build shield if no shield exists
-            // 5. High HP (8+): Use damage attacks
-            
-            if (botHP <= 2) {
-                // Critical HP - ALWAYS heal if available (survival is top priority)
-                if (healingPowers.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * healingPowers.length);
-                    selected = healingPowers[randomIndex];
-                } else if (shieldPowers.length > 0 && botShield === 0) {
-                    // No healing available, use shield for protection
-                    const randomIndex = Math.floor(Math.random() * shieldPowers.length);
-                    selected = shieldPowers[randomIndex];
-                } else if (damagePowers.length > 0) {
-                    // Last resort: damage
-                    const randomIndex = Math.floor(Math.random() * damagePowers.length);
-                    selected = damagePowers[randomIndex];
-                }
-            } else if (botHP <= 4) {
-                // Low HP - prioritize protection and healing
-                if (botShield === 0 && shieldPowers.length > 0) {
-                    // No shield - build protection first
-                    const randomIndex = Math.floor(Math.random() * shieldPowers.length);
-                    selected = shieldPowers[randomIndex];
-                } else if (healingPowers.length > 0) {
-                    // Has shield or no shield available - heal to recover HP
-                    const randomIndex = Math.floor(Math.random() * healingPowers.length);
-                    selected = healingPowers[randomIndex];
-                } else if (damagePowers.length > 0) {
-                    // No healing available - use damage
-                    const randomIndex = Math.floor(Math.random() * damagePowers.length);
-                    selected = damagePowers[randomIndex];
-                }
-            } else if (botHP <= 7) {
-                // Medium HP - balance offense and defense
-                if (botShield === 0 && shieldPowers.length > 0) {
-                    // No shield - build some protection (50% chance to be strategic)
-                    if (Math.random() < 0.5) {
-                        const randomIndex = Math.floor(Math.random() * shieldPowers.length);
-                        selected = shieldPowers[randomIndex];
-                    } else {
-                        // Otherwise use damage
-                        const randomIndex = Math.floor(Math.random() * damagePowers.length);
-                        selected = damagePowers[randomIndex];
-                    }
-                } else {
-                    // Has shield or no shield power - use damage
-                    const randomIndex = Math.floor(Math.random() * damagePowers.length);
-                    selected = damagePowers[randomIndex];
-                }
-            } else {
-                // High HP (8+) - focus on offense
-                if (damagePowers.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * damagePowers.length);
-                    selected = damagePowers[randomIndex];
-                } else if (shieldPowers.length > 0 && botShield === 0) {
-                    // Only shield available and no shield - use it
-                    const randomIndex = Math.floor(Math.random() * shieldPowers.length);
-                    selected = shieldPowers[randomIndex];
-                } else if (healingPowers.length > 0) {
-                    // Only healing available - use it (won't hurt)
-                    const randomIndex = Math.floor(Math.random() * healingPowers.length);
-                    selected = healingPowers[randomIndex];
-                }
-            }
-            
-            // Fallback: if no selection was made, randomly select from all available
-            if (!selected) {
-                const randomIndex = Math.floor(Math.random() * availablePowers.length);
-                selected = availablePowers[randomIndex];
-            }
-            
-            battleState.dragon2Power = selected.power;
-            
-            // Update bot's power display
-            document.getElementById('battle-dragon2-powers').textContent = selected.power.name;
-        }
-
         // Set up power selection listeners
         function setupPowerSelectionListeners() {
             const power1Select = document.getElementById('battle-dragon1-powers');
+            const power2Select = document.getElementById('battle-dragon2-powers');
             const fightButton = document.getElementById('fight-button');
 
             power1Select.addEventListener('change', function() {
@@ -2122,13 +2043,28 @@
                         alert('Shield power has been used 3 times and cannot be used again!');
                     } else {
                         battleState.dragon1Power = selectedPower;
-                        // Bot automatically selects a power when player selects theirs
-                        botSelectPower();
                     }
                 } else {
                     battleState.dragon1Power = null;
+                }
+                checkFightButtonState();
+            });
+
+            power2Select.addEventListener('change', function() {
+                const powerIndex = parseInt(this.value);
+                if (powerIndex >= 0 && battleState.dragon2) {
+                    const selectedPower = battleState.dragon2.powers[powerIndex];
+                    // Check if this is a shield power that has been used 3 times
+                    if (selectedPower.isShield === true && battleState.dragon2ShieldUses >= 3) {
+                        // Reset to empty if trying to select a shield power that's been used 3 times
+                        this.value = '';
+                        battleState.dragon2Power = null;
+                        alert('Shield power has been used 3 times and cannot be used again!');
+                    } else {
+                        battleState.dragon2Power = selectedPower;
+                    }
+                } else {
                     battleState.dragon2Power = null;
-                    document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
                 }
                 checkFightButtonState();
             });
@@ -2174,8 +2110,8 @@
             
             if (isShield2 && battleState.dragon2ShieldUses >= 3) {
                 battleLog.innerHTML += '<p style="color: #FF4444; font-weight: bold;">' + battleState.dragon2.name + ' cannot use shield power - it has been used 3 times already!</p>';
+                document.getElementById('battle-dragon2-powers').value = '';
                 battleState.dragon2Power = null;
-                document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
                 checkFightButtonState();
                 document.getElementById('fight-button').disabled = false;
                 return;
@@ -2513,8 +2449,6 @@
 
                 // Reset for next round - but keep the dropdowns selected
                 setTimeout(function() {
-                    // Bot automatically selects a new power for the next round
-                    botSelectPower();
                     // Re-enable fight button if powers are still selected
                     checkFightButtonState();
                     battleLog.innerHTML += '<p style="color: #88CCFF; font-weight: bold; margin-top: 10px;">Select new powers for the next round (or use the same ones)!</p>';
@@ -2581,7 +2515,7 @@
                         battleState.dragon1Power = null;
                         battleState.dragon2Power = null;
                         document.getElementById('battle-dragon1-powers').value = '';
-                        document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
+                        document.getElementById('battle-dragon2-powers').value = '';
                         checkFightButtonState();
                         battleLog.innerHTML += '<p style="color: #88CCFF; margin-top: 20px; font-weight: bold;">Select new powers for the next round!</p>';
                     }, 1500);
@@ -2609,7 +2543,7 @@
                         battleState.dragon1Power = null;
                         battleState.dragon2Power = null;
                         document.getElementById('battle-dragon1-powers').value = '';
-                        document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
+                        document.getElementById('battle-dragon2-powers').value = '';
                         checkFightButtonState();
                         battleLog.innerHTML += '<p style="color: #88CCFF; margin-top: 20px; font-weight: bold;">Select new powers for the next round!</p>';
                     }, 1500);
@@ -2626,7 +2560,7 @@
                     battleState.dragon1Power = null;
                     battleState.dragon2Power = null;
                     document.getElementById('battle-dragon1-powers').value = '';
-                    document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
+                    document.getElementById('battle-dragon2-powers').value = '';
                     checkFightButtonState();
                     battleLog.innerHTML += '<p style="color: #88CCFF; margin-top: 20px; font-weight: bold;">Select new powers for the next round!</p>';
                 }, 1500);
@@ -2676,7 +2610,9 @@
             
             // Reset selections
             document.getElementById('dragon1-select').value = '';
+            document.getElementById('dragon2-select').value = '';
             document.getElementById('dragon1-display').innerHTML = '';
+            document.getElementById('dragon2-display').innerHTML = '';
             
             // Reset battle state
             battleState = {
@@ -2694,8 +2630,8 @@
                 dragon2Power: null
             };
             
-            // Update battle button
-            updateBattleButton();
+            // Update dropdowns
+            updateDropdowns();
         }
     </script>
 </body>
