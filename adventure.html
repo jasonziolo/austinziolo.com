@@ -377,10 +377,9 @@
             image-rendering: crisp-edges;
             transition: none;
             z-index: 100;
-            width: 100px;
+            width: 120px;
             height: 120px;
-            background-color: transparent;
-            border: none;
+            object-fit: contain;
             visibility: visible !important;
             display: block !important;
             opacity: 1 !important;
@@ -389,54 +388,165 @@
         /* Pixelated Dragon Sprites - Each dragon gets a unique pixelated design */
         .pixel-dragon.breezeflight {
             background: #A8D4E8 !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #88CCFF;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #88CCFF;
             position: relative;
             overflow: visible;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(136, 204, 255, 0.5);
+            box-shadow: 
+                /* Detailed body scales - creating scale pattern */
+                8px 8px 0 0 #C8E4F0,
+                12px 10px 0 0 #E8F4F8,
+                18px 12px 0 0 #C8E4F0,
+                22px 14px 0 0 #E8F4F8,
+                28px 16px 0 0 #C8E4F0,
+                32px 18px 0 0 #E8F4F8,
+                38px 20px 0 0 #C8E4F0,
+                /* Second row of scales */
+                10px 18px 0 0 #C8E4F0,
+                16px 20px 0 0 #E8F4F8,
+                24px 22px 0 0 #C8E4F0,
+                30px 24px 0 0 #E8F4F8,
+                36px 26px 0 0 #C8E4F0,
+                /* Third row */
+                12px 28px 0 0 #C8E4F0,
+                20px 30px 0 0 #E8F4F8,
+                28px 32px 0 0 #C8E4F0,
+                34px 34px 0 0 #E8F4F8,
+                /* Spine/back ridge */
+                20px 5px 0 0 #88CCFF,
+                22px 8px 0 0 #66AAFF,
+                24px 12px 0 0 #88CCFF,
+                26px 16px 0 0 #66AAFF,
+                28px 20px 0 0 #88CCFF,
+                30px 24px 0 0 #66AAFF,
+                32px 28px 0 0 #88CCFF,
+                /* Front legs with claws */
+                3px 58px 0 0 #A8D4E8,
+                3px 62px 0 0 #A8D4E8,
+                3px 66px 0 0 #88CCFF,
+                7px 58px 0 0 #A8D4E8,
+                7px 62px 0 0 #A8D4E8,
+                7px 66px 0 0 #88CCFF,
+                11px 58px 0 0 #A8D4E8,
+                11px 62px 0 0 #A8D4E8,
+                /* Back legs with claws */
+                33px 58px 0 0 #A8D4E8,
+                33px 62px 0 0 #A8D4E8,
+                33px 66px 0 0 #88CCFF,
+                37px 58px 0 0 #A8D4E8,
+                37px 62px 0 0 #A8D4E8,
+                37px 66px 0 0 #88CCFF,
+                41px 58px 0 0 #A8D4E8,
+                41px 62px 0 0 #A8D4E8,
+                /* Detailed tail with segments and tip */
+                45px 48px 0 0 #A8D4E8,
+                48px 52px 0 0 #C8E4F0,
+                51px 56px 0 0 #A8D4E8,
+                54px 60px 0 0 #C8E4F0,
+                57px 64px 0 0 #A8D4E8,
+                60px 68px 0 0 #C8E4F0,
+                63px 72px 0 0 #A8D4E8,
+                66px 76px 0 0 #88CCFF,
+                69px 80px 0 0 #66AAFF,
+                0 0 10px rgba(136, 204, 255, 0.5);
         }
 
-        /* Head */
+        /* Detailed head with snout, nostrils, mouth, and horns */
         .pixel-dragon.breezeflight::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -30px;
+            left: 6px;
+            width: 38px;
+            height: 35px;
             background: #E8F4F8 !important;
             border: 2px solid #88CCFF;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(12% 0%, 88% 0%, 100% 25%, 98% 50%, 85% 75%, 75% 100%, 25% 100%, 15% 75%, 2% 50%, 0% 25%);
             box-shadow: 
-                8px 8px 0 0 #66AAFF,
-                18px 8px 0 0 #66AAFF;
+                /* Detailed eyes with highlights */
+                10px 10px 0 0 #66AAFF,
+                10px 10px 0 2px #88CCFF,
+                12px 12px 0 0 #FFFFFF,
+                22px 10px 0 0 #66AAFF,
+                22px 10px 0 2px #88CCFF,
+                24px 12px 0 0 #FFFFFF,
+                /* Nostrils */
+                12px 18px 0 0 #88CCFF,
+                26px 18px 0 0 #88CCFF,
+                /* Mouth line */
+                14px 22px 0 0 #88CCFF,
+                16px 24px 0 0 #88CCFF,
+                18px 24px 0 0 #88CCFF,
+                20px 24px 0 0 #88CCFF,
+                22px 24px 0 0 #88CCFF,
+                24px 24px 0 0 #88CCFF,
+                26px 22px 0 0 #88CCFF,
+                /* Detailed horns/spikes on head */
+                4px -6px 0 0 #88CCFF,
+                4px -6px 0 2px #66AAFF,
+                6px -10px 0 0 #66AAFF,
+                32px -6px 0 0 #88CCFF,
+                32px -6px 0 2px #66AAFF,
+                34px -10px 0 0 #66AAFF,
+                /* Additional head details */
+                8px 6px 0 0 #C8E4F0,
+                30px 6px 0 0 #C8E4F0;
             z-index: 11;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
         }
 
-        /* Wings and Tail */
+        /* Detailed wings with membrane structure and claws */
         .pixel-dragon.breezeflight::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 12px;
+            left: -28px;
+            width: 28px;
+            height: 45px;
             background: #C8E4F0 !important;
             border: 2px solid #88CCFF;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 3%, 98% 25%, 100% 50%, 95% 75%, 85% 95%, 0% 100%, 3% 50%);
             box-shadow: 
-                80px 0 0 0 #C8E4F0,
-                80px 0 0 2px #88CCFF,
-                45px 60px 0 0 #A8D4E8,
-                50px 65px 0 0 #A8D4E8,
-                55px 70px 0 0 #A8D4E8;
+                /* Right wing */
+                78px 0 0 0 #C8E4F0,
+                78px 0 0 2px #88CCFF,
+                /* Wing membrane structure - creating finger-like supports */
+                4px 12px 0 0 #E8F4F8,
+                4px 12px 0 1px #88CCFF,
+                8px 18px 0 0 #E8F4F8,
+                8px 18px 0 1px #88CCFF,
+                12px 24px 0 0 #E8F4F8,
+                12px 24px 0 1px #88CCFF,
+                16px 30px 0 0 #E8F4F8,
+                16px 30px 0 1px #88CCFF,
+                20px 36px 0 0 #E8F4F8,
+                20px 36px 0 1px #88CCFF,
+                /* Right wing membrane */
+                82px 12px 0 0 #E8F4F8,
+                82px 12px 0 1px #88CCFF,
+                86px 18px 0 0 #E8F4F8,
+                86px 18px 0 1px #88CCFF,
+                90px 24px 0 0 #E8F4F8,
+                90px 24px 0 1px #88CCFF,
+                94px 30px 0 0 #E8F4F8,
+                94px 30px 0 1px #88CCFF,
+                98px 36px 0 0 #E8F4F8,
+                98px 36px 0 1px #88CCFF,
+                /* Wing claws - detailed */
+                -2px 40px 0 0 #88CCFF,
+                -2px 40px 0 1px #66AAFF,
+                0px 42px 0 0 #66AAFF,
+                2px 44px 0 0 #88CCFF,
+                106px 40px 0 0 #88CCFF,
+                106px 40px 0 1px #66AAFF,
+                108px 42px 0 0 #66AAFF,
+                110px 44px 0 0 #88CCFF;
             z-index: 9;
             display: block !important;
             visibility: visible !important;
@@ -445,31 +555,106 @@
 
         .pixel-dragon.chaosflare {
             background: #FF44AA !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #8844FF;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #8844FF;
             position: relative;
             overflow: visible;
             animation: chaosPulse 2s infinite;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(255, 68, 170, 0.5);
+            box-shadow: 
+                /* Detailed chaotic scales */
+                8px 8px 0 0 #FF8844,
+                12px 10px 0 0 #8844FF,
+                18px 12px 0 0 #FF8844,
+                22px 14px 0 0 #8844FF,
+                28px 16px 0 0 #FF8844,
+                32px 18px 0 0 #8844FF,
+                38px 20px 0 0 #FF8844,
+                10px 18px 0 0 #8844FF,
+                16px 20px 0 0 #FF8844,
+                24px 22px 0 0 #8844FF,
+                30px 24px 0 0 #FF8844,
+                36px 26px 0 0 #8844FF,
+                12px 28px 0 0 #FF8844,
+                20px 30px 0 0 #8844FF,
+                28px 32px 0 0 #FF8844,
+                34px 34px 0 0 #8844FF,
+                /* Chaotic spine */
+                20px 5px 0 0 #FF44AA,
+                22px 8px 0 0 #FF8844,
+                24px 12px 0 0 #8844FF,
+                26px 16px 0 0 #FF44AA,
+                28px 20px 0 0 #FF8844,
+                30px 24px 0 0 #8844FF,
+                32px 28px 0 0 #FF44AA,
+                /* Front legs with claws */
+                3px 58px 0 0 #FF44AA,
+                3px 62px 0 0 #FF44AA,
+                3px 66px 0 0 #8844FF,
+                7px 58px 0 0 #FF44AA,
+                7px 62px 0 0 #FF44AA,
+                7px 66px 0 0 #8844FF,
+                11px 58px 0 0 #FF44AA,
+                11px 62px 0 0 #FF44AA,
+                /* Back legs */
+                33px 58px 0 0 #FF44AA,
+                33px 62px 0 0 #FF44AA,
+                33px 66px 0 0 #8844FF,
+                37px 58px 0 0 #FF44AA,
+                37px 62px 0 0 #FF44AA,
+                37px 66px 0 0 #8844FF,
+                41px 58px 0 0 #FF44AA,
+                41px 62px 0 0 #FF44AA,
+                /* Detailed tail */
+                45px 48px 0 0 #FF44AA,
+                48px 52px 0 0 #FF8844,
+                51px 56px 0 0 #8844FF,
+                54px 60px 0 0 #FF44AA,
+                57px 64px 0 0 #FF8844,
+                60px 68px 0 0 #8844FF,
+                63px 72px 0 0 #FF44AA,
+                66px 76px 0 0 #FF8844,
+                69px 80px 0 0 #8844FF,
+                0 0 10px rgba(255, 68, 170, 0.5);
         }
 
         .pixel-dragon.chaosflare::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -30px;
+            left: 6px;
+            width: 38px;
+            height: 35px;
             background: #8844FF;
             border: 2px solid #FF44AA;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(12% 0%, 88% 0%, 100% 25%, 98% 50%, 85% 75%, 75% 100%, 25% 100%, 15% 75%, 2% 50%, 0% 25%);
             box-shadow: 
-                8px 8px 0 0 #FF8844,
-                18px 8px 0 0 #FF8844;
+                10px 10px 0 0 #FF8844,
+                10px 10px 0 2px #FF44AA,
+                12px 12px 0 0 #FFFFFF,
+                22px 10px 0 0 #FF8844,
+                22px 10px 0 2px #FF44AA,
+                24px 12px 0 0 #FFFFFF,
+                12px 18px 0 0 #FF44AA,
+                26px 18px 0 0 #FF44AA,
+                14px 22px 0 0 #FF44AA,
+                16px 24px 0 0 #FF8844,
+                18px 24px 0 0 #8844FF,
+                20px 24px 0 0 #FF8844,
+                22px 24px 0 0 #8844FF,
+                24px 24px 0 0 #FF8844,
+                26px 22px 0 0 #FF44AA,
+                4px -6px 0 0 #FF44AA,
+                4px -6px 0 2px #FF8844,
+                6px -10px 0 0 #FF8844,
+                32px -6px 0 0 #FF44AA,
+                32px -6px 0 2px #FF8844,
+                34px -10px 0 0 #FF8844,
+                8px 6px 0 0 #FF8844,
+                30px 6px 0 0 #8844FF;
             z-index: 1;
             display: block;
         }
@@ -477,19 +662,44 @@
         .pixel-dragon.chaosflare::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 12px;
+            left: -28px;
+            width: 28px;
+            height: 45px;
             background: #FF8844;
             border: 2px solid #FF44AA;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 3%, 98% 25%, 100% 50%, 95% 75%, 85% 95%, 0% 100%, 3% 50%);
             box-shadow: 
-                80px 0 0 0 #FF8844,
-                80px 0 0 2px #FF44AA,
-                45px 60px 0 0 #FF44AA,
-                50px 65px 0 0 #8844FF,
-                55px 70px 0 0 #FF8844;
+                78px 0 0 0 #FF8844,
+                78px 0 0 2px #FF44AA,
+                4px 12px 0 0 #8844FF,
+                4px 12px 0 1px #FF44AA,
+                8px 18px 0 0 #FF44AA,
+                8px 18px 0 1px #FF8844,
+                12px 24px 0 0 #8844FF,
+                12px 24px 0 1px #FF44AA,
+                16px 30px 0 0 #FF44AA,
+                16px 30px 0 1px #FF8844,
+                20px 36px 0 0 #8844FF,
+                20px 36px 0 1px #FF44AA,
+                82px 12px 0 0 #8844FF,
+                82px 12px 0 1px #FF44AA,
+                86px 18px 0 0 #FF44AA,
+                86px 18px 0 1px #FF8844,
+                90px 24px 0 0 #8844FF,
+                90px 24px 0 1px #FF44AA,
+                94px 30px 0 0 #FF44AA,
+                94px 30px 0 1px #FF8844,
+                98px 36px 0 0 #8844FF,
+                98px 36px 0 1px #FF44AA,
+                -2px 40px 0 0 #FF44AA,
+                -2px 40px 0 1px #FF8844,
+                0px 42px 0 0 #FF8844,
+                2px 44px 0 0 #FF44AA,
+                106px 40px 0 0 #FF44AA,
+                106px 40px 0 1px #FF8844,
+                108px 42px 0 0 #FF8844,
+                110px 44px 0 0 #FF44AA;
             z-index: 0;
             display: block;
         }
@@ -501,82 +711,256 @@
 
         .pixel-dragon.crystalwing {
             background: #DD99FF !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #BB66FF;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #BB66FF;
             position: relative;
             overflow: visible;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(187, 102, 255, 0.5);
+            box-shadow: 
+                /* Detailed crystal scales */
+                8px 8px 0 0 #BB66FF,
+                12px 10px 0 0 #DD99FF,
+                18px 12px 0 0 #BB66FF,
+                22px 14px 0 0 #DD99FF,
+                28px 16px 0 0 #BB66FF,
+                32px 18px 0 0 #DD99FF,
+                38px 20px 0 0 #BB66FF,
+                10px 18px 0 0 #DD99FF,
+                16px 20px 0 0 #BB66FF,
+                24px 22px 0 0 #DD99FF,
+                30px 24px 0 0 #BB66FF,
+                36px 26px 0 0 #DD99FF,
+                12px 28px 0 0 #BB66FF,
+                20px 30px 0 0 #DD99FF,
+                28px 32px 0 0 #BB66FF,
+                34px 34px 0 0 #DD99FF,
+                /* Crystal spine */
+                20px 5px 0 0 #BB66FF,
+                22px 8px 0 0 #DD99FF,
+                24px 12px 0 0 #BB66FF,
+                26px 16px 0 0 #DD99FF,
+                28px 20px 0 0 #BB66FF,
+                30px 24px 0 0 #DD99FF,
+                32px 28px 0 0 #BB66FF,
+                /* Front legs with claws */
+                3px 58px 0 0 #DD99FF,
+                3px 62px 0 0 #DD99FF,
+                3px 66px 0 0 #BB66FF,
+                7px 58px 0 0 #DD99FF,
+                7px 62px 0 0 #DD99FF,
+                7px 66px 0 0 #BB66FF,
+                11px 58px 0 0 #DD99FF,
+                11px 62px 0 0 #DD99FF,
+                /* Back legs */
+                33px 58px 0 0 #DD99FF,
+                33px 62px 0 0 #DD99FF,
+                33px 66px 0 0 #BB66FF,
+                37px 58px 0 0 #DD99FF,
+                37px 62px 0 0 #DD99FF,
+                37px 66px 0 0 #BB66FF,
+                41px 58px 0 0 #DD99FF,
+                41px 62px 0 0 #DD99FF,
+                /* Detailed tail */
+                45px 48px 0 0 #DD99FF,
+                48px 52px 0 0 #BB66FF,
+                51px 56px 0 0 #DD99FF,
+                54px 60px 0 0 #BB66FF,
+                57px 64px 0 0 #DD99FF,
+                60px 68px 0 0 #BB66FF,
+                63px 72px 0 0 #DD99FF,
+                66px 76px 0 0 #BB66FF,
+                69px 80px 0 0 #DD99FF,
+                0 0 10px rgba(187, 102, 255, 0.5);
         }
 
         .pixel-dragon.crystalwing::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -30px;
+            left: 6px;
+            width: 38px;
+            height: 35px;
             background: #BB66FF;
             border: 2px solid #DD99FF;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(12% 0%, 88% 0%, 100% 25%, 98% 50%, 85% 75%, 75% 100%, 25% 100%, 15% 75%, 2% 50%, 0% 25%);
             box-shadow: 
-                8px 8px 0 0 #DD99FF,
-                18px 8px 0 0 #DD99FF;
+                10px 10px 0 0 #DD99FF,
+                10px 10px 0 2px #BB66FF,
+                12px 12px 0 0 #FFFFFF,
+                22px 10px 0 0 #DD99FF,
+                22px 10px 0 2px #BB66FF,
+                24px 12px 0 0 #FFFFFF,
+                12px 18px 0 0 #DD99FF,
+                26px 18px 0 0 #DD99FF,
+                14px 22px 0 0 #DD99FF,
+                16px 24px 0 0 #BB66FF,
+                18px 24px 0 0 #DD99FF,
+                20px 24px 0 0 #BB66FF,
+                22px 24px 0 0 #DD99FF,
+                24px 24px 0 0 #BB66FF,
+                26px 22px 0 0 #DD99FF,
+                4px -6px 0 0 #DD99FF,
+                4px -6px 0 2px #BB66FF,
+                6px -10px 0 0 #BB66FF,
+                32px -6px 0 0 #DD99FF,
+                32px -6px 0 2px #BB66FF,
+                34px -10px 0 0 #BB66FF,
+                8px 6px 0 0 #DD99FF,
+                30px 6px 0 0 #BB66FF;
             z-index: 1;
             display: block;
-            box-shadow: 8px 8px 0 0 #DD99FF, 18px 8px 0 0 #DD99FF;
             filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
         }
 
         .pixel-dragon.crystalwing::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 12px;
+            left: -28px;
+            width: 28px;
+            height: 45px;
             background: #BB66FF;
             border: 2px solid #DD99FF;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 3%, 98% 25%, 100% 50%, 95% 75%, 85% 95%, 0% 100%, 3% 50%);
             box-shadow: 
-                80px 0 0 0 #BB66FF,
-                80px 0 0 2px #DD99FF,
-                45px 60px 0 0 #DD99FF,
-                50px 65px 0 0 #BB66FF,
-                55px 70px 0 0 #DD99FF;
+                78px 0 0 0 #BB66FF,
+                78px 0 0 2px #DD99FF,
+                4px 12px 0 0 #DD99FF,
+                4px 12px 0 1px #BB66FF,
+                8px 18px 0 0 #BB66FF,
+                8px 18px 0 1px #DD99FF,
+                12px 24px 0 0 #DD99FF,
+                12px 24px 0 1px #BB66FF,
+                16px 30px 0 0 #BB66FF,
+                16px 30px 0 1px #DD99FF,
+                20px 36px 0 0 #DD99FF,
+                20px 36px 0 1px #BB66FF,
+                82px 12px 0 0 #DD99FF,
+                82px 12px 0 1px #BB66FF,
+                86px 18px 0 0 #BB66FF,
+                86px 18px 0 1px #DD99FF,
+                90px 24px 0 0 #DD99FF,
+                90px 24px 0 1px #BB66FF,
+                94px 30px 0 0 #BB66FF,
+                94px 30px 0 1px #DD99FF,
+                98px 36px 0 0 #DD99FF,
+                98px 36px 0 1px #BB66FF,
+                -2px 40px 0 0 #DD99FF,
+                -2px 40px 0 1px #BB66FF,
+                0px 42px 0 0 #BB66FF,
+                2px 44px 0 0 #DD99FF,
+                106px 40px 0 0 #DD99FF,
+                106px 40px 0 1px #BB66FF,
+                108px 42px 0 0 #BB66FF,
+                110px 44px 0 0 #DD99FF;
             z-index: 0;
             display: block;
         }
 
         .pixel-dragon.earthheart {
             background: #8B6F47 !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #5B4F27;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #5B4F27;
             position: relative;
             overflow: visible;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(91, 79, 39, 0.5);
+            box-shadow: 
+                /* Detailed stone scales */
+                8px 8px 0 0 #6B5F37,
+                12px 10px 0 0 #8B6F47,
+                18px 12px 0 0 #6B5F37,
+                22px 14px 0 0 #8B6F47,
+                28px 16px 0 0 #6B5F37,
+                32px 18px 0 0 #8B6F47,
+                38px 20px 0 0 #6B5F37,
+                10px 18px 0 0 #8B6F47,
+                16px 20px 0 0 #6B5F37,
+                24px 22px 0 0 #8B6F47,
+                30px 24px 0 0 #6B5F37,
+                36px 26px 0 0 #8B6F47,
+                12px 28px 0 0 #6B5F37,
+                20px 30px 0 0 #8B6F47,
+                28px 32px 0 0 #6B5F37,
+                34px 34px 0 0 #8B6F47,
+                /* Stone spine */
+                20px 5px 0 0 #5B4F27,
+                22px 8px 0 0 #6B5F37,
+                24px 12px 0 0 #5B4F27,
+                26px 16px 0 0 #6B5F37,
+                28px 20px 0 0 #5B4F27,
+                30px 24px 0 0 #6B5F37,
+                32px 28px 0 0 #5B4F27,
+                /* Front legs with claws */
+                3px 58px 0 0 #8B6F47,
+                3px 62px 0 0 #8B6F47,
+                3px 66px 0 0 #5B4F27,
+                7px 58px 0 0 #8B6F47,
+                7px 62px 0 0 #8B6F47,
+                7px 66px 0 0 #5B4F27,
+                11px 58px 0 0 #8B6F47,
+                11px 62px 0 0 #8B6F47,
+                /* Back legs */
+                33px 58px 0 0 #8B6F47,
+                33px 62px 0 0 #8B6F47,
+                33px 66px 0 0 #5B4F27,
+                37px 58px 0 0 #8B6F47,
+                37px 62px 0 0 #8B6F47,
+                37px 66px 0 0 #5B4F27,
+                41px 58px 0 0 #8B6F47,
+                41px 62px 0 0 #8B6F47,
+                /* Detailed tail */
+                45px 48px 0 0 #8B6F47,
+                48px 52px 0 0 #6B5F37,
+                51px 56px 0 0 #8B6F47,
+                54px 60px 0 0 #6B5F37,
+                57px 64px 0 0 #8B6F47,
+                60px 68px 0 0 #6B5F37,
+                63px 72px 0 0 #8B6F47,
+                66px 76px 0 0 #5B4F27,
+                69px 80px 0 0 #6B5F37,
+                0 0 10px rgba(91, 79, 39, 0.5);
         }
 
         .pixel-dragon.earthheart::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -30px;
+            left: 6px;
+            width: 38px;
+            height: 35px;
             background: #6B5F37;
             border: 2px solid #5B4F27;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(12% 0%, 88% 0%, 100% 25%, 98% 50%, 85% 75%, 75% 100%, 25% 100%, 15% 75%, 2% 50%, 0% 25%);
             box-shadow: 
-                8px 8px 0 0 #5B4F27,
-                18px 8px 0 0 #5B4F27;
+                10px 10px 0 0 #5B4F27,
+                10px 10px 0 2px #6B5F37,
+                12px 12px 0 0 #FFFFFF,
+                22px 10px 0 0 #5B4F27,
+                22px 10px 0 2px #6B5F37,
+                24px 12px 0 0 #FFFFFF,
+                12px 18px 0 0 #5B4F27,
+                26px 18px 0 0 #5B4F27,
+                14px 22px 0 0 #5B4F27,
+                16px 24px 0 0 #8B6F47,
+                18px 24px 0 0 #6B5F37,
+                20px 24px 0 0 #8B6F47,
+                22px 24px 0 0 #6B5F37,
+                24px 24px 0 0 #8B6F47,
+                26px 22px 0 0 #5B4F27,
+                4px -6px 0 0 #5B4F27,
+                4px -6px 0 2px #6B5F37,
+                6px -10px 0 0 #6B5F37,
+                32px -6px 0 0 #5B4F27,
+                32px -6px 0 2px #6B5F37,
+                34px -10px 0 0 #6B5F37,
+                8px 6px 0 0 #8B6F47,
+                30px 6px 0 0 #6B5F37;
             z-index: 1;
             display: block;
         }
@@ -584,50 +968,150 @@
         .pixel-dragon.earthheart::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 12px;
+            left: -28px;
+            width: 28px;
+            height: 45px;
             background: #6B5F37;
             border: 2px solid #5B4F27;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 3%, 98% 25%, 100% 50%, 95% 75%, 85% 95%, 0% 100%, 3% 50%);
             box-shadow: 
-                80px 0 0 0 #6B5F37,
-                80px 0 0 2px #5B4F27,
-                45px 60px 0 0 #8B6F47,
-                50px 65px 0 0 #6B5F37,
-                55px 70px 0 0 #8B6F47;
+                78px 0 0 0 #6B5F37,
+                78px 0 0 2px #5B4F27,
+                4px 12px 0 0 #8B6F47,
+                4px 12px 0 1px #5B4F27,
+                8px 18px 0 0 #5B4F27,
+                8px 18px 0 1px #6B5F37,
+                12px 24px 0 0 #8B6F47,
+                12px 24px 0 1px #5B4F27,
+                16px 30px 0 0 #5B4F27,
+                16px 30px 0 1px #6B5F37,
+                20px 36px 0 0 #8B6F47,
+                20px 36px 0 1px #5B4F27,
+                82px 12px 0 0 #8B6F47,
+                82px 12px 0 1px #5B4F27,
+                86px 18px 0 0 #5B4F27,
+                86px 18px 0 1px #6B5F37,
+                90px 24px 0 0 #8B6F47,
+                90px 24px 0 1px #5B4F27,
+                94px 30px 0 0 #5B4F27,
+                94px 30px 0 1px #6B5F37,
+                98px 36px 0 0 #8B6F47,
+                98px 36px 0 1px #5B4F27,
+                -2px 40px 0 0 #5B4F27,
+                -2px 40px 0 1px #6B5F37,
+                0px 42px 0 0 #6B5F37,
+                2px 44px 0 0 #5B4F27,
+                106px 40px 0 0 #5B4F27,
+                106px 40px 0 1px #6B5F37,
+                108px 42px 0 0 #6B5F37,
+                110px 44px 0 0 #5B4F27;
             z-index: 0;
             display: block;
         }
 
         .pixel-dragon.flamethorn {
             background: #FF4444 !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #FFD700;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #FFD700;
             position: relative;
             overflow: visible;
             animation: fireFlicker 0.5s infinite;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+            box-shadow: 
+                /* Detailed fire scales */
+                8px 8px 0 0 #FF8800,
+                12px 10px 0 0 #FFD700,
+                18px 12px 0 0 #FF8800,
+                22px 14px 0 0 #FFD700,
+                28px 16px 0 0 #FF8800,
+                32px 18px 0 0 #FFD700,
+                38px 20px 0 0 #FF8800,
+                10px 18px 0 0 #FFD700,
+                16px 20px 0 0 #FF8800,
+                24px 22px 0 0 #FFD700,
+                30px 24px 0 0 #FF8800,
+                36px 26px 0 0 #FFD700,
+                12px 28px 0 0 #FF8800,
+                20px 30px 0 0 #FFD700,
+                28px 32px 0 0 #FF8800,
+                34px 34px 0 0 #FFD700,
+                /* Fire spine */
+                20px 5px 0 0 #FF0000,
+                22px 8px 0 0 #FFD700,
+                24px 12px 0 0 #FF0000,
+                26px 16px 0 0 #FFD700,
+                28px 20px 0 0 #FF0000,
+                30px 24px 0 0 #FFD700,
+                32px 28px 0 0 #FF0000,
+                /* Front legs with claws */
+                3px 58px 0 0 #FF4444,
+                3px 62px 0 0 #FF4444,
+                3px 66px 0 0 #FFD700,
+                7px 58px 0 0 #FF4444,
+                7px 62px 0 0 #FF4444,
+                7px 66px 0 0 #FFD700,
+                11px 58px 0 0 #FF4444,
+                11px 62px 0 0 #FF4444,
+                /* Back legs */
+                33px 58px 0 0 #FF4444,
+                33px 62px 0 0 #FF4444,
+                33px 66px 0 0 #FFD700,
+                37px 58px 0 0 #FF4444,
+                37px 62px 0 0 #FF4444,
+                37px 66px 0 0 #FFD700,
+                41px 58px 0 0 #FF4444,
+                41px 62px 0 0 #FF4444,
+                /* Detailed tail */
+                45px 48px 0 0 #FF4444,
+                48px 52px 0 0 #FF8800,
+                51px 56px 0 0 #FF0000,
+                54px 60px 0 0 #FF4444,
+                57px 64px 0 0 #FF8800,
+                60px 68px 0 0 #FF0000,
+                63px 72px 0 0 #FF4444,
+                66px 76px 0 0 #FF8800,
+                69px 80px 0 0 #FFD700,
+                0 0 10px rgba(255, 68, 68, 0.5);
         }
 
         .pixel-dragon.flamethorn::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -30px;
+            left: 6px;
+            width: 38px;
+            height: 35px;
             background: #FF8800;
             border: 2px solid #FFD700;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(12% 0%, 88% 0%, 100% 25%, 98% 50%, 85% 75%, 75% 100%, 25% 100%, 15% 75%, 2% 50%, 0% 25%);
             box-shadow: 
-                8px 8px 0 0 #FFD700,
-                18px 8px 0 0 #FFD700;
+                10px 10px 0 0 #FFD700,
+                10px 10px 0 2px #FF0000,
+                12px 12px 0 0 #FFFFFF,
+                22px 10px 0 0 #FFD700,
+                22px 10px 0 2px #FF0000,
+                24px 12px 0 0 #FFFFFF,
+                12px 18px 0 0 #FFD700,
+                26px 18px 0 0 #FFD700,
+                14px 22px 0 0 #FFD700,
+                16px 24px 0 0 #FF8800,
+                18px 24px 0 0 #FF4444,
+                20px 24px 0 0 #FF8800,
+                22px 24px 0 0 #FF4444,
+                24px 24px 0 0 #FF8800,
+                26px 22px 0 0 #FFD700,
+                4px -6px 0 0 #FFD700,
+                4px -6px 0 2px #FF8800,
+                6px -10px 0 0 #FF8800,
+                32px -6px 0 0 #FFD700,
+                32px -6px 0 2px #FF8800,
+                34px -10px 0 0 #FF8800,
+                8px 6px 0 0 #FF8800,
+                30px 6px 0 0 #FF4444;
             z-index: 1;
             display: block;
             animation: fireFlicker 0.3s infinite;
@@ -636,19 +1120,44 @@
         .pixel-dragon.flamethorn::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 12px;
+            left: -28px;
+            width: 28px;
+            height: 45px;
             background: #FF8800;
             border: 2px solid #FFD700;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 3%, 98% 25%, 100% 50%, 95% 75%, 85% 95%, 0% 100%, 3% 50%);
             box-shadow: 
-                80px 0 0 0 #FF8800,
-                80px 0 0 2px #FFD700,
-                45px 60px 0 0 #FF4444,
-                50px 65px 0 0 #FF0000,
-                55px 70px 0 0 #FF4444;
+                78px 0 0 0 #FF8800,
+                78px 0 0 2px #FFD700,
+                4px 12px 0 0 #FF4444,
+                4px 12px 0 1px #FFD700,
+                8px 18px 0 0 #FFD700,
+                8px 18px 0 1px #FF8800,
+                12px 24px 0 0 #FF4444,
+                12px 24px 0 1px #FFD700,
+                16px 30px 0 0 #FFD700,
+                16px 30px 0 1px #FF8800,
+                20px 36px 0 0 #FF4444,
+                20px 36px 0 1px #FFD700,
+                82px 12px 0 0 #FF4444,
+                82px 12px 0 1px #FFD700,
+                86px 18px 0 0 #FFD700,
+                86px 18px 0 1px #FF8800,
+                90px 24px 0 0 #FF4444,
+                90px 24px 0 1px #FFD700,
+                94px 30px 0 0 #FFD700,
+                94px 30px 0 1px #FF8800,
+                98px 36px 0 0 #FF4444,
+                98px 36px 0 1px #FFD700,
+                -2px 40px 0 0 #FFD700,
+                -2px 40px 0 1px #FF8800,
+                0px 42px 0 0 #FF8800,
+                2px 44px 0 0 #FFD700,
+                106px 40px 0 0 #FFD700,
+                106px 40px 0 1px #FF8800,
+                108px 42px 0 0 #FF8800,
+                110px 44px 0 0 #FFD700;
             z-index: 0;
             display: block;
         }
@@ -660,30 +1169,105 @@
 
         .pixel-dragon.frostbite {
             background: #88EEFF !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #66CCFF;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #66CCFF;
             position: relative;
             overflow: visible;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(102, 204, 255, 0.5);
+            box-shadow: 
+                /* Detailed ice scales */
+                8px 8px 0 0 #AAFFFF,
+                12px 10px 0 0 #88EEFF,
+                18px 12px 0 0 #AAFFFF,
+                22px 14px 0 0 #88EEFF,
+                28px 16px 0 0 #AAFFFF,
+                32px 18px 0 0 #88EEFF,
+                38px 20px 0 0 #AAFFFF,
+                10px 18px 0 0 #88EEFF,
+                16px 20px 0 0 #AAFFFF,
+                24px 22px 0 0 #88EEFF,
+                30px 24px 0 0 #AAFFFF,
+                36px 26px 0 0 #88EEFF,
+                12px 28px 0 0 #AAFFFF,
+                20px 30px 0 0 #88EEFF,
+                28px 32px 0 0 #AAFFFF,
+                34px 34px 0 0 #88EEFF,
+                /* Ice spine */
+                20px 5px 0 0 #66CCFF,
+                22px 8px 0 0 #AAFFFF,
+                24px 12px 0 0 #66CCFF,
+                26px 16px 0 0 #AAFFFF,
+                28px 20px 0 0 #66CCFF,
+                30px 24px 0 0 #AAFFFF,
+                32px 28px 0 0 #66CCFF,
+                /* Front legs with claws */
+                3px 58px 0 0 #88EEFF,
+                3px 62px 0 0 #88EEFF,
+                3px 66px 0 0 #66CCFF,
+                7px 58px 0 0 #88EEFF,
+                7px 62px 0 0 #88EEFF,
+                7px 66px 0 0 #66CCFF,
+                11px 58px 0 0 #88EEFF,
+                11px 62px 0 0 #88EEFF,
+                /* Back legs */
+                33px 58px 0 0 #88EEFF,
+                33px 62px 0 0 #88EEFF,
+                33px 66px 0 0 #66CCFF,
+                37px 58px 0 0 #88EEFF,
+                37px 62px 0 0 #88EEFF,
+                37px 66px 0 0 #66CCFF,
+                41px 58px 0 0 #88EEFF,
+                41px 62px 0 0 #88EEFF,
+                /* Detailed tail */
+                45px 48px 0 0 #88EEFF,
+                48px 52px 0 0 #66CCFF,
+                51px 56px 0 0 #88EEFF,
+                54px 60px 0 0 #66CCFF,
+                57px 64px 0 0 #88EEFF,
+                60px 68px 0 0 #66CCFF,
+                63px 72px 0 0 #88EEFF,
+                66px 76px 0 0 #AAFFFF,
+                69px 80px 0 0 #66CCFF,
+                0 0 10px rgba(102, 204, 255, 0.5);
         }
 
         .pixel-dragon.frostbite::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -30px;
+            left: 6px;
+            width: 38px;
+            height: 35px;
             background: #AAFFFF;
             border: 2px solid #66CCFF;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(12% 0%, 88% 0%, 100% 25%, 98% 50%, 85% 75%, 75% 100%, 25% 100%, 15% 75%, 2% 50%, 0% 25%);
             box-shadow: 
-                8px 8px 0 0 #66CCFF,
-                18px 8px 0 0 #66CCFF;
+                10px 10px 0 0 #66CCFF,
+                10px 10px 0 2px #88EEFF,
+                12px 12px 0 0 #FFFFFF,
+                22px 10px 0 0 #66CCFF,
+                22px 10px 0 2px #88EEFF,
+                24px 12px 0 0 #FFFFFF,
+                12px 18px 0 0 #66CCFF,
+                26px 18px 0 0 #66CCFF,
+                14px 22px 0 0 #66CCFF,
+                16px 24px 0 0 #AAFFFF,
+                18px 24px 0 0 #88EEFF,
+                20px 24px 0 0 #AAFFFF,
+                22px 24px 0 0 #88EEFF,
+                24px 24px 0 0 #AAFFFF,
+                26px 22px 0 0 #66CCFF,
+                4px -6px 0 0 #66CCFF,
+                4px -6px 0 2px #AAFFFF,
+                6px -10px 0 0 #AAFFFF,
+                32px -6px 0 0 #66CCFF,
+                32px -6px 0 2px #AAFFFF,
+                34px -10px 0 0 #AAFFFF,
+                8px 6px 0 0 #AAFFFF,
+                30px 6px 0 0 #88EEFF;
             z-index: 1;
             display: block;
         }
@@ -691,50 +1275,150 @@
         .pixel-dragon.frostbite::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 12px;
+            left: -28px;
+            width: 28px;
+            height: 45px;
             background: #AAFFFF;
             border: 2px solid #66CCFF;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 3%, 98% 25%, 100% 50%, 95% 75%, 85% 95%, 0% 100%, 3% 50%);
             box-shadow: 
-                80px 0 0 0 #AAFFFF,
-                80px 0 0 2px #66CCFF,
-                45px 60px 0 0 #88EEFF,
-                50px 65px 0 0 #AAFFFF,
-                55px 70px 0 0 #88EEFF;
+                78px 0 0 0 #AAFFFF,
+                78px 0 0 2px #66CCFF,
+                4px 12px 0 0 #88EEFF,
+                4px 12px 0 1px #66CCFF,
+                8px 18px 0 0 #66CCFF,
+                8px 18px 0 1px #AAFFFF,
+                12px 24px 0 0 #88EEFF,
+                12px 24px 0 1px #66CCFF,
+                16px 30px 0 0 #66CCFF,
+                16px 30px 0 1px #AAFFFF,
+                20px 36px 0 0 #88EEFF,
+                20px 36px 0 1px #66CCFF,
+                82px 12px 0 0 #88EEFF,
+                82px 12px 0 1px #66CCFF,
+                86px 18px 0 0 #66CCFF,
+                86px 18px 0 1px #AAFFFF,
+                90px 24px 0 0 #88EEFF,
+                90px 24px 0 1px #66CCFF,
+                94px 30px 0 0 #66CCFF,
+                94px 30px 0 1px #AAFFFF,
+                98px 36px 0 0 #88EEFF,
+                98px 36px 0 1px #66CCFF,
+                -2px 40px 0 0 #66CCFF,
+                -2px 40px 0 1px #AAFFFF,
+                0px 42px 0 0 #AAFFFF,
+                2px 44px 0 0 #66CCFF,
+                106px 40px 0 0 #66CCFF,
+                106px 40px 0 1px #AAFFFF,
+                108px 42px 0 0 #AAFFFF,
+                110px 44px 0 0 #66CCFF;
             z-index: 0;
             display: block;
         }
 
         .pixel-dragon.radiant {
             background: #FFD700 !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #FFAA00;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #FFAA00;
             position: relative;
             overflow: visible;
             animation: lightPulse 1.5s infinite;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            box-shadow: 
+                /* Detailed light scales */
+                8px 8px 0 0 #FFFF88,
+                12px 10px 0 0 #FFD700,
+                18px 12px 0 0 #FFFF88,
+                22px 14px 0 0 #FFD700,
+                28px 16px 0 0 #FFFF88,
+                32px 18px 0 0 #FFD700,
+                38px 20px 0 0 #FFFF88,
+                10px 18px 0 0 #FFD700,
+                16px 20px 0 0 #FFFF88,
+                24px 22px 0 0 #FFD700,
+                30px 24px 0 0 #FFFF88,
+                36px 26px 0 0 #FFD700,
+                12px 28px 0 0 #FFFF88,
+                20px 30px 0 0 #FFD700,
+                28px 32px 0 0 #FFFF88,
+                34px 34px 0 0 #FFD700,
+                /* Light spine */
+                20px 5px 0 0 #FFAA00,
+                22px 8px 0 0 #FFFF88,
+                24px 12px 0 0 #FFAA00,
+                26px 16px 0 0 #FFFF88,
+                28px 20px 0 0 #FFAA00,
+                30px 24px 0 0 #FFFF88,
+                32px 28px 0 0 #FFAA00,
+                /* Front legs with claws */
+                3px 58px 0 0 #FFD700,
+                3px 62px 0 0 #FFD700,
+                3px 66px 0 0 #FFAA00,
+                7px 58px 0 0 #FFD700,
+                7px 62px 0 0 #FFD700,
+                7px 66px 0 0 #FFAA00,
+                11px 58px 0 0 #FFD700,
+                11px 62px 0 0 #FFD700,
+                /* Back legs */
+                33px 58px 0 0 #FFD700,
+                33px 62px 0 0 #FFD700,
+                33px 66px 0 0 #FFAA00,
+                37px 58px 0 0 #FFD700,
+                37px 62px 0 0 #FFD700,
+                37px 66px 0 0 #FFAA00,
+                41px 58px 0 0 #FFD700,
+                41px 62px 0 0 #FFD700,
+                /* Detailed tail */
+                45px 48px 0 0 #FFD700,
+                48px 52px 0 0 #FFAA00,
+                51px 56px 0 0 #FFD700,
+                54px 60px 0 0 #FFAA00,
+                57px 64px 0 0 #FFD700,
+                60px 68px 0 0 #FFAA00,
+                63px 72px 0 0 #FFD700,
+                66px 76px 0 0 #FFFF88,
+                69px 80px 0 0 #FFAA00,
+                0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .pixel-dragon.radiant::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -30px;
+            left: 6px;
+            width: 38px;
+            height: 35px;
             background: #FFFF88;
             border: 2px solid #FFD700;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(12% 0%, 88% 0%, 100% 25%, 98% 50%, 85% 75%, 75% 100%, 25% 100%, 15% 75%, 2% 50%, 0% 25%);
             box-shadow: 
-                8px 8px 0 0 #FFD700,
-                18px 8px 0 0 #FFD700;
+                10px 10px 0 0 #FFD700,
+                10px 10px 0 2px #FFAA00,
+                12px 12px 0 0 #FFFFFF,
+                22px 10px 0 0 #FFD700,
+                22px 10px 0 2px #FFAA00,
+                24px 12px 0 0 #FFFFFF,
+                12px 18px 0 0 #FFD700,
+                26px 18px 0 0 #FFD700,
+                14px 22px 0 0 #FFD700,
+                16px 24px 0 0 #FFFF88,
+                18px 24px 0 0 #FFD700,
+                20px 24px 0 0 #FFFF88,
+                22px 24px 0 0 #FFD700,
+                24px 24px 0 0 #FFFF88,
+                26px 22px 0 0 #FFD700,
+                4px -6px 0 0 #FFD700,
+                4px -6px 0 2px #FFFF88,
+                6px -10px 0 0 #FFFF88,
+                32px -6px 0 0 #FFD700,
+                32px -6px 0 2px #FFFF88,
+                34px -10px 0 0 #FFFF88,
+                8px 6px 0 0 #FFFF88,
+                30px 6px 0 0 #FFD700;
             z-index: 1;
             display: block;
         }
@@ -742,19 +1426,44 @@
         .pixel-dragon.radiant::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 12px;
+            left: -28px;
+            width: 28px;
+            height: 45px;
             background: #FFFF88;
             border: 2px solid #FFD700;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 3%, 98% 25%, 100% 50%, 95% 75%, 85% 95%, 0% 100%, 3% 50%);
             box-shadow: 
-                80px 0 0 0 #FFFF88,
-                80px 0 0 2px #FFD700,
-                45px 60px 0 0 #FFD700,
-                50px 65px 0 0 #FFAA00,
-                55px 70px 0 0 #FFD700;
+                78px 0 0 0 #FFFF88,
+                78px 0 0 2px #FFD700,
+                4px 12px 0 0 #FFD700,
+                4px 12px 0 1px #FFAA00,
+                8px 18px 0 0 #FFAA00,
+                8px 18px 0 1px #FFFF88,
+                12px 24px 0 0 #FFD700,
+                12px 24px 0 1px #FFAA00,
+                16px 30px 0 0 #FFAA00,
+                16px 30px 0 1px #FFFF88,
+                20px 36px 0 0 #FFD700,
+                20px 36px 0 1px #FFAA00,
+                82px 12px 0 0 #FFD700,
+                82px 12px 0 1px #FFAA00,
+                86px 18px 0 0 #FFAA00,
+                86px 18px 0 1px #FFFF88,
+                90px 24px 0 0 #FFD700,
+                90px 24px 0 1px #FFAA00,
+                94px 30px 0 0 #FFAA00,
+                94px 30px 0 1px #FFFF88,
+                98px 36px 0 0 #FFD700,
+                98px 36px 0 1px #FFAA00,
+                -2px 40px 0 0 #FFAA00,
+                -2px 40px 0 1px #FFFF88,
+                0px 42px 0 0 #FFFF88,
+                2px 44px 0 0 #FFAA00,
+                106px 40px 0 0 #FFAA00,
+                106px 40px 0 1px #FFFF88,
+                108px 42px 0 0 #FFFF88,
+                110px 44px 0 0 #FFAA00;
             z-index: 0;
             display: block;
         }
@@ -766,31 +1475,106 @@
 
         .pixel-dragon.stormwing {
             background: #FFDD00 !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #FFFF44;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #FFFF44;
             position: relative;
             overflow: visible;
             animation: lightningFlicker 0.3s infinite;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(255, 221, 0, 0.5);
+            box-shadow: 
+                /* Detailed lightning scales */
+                8px 8px 0 0 #FFFF44,
+                12px 10px 0 0 #FFDD00,
+                18px 12px 0 0 #FFFF44,
+                22px 14px 0 0 #FFDD00,
+                28px 16px 0 0 #FFFF44,
+                32px 18px 0 0 #FFDD00,
+                38px 20px 0 0 #FFFF44,
+                10px 18px 0 0 #FFDD00,
+                16px 20px 0 0 #FFFF44,
+                24px 22px 0 0 #FFDD00,
+                30px 24px 0 0 #FFFF44,
+                36px 26px 0 0 #FFDD00,
+                12px 28px 0 0 #FFFF44,
+                20px 30px 0 0 #FFDD00,
+                28px 32px 0 0 #FFFF44,
+                34px 34px 0 0 #FFDD00,
+                /* Lightning spine */
+                20px 5px 0 0 #FFFF44,
+                22px 8px 0 0 #FFDD00,
+                24px 12px 0 0 #FFFF44,
+                26px 16px 0 0 #FFDD00,
+                28px 20px 0 0 #FFFF44,
+                30px 24px 0 0 #FFDD00,
+                32px 28px 0 0 #FFFF44,
+                /* Front legs with claws */
+                3px 58px 0 0 #FFDD00,
+                3px 62px 0 0 #FFDD00,
+                3px 66px 0 0 #FFFF44,
+                7px 58px 0 0 #FFDD00,
+                7px 62px 0 0 #FFDD00,
+                7px 66px 0 0 #FFFF44,
+                11px 58px 0 0 #FFDD00,
+                11px 62px 0 0 #FFDD00,
+                /* Back legs */
+                33px 58px 0 0 #FFDD00,
+                33px 62px 0 0 #FFDD00,
+                33px 66px 0 0 #FFFF44,
+                37px 58px 0 0 #FFDD00,
+                37px 62px 0 0 #FFDD00,
+                37px 66px 0 0 #FFFF44,
+                41px 58px 0 0 #FFDD00,
+                41px 62px 0 0 #FFDD00,
+                /* Detailed tail */
+                45px 48px 0 0 #FFDD00,
+                48px 52px 0 0 #FFFF44,
+                51px 56px 0 0 #FFDD00,
+                54px 60px 0 0 #FFFF44,
+                57px 64px 0 0 #FFDD00,
+                60px 68px 0 0 #FFFF44,
+                63px 72px 0 0 #FFDD00,
+                66px 76px 0 0 #FFFF44,
+                69px 80px 0 0 #FFDD00,
+                0 0 10px rgba(255, 221, 0, 0.5);
         }
 
         .pixel-dragon.stormwing::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -30px;
+            left: 6px;
+            width: 38px;
+            height: 35px;
             background: #FFFF44;
             border: 2px solid #FFDD00;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(12% 0%, 88% 0%, 100% 25%, 98% 50%, 85% 75%, 75% 100%, 25% 100%, 15% 75%, 2% 50%, 0% 25%);
             box-shadow: 
-                8px 8px 0 0 #FFDD00,
-                18px 8px 0 0 #FFDD00;
+                10px 10px 0 0 #FFDD00,
+                10px 10px 0 2px #FFFF44,
+                12px 12px 0 0 #FFFFFF,
+                22px 10px 0 0 #FFDD00,
+                22px 10px 0 2px #FFFF44,
+                24px 12px 0 0 #FFFFFF,
+                12px 18px 0 0 #FFDD00,
+                26px 18px 0 0 #FFDD00,
+                14px 22px 0 0 #FFDD00,
+                16px 24px 0 0 #FFFF44,
+                18px 24px 0 0 #FFDD00,
+                20px 24px 0 0 #FFFF44,
+                22px 24px 0 0 #FFDD00,
+                24px 24px 0 0 #FFFF44,
+                26px 22px 0 0 #FFDD00,
+                4px -6px 0 0 #FFDD00,
+                4px -6px 0 2px #FFFF44,
+                6px -10px 0 0 #FFFF44,
+                32px -6px 0 0 #FFDD00,
+                32px -6px 0 2px #FFFF44,
+                34px -10px 0 0 #FFFF44,
+                8px 6px 0 0 #FFFF44,
+                30px 6px 0 0 #FFDD00;
             z-index: 1;
             display: block;
         }
@@ -798,19 +1582,44 @@
         .pixel-dragon.stormwing::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 12px;
+            left: -28px;
+            width: 28px;
+            height: 45px;
             background: #FFFF44;
             border: 2px solid #FFDD00;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 3%, 98% 25%, 100% 50%, 95% 75%, 85% 95%, 0% 100%, 3% 50%);
             box-shadow: 
-                80px 0 0 0 #FFFF44,
-                80px 0 0 2px #FFDD00,
-                45px 60px 0 0 #FFDD00,
-                50px 65px 0 0 #FFFF44,
-                55px 70px 0 0 #FFDD00;
+                78px 0 0 0 #FFFF44,
+                78px 0 0 2px #FFDD00,
+                4px 12px 0 0 #FFDD00,
+                4px 12px 0 1px #FFFF44,
+                8px 18px 0 0 #FFFF44,
+                8px 18px 0 1px #FFDD00,
+                12px 24px 0 0 #FFDD00,
+                12px 24px 0 1px #FFFF44,
+                16px 30px 0 0 #FFFF44,
+                16px 30px 0 1px #FFDD00,
+                20px 36px 0 0 #FFDD00,
+                20px 36px 0 1px #FFFF44,
+                82px 12px 0 0 #FFDD00,
+                82px 12px 0 1px #FFFF44,
+                86px 18px 0 0 #FFFF44,
+                86px 18px 0 1px #FFDD00,
+                90px 24px 0 0 #FFDD00,
+                90px 24px 0 1px #FFFF44,
+                94px 30px 0 0 #FFFF44,
+                94px 30px 0 1px #FFDD00,
+                98px 36px 0 0 #FFDD00,
+                98px 36px 0 1px #FFFF44,
+                -2px 40px 0 0 #FFFF44,
+                -2px 40px 0 1px #FFDD00,
+                0px 42px 0 0 #FFDD00,
+                2px 44px 0 0 #FFFF44,
+                106px 40px 0 0 #FFFF44,
+                106px 40px 0 1px #FFDD00,
+                108px 42px 0 0 #FFDD00,
+                110px 44px 0 0 #FFFF44;
             z-index: 0;
             display: block;
         }
@@ -822,30 +1631,90 @@
 
         .pixel-dragon.metalbeak {
             background: #AAAAAA !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #888888;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #888888;
             position: relative;
             overflow: visible;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(136, 136, 136, 0.5);
+            box-shadow: 
+                /* Detailed metal scales */
+                8px 8px 0 0 #CCCCCC,
+                12px 10px 0 0 #AAAAAA,
+                18px 12px 0 0 #CCCCCC,
+                22px 14px 0 0 #AAAAAA,
+                28px 16px 0 0 #CCCCCC,
+                32px 18px 0 0 #AAAAAA,
+                38px 20px 0 0 #CCCCCC,
+                10px 18px 0 0 #AAAAAA,
+                16px 20px 0 0 #CCCCCC,
+                24px 22px 0 0 #AAAAAA,
+                30px 24px 0 0 #CCCCCC,
+                36px 26px 0 0 #AAAAAA,
+                12px 28px 0 0 #CCCCCC,
+                20px 30px 0 0 #AAAAAA,
+                28px 32px 0 0 #CCCCCC,
+                34px 34px 0 0 #AAAAAA,
+                /* Metal spine */
+                20px 5px 0 0 #888888,
+                22px 8px 0 0 #CCCCCC,
+                24px 12px 0 0 #888888,
+                26px 16px 0 0 #CCCCCC,
+                28px 20px 0 0 #888888,
+                30px 24px 0 0 #CCCCCC,
+                32px 28px 0 0 #888888,
+                /* Front legs with claws */
+                3px 58px 0 0 #AAAAAA,
+                3px 62px 0 0 #AAAAAA,
+                3px 66px 0 0 #888888,
+                7px 58px 0 0 #AAAAAA,
+                7px 62px 0 0 #AAAAAA,
+                7px 66px 0 0 #888888,
+                11px 58px 0 0 #AAAAAA,
+                11px 62px 0 0 #AAAAAA,
+                /* Back legs */
+                33px 58px 0 0 #AAAAAA,
+                33px 62px 0 0 #AAAAAA,
+                33px 66px 0 0 #888888,
+                37px 58px 0 0 #AAAAAA,
+                37px 62px 0 0 #AAAAAA,
+                37px 66px 0 0 #888888,
+                41px 58px 0 0 #AAAAAA,
+                41px 62px 0 0 #AAAAAA,
+                /* Detailed tail */
+                45px 48px 0 0 #AAAAAA,
+                48px 52px 0 0 #888888,
+                51px 56px 0 0 #AAAAAA,
+                54px 60px 0 0 #888888,
+                57px 64px 0 0 #AAAAAA,
+                60px 68px 0 0 #888888,
+                63px 72px 0 0 #AAAAAA,
+                66px 76px 0 0 #CCCCCC,
+                69px 80px 0 0 #888888,
+                0 0 10px rgba(136, 136, 136, 0.5);
         }
 
         .pixel-dragon.metalbeak::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -25px;
+            left: 8px;
+            width: 35px;
+            height: 30px;
             background: #CCCCCC;
             border: 2px solid #888888;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(15% 0%, 85% 0%, 100% 30%, 95% 60%, 80% 100%, 20% 100%, 5% 60%, 0% 30%);
             box-shadow: 
-                8px 8px 0 0 #888888,
-                18px 8px 0 0 #888888;
+                10px 12px 0 0 #888888,
+                22px 12px 0 0 #888888,
+                15px 20px 0 0 #AAAAAA,
+                20px 20px 0 0 #AAAAAA,
+                5px -5px 0 0 #888888,
+                30px -5px 0 0 #888888,
+                8px -8px 0 0 #CCCCCC,
+                27px -8px 0 0 #CCCCCC;
             z-index: 1;
             display: block;
         }
@@ -853,19 +1722,22 @@
         .pixel-dragon.metalbeak::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 15px;
+            left: -25px;
+            width: 25px;
+            height: 40px;
             background: #CCCCCC;
             border: 2px solid #888888;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 5%, 95% 30%, 100% 60%, 90% 95%, 0% 100%, 5% 50%);
             box-shadow: 
-                80px 0 0 0 #CCCCCC,
-                80px 0 0 2px #888888,
-                45px 60px 0 0 #AAAAAA,
-                50px 65px 0 0 #CCCCCC,
-                55px 70px 0 0 #AAAAAA,
+                75px 0 0 0 #CCCCCC,
+                75px 0 0 2px #888888,
+                5px 15px 0 0 #AAAAAA,
+                20px 20px 0 0 #AAAAAA,
+                80px 15px 0 0 #AAAAAA,
+                95px 20px 0 0 #AAAAAA,
+                0px 35px 0 0 #888888,
+                100px 35px 0 0 #888888,
                 8px 25px 0 0 #CCCCCC,
                 18px 25px 0 0 #CCCCCC;
             z-index: 0;
@@ -874,30 +1746,57 @@
 
         .pixel-dragon.vineclaw {
             background: #44AA44 !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #228822;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #228822;
             position: relative;
             overflow: visible;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(34, 136, 34, 0.5);
+            box-shadow: 
+                10px 10px 0 0 #66DD66,
+                20px 15px 0 0 #44AA44,
+                30px 20px 0 0 #66DD66,
+                15px 25px 0 0 #44AA44,
+                25px 30px 0 0 #66DD66,
+                35px 35px 0 0 #44AA44,
+                5px 60px 0 0 #44AA44,
+                5px 65px 0 0 #44AA44,
+                10px 60px 0 0 #44AA44,
+                10px 65px 0 0 #44AA44,
+                35px 60px 0 0 #44AA44,
+                35px 65px 0 0 #44AA44,
+                40px 60px 0 0 #44AA44,
+                40px 65px 0 0 #44AA44,
+                45px 50px 0 0 #44AA44,
+                50px 55px 0 0 #228822,
+                55px 60px 0 0 #44AA44,
+                60px 65px 0 0 #228822,
+                65px 70px 0 0 #44AA44,
+                70px 75px 0 0 #66DD66,
+                0 0 10px rgba(34, 136, 34, 0.5);
         }
 
         .pixel-dragon.vineclaw::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -25px;
+            left: 8px;
+            width: 35px;
+            height: 30px;
             background: #66DD66;
             border: 2px solid #228822;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(15% 0%, 85% 0%, 100% 30%, 95% 60%, 80% 100%, 20% 100%, 5% 60%, 0% 30%);
             box-shadow: 
-                8px 8px 0 0 #228822,
-                18px 8px 0 0 #228822;
+                10px 12px 0 0 #228822,
+                22px 12px 0 0 #228822,
+                15px 20px 0 0 #44AA44,
+                20px 20px 0 0 #44AA44,
+                5px -5px 0 0 #228822,
+                30px -5px 0 0 #228822,
+                8px -8px 0 0 #66DD66,
+                27px -8px 0 0 #66DD66;
             z-index: 1;
             display: block;
         }
@@ -905,49 +1804,127 @@
         .pixel-dragon.vineclaw::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 15px;
+            left: -25px;
+            width: 25px;
+            height: 40px;
             background: #66DD66;
             border: 2px solid #228822;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 5%, 95% 30%, 100% 60%, 90% 95%, 0% 100%, 5% 50%);
             box-shadow: 
-                80px 0 0 0 #66DD66,
-                80px 0 0 2px #228822,
-                45px 60px 0 0 #44AA44,
-                50px 65px 0 0 #66DD66,
-                55px 70px 0 0 #44AA44;
+                75px 0 0 0 #66DD66,
+                75px 0 0 2px #228822,
+                5px 15px 0 0 #44AA44,
+                20px 20px 0 0 #44AA44,
+                80px 15px 0 0 #44AA44,
+                95px 20px 0 0 #44AA44,
+                0px 35px 0 0 #228822,
+                100px 35px 0 0 #228822;
             z-index: 0;
             display: block;
         }
 
         .pixel-dragon.shadowmaw {
             background: #000000 !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #8844AA;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #8844AA;
             position: relative;
             overflow: visible;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(136, 68, 170, 0.5);
+            box-shadow: 
+                /* Detailed shadow scales */
+                8px 8px 0 0 #8844AA,
+                12px 10px 0 0 #000000,
+                18px 12px 0 0 #8844AA,
+                22px 14px 0 0 #000000,
+                28px 16px 0 0 #8844AA,
+                32px 18px 0 0 #000000,
+                38px 20px 0 0 #8844AA,
+                10px 18px 0 0 #000000,
+                16px 20px 0 0 #8844AA,
+                24px 22px 0 0 #000000,
+                30px 24px 0 0 #8844AA,
+                36px 26px 0 0 #000000,
+                12px 28px 0 0 #8844AA,
+                20px 30px 0 0 #000000,
+                28px 32px 0 0 #8844AA,
+                34px 34px 0 0 #000000,
+                /* Shadow spine */
+                20px 5px 0 0 #BB88DD,
+                22px 8px 0 0 #8844AA,
+                24px 12px 0 0 #BB88DD,
+                26px 16px 0 0 #8844AA,
+                28px 20px 0 0 #BB88DD,
+                30px 24px 0 0 #8844AA,
+                32px 28px 0 0 #BB88DD,
+                /* Front legs with claws */
+                3px 58px 0 0 #000000,
+                3px 62px 0 0 #000000,
+                3px 66px 0 0 #8844AA,
+                7px 58px 0 0 #000000,
+                7px 62px 0 0 #000000,
+                7px 66px 0 0 #8844AA,
+                11px 58px 0 0 #000000,
+                11px 62px 0 0 #000000,
+                /* Back legs */
+                33px 58px 0 0 #000000,
+                33px 62px 0 0 #000000,
+                33px 66px 0 0 #8844AA,
+                37px 58px 0 0 #000000,
+                37px 62px 0 0 #000000,
+                37px 66px 0 0 #8844AA,
+                41px 58px 0 0 #000000,
+                41px 62px 0 0 #000000,
+                /* Detailed tail */
+                45px 48px 0 0 #000000,
+                48px 52px 0 0 #8844AA,
+                51px 56px 0 0 #000000,
+                54px 60px 0 0 #8844AA,
+                57px 64px 0 0 #000000,
+                60px 68px 0 0 #8844AA,
+                63px 72px 0 0 #000000,
+                66px 76px 0 0 #BB88DD,
+                69px 80px 0 0 #8844AA,
+                0 0 10px rgba(136, 68, 170, 0.5);
         }
 
         .pixel-dragon.shadowmaw::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -30px;
+            left: 6px;
+            width: 38px;
+            height: 35px;
             background: #8844AA;
             border: 2px solid #BB88DD;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(12% 0%, 88% 0%, 100% 25%, 98% 50%, 85% 75%, 75% 100%, 25% 100%, 15% 75%, 2% 50%, 0% 25%);
             box-shadow: 
-                8px 8px 0 0 #BB88DD,
-                18px 8px 0 0 #BB88DD;
+                10px 10px 0 0 #BB88DD,
+                10px 10px 0 2px #000000,
+                12px 12px 0 0 #FFFFFF,
+                22px 10px 0 0 #BB88DD,
+                22px 10px 0 2px #000000,
+                24px 12px 0 0 #FFFFFF,
+                12px 18px 0 0 #BB88DD,
+                26px 18px 0 0 #BB88DD,
+                14px 22px 0 0 #BB88DD,
+                16px 24px 0 0 #8844AA,
+                18px 24px 0 0 #000000,
+                20px 24px 0 0 #8844AA,
+                22px 24px 0 0 #000000,
+                24px 24px 0 0 #8844AA,
+                26px 22px 0 0 #BB88DD,
+                4px -6px 0 0 #BB88DD,
+                4px -6px 0 2px #8844AA,
+                6px -10px 0 0 #8844AA,
+                32px -6px 0 0 #BB88DD,
+                32px -6px 0 2px #8844AA,
+                34px -10px 0 0 #8844AA,
+                8px 6px 0 0 #8844AA,
+                30px 6px 0 0 #000000;
             z-index: 1;
             display: block;
         }
@@ -955,50 +1932,102 @@
         .pixel-dragon.shadowmaw::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 12px;
+            left: -28px;
+            width: 28px;
+            height: 45px;
             background: #8844AA;
             border: 2px solid #BB88DD;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 3%, 98% 25%, 100% 50%, 95% 75%, 85% 95%, 0% 100%, 3% 50%);
             box-shadow: 
-                80px 0 0 0 #8844AA,
-                80px 0 0 2px #BB88DD,
-                45px 60px 0 0 #000000,
-                50px 65px 0 0 #8844AA,
-                55px 70px 0 0 #000000;
+                78px 0 0 0 #8844AA,
+                78px 0 0 2px #BB88DD,
+                4px 12px 0 0 #000000,
+                4px 12px 0 1px #BB88DD,
+                8px 18px 0 0 #BB88DD,
+                8px 18px 0 1px #8844AA,
+                12px 24px 0 0 #000000,
+                12px 24px 0 1px #BB88DD,
+                16px 30px 0 0 #BB88DD,
+                16px 30px 0 1px #8844AA,
+                20px 36px 0 0 #000000,
+                20px 36px 0 1px #BB88DD,
+                82px 12px 0 0 #000000,
+                82px 12px 0 1px #BB88DD,
+                86px 18px 0 0 #BB88DD,
+                86px 18px 0 1px #8844AA,
+                90px 24px 0 0 #000000,
+                90px 24px 0 1px #BB88DD,
+                94px 30px 0 0 #BB88DD,
+                94px 30px 0 1px #8844AA,
+                98px 36px 0 0 #000000,
+                98px 36px 0 1px #BB88DD,
+                -2px 40px 0 0 #BB88DD,
+                -2px 40px 0 1px #8844AA,
+                0px 42px 0 0 #8844AA,
+                2px 44px 0 0 #BB88DD,
+                106px 40px 0 0 #BB88DD,
+                106px 40px 0 1px #8844AA,
+                108px 42px 0 0 #8844AA,
+                110px 44px 0 0 #BB88DD;
             z-index: 0;
             display: block;
         }
 
         .pixel-dragon.aquaris {
             background: #4488FF !important;
-            width: 60px;
-            height: 80px;
-            border: 3px solid #2266FF;
+            width: 50px;
+            height: 70px;
+            border: 2px solid #2266FF;
             position: relative;
             overflow: visible;
             animation: waterFlow 2s infinite;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            box-shadow: 0 0 10px rgba(34, 102, 255, 0.5);
+            box-shadow: 
+                10px 10px 0 0 #66AAFF,
+                20px 15px 0 0 #4488FF,
+                30px 20px 0 0 #66AAFF,
+                15px 25px 0 0 #4488FF,
+                25px 30px 0 0 #66AAFF,
+                35px 35px 0 0 #4488FF,
+                5px 60px 0 0 #4488FF,
+                5px 65px 0 0 #4488FF,
+                10px 60px 0 0 #4488FF,
+                10px 65px 0 0 #4488FF,
+                35px 60px 0 0 #4488FF,
+                35px 65px 0 0 #4488FF,
+                40px 60px 0 0 #4488FF,
+                40px 65px 0 0 #4488FF,
+                45px 50px 0 0 #4488FF,
+                50px 55px 0 0 #2266FF,
+                55px 60px 0 0 #4488FF,
+                60px 65px 0 0 #2266FF,
+                65px 70px 0 0 #4488FF,
+                70px 75px 0 0 #66AAFF,
+                0 0 10px rgba(34, 102, 255, 0.5);
         }
 
         .pixel-dragon.aquaris::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: 5px;
-            width: 30px;
-            height: 25px;
+            top: -25px;
+            left: 8px;
+            width: 35px;
+            height: 30px;
             background: #66AAFF;
             border: 2px solid #2266FF;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
+            clip-path: polygon(15% 0%, 85% 0%, 100% 30%, 95% 60%, 80% 100%, 20% 100%, 5% 60%, 0% 30%);
             box-shadow: 
-                8px 8px 0 0 #2266FF,
-                18px 8px 0 0 #2266FF;
+                10px 12px 0 0 #2266FF,
+                22px 12px 0 0 #2266FF,
+                15px 20px 0 0 #4488FF,
+                20px 20px 0 0 #4488FF,
+                5px -5px 0 0 #2266FF,
+                30px -5px 0 0 #2266FF,
+                8px -8px 0 0 #66AAFF,
+                27px -8px 0 0 #66AAFF;
             z-index: 1;
             display: block;
         }
@@ -1006,19 +2035,22 @@
         .pixel-dragon.aquaris::after {
             content: '';
             position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 20px;
-            height: 30px;
+            top: 15px;
+            left: -25px;
+            width: 25px;
+            height: 40px;
             background: #66AAFF;
             border: 2px solid #2266FF;
-            clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
+            clip-path: polygon(0% 0%, 100% 5%, 95% 30%, 100% 60%, 90% 95%, 0% 100%, 5% 50%);
             box-shadow: 
-                80px 0 0 0 #66AAFF,
-                80px 0 0 2px #2266FF,
-                45px 60px 0 0 #4488FF,
-                50px 65px 0 0 #66AAFF,
-                55px 70px 0 0 #4488FF;
+                75px 0 0 0 #66AAFF,
+                75px 0 0 2px #2266FF,
+                5px 15px 0 0 #4488FF,
+                20px 20px 0 0 #4488FF,
+                80px 15px 0 0 #4488FF,
+                95px 20px 0 0 #4488FF,
+                0px 35px 0 0 #2266FF,
+                100px 35px 0 0 #2266FF;
             z-index: 0;
             display: block;
         }
@@ -1065,6 +2097,54 @@
             background-color: #4488FF;
             box-shadow: 0 6px 12px rgba(102, 170, 255, 0.6);
             transform: translateY(-2px);
+        }
+
+        /* Virtual Joystick for Mobile */
+        .joystick-container {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 140px;
+            height: 140px;
+            display: none;
+            z-index: 1000;
+            touch-action: none;
+        }
+
+        .joystick-base {
+            width: 140px;
+            height: 140px;
+            background: rgba(136, 68, 170, 0.6);
+            border: 4px solid rgba(187, 136, 221, 0.8);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .joystick-stick {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 215, 0, 0.9);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease-out;
+            pointer-events: none;
+        }
+
+        .joystick-container.active .joystick-stick {
+            transition: none;
+        }
+
+        /* Show joystick only on mobile */
+        @media screen and (max-width: 768px) {
+            .joystick-container {
+                display: block;
+            }
         }
 
         /* Mobile Responsive Styles */
@@ -1252,7 +2332,7 @@
                 <div class="cave-container">
                     <div class="cave-background">
                         <div class="cave-stalactites"></div>
-                        <div id="pixel-dragon" class="pixel-dragon"></div>
+                        <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
                     </div>
                 </div>
 
@@ -1263,6 +2343,13 @@
             </div>
         </div>
     </main>
+
+    <!-- Virtual Joystick for Mobile -->
+    <div id="joystick-container" class="joystick-container">
+        <div class="joystick-base">
+            <div class="joystick-stick"></div>
+        </div>
+    </div>
 
     <script>
         // Dragon data with all information
@@ -1543,8 +2630,12 @@
                     document.getElementById('adventure-view').classList.remove('active');
                     // Show selection area
                     document.getElementById('selection-area').classList.remove('hidden');
+                    // Hide joystick
+                    hideJoystick();
                     // Reset keys
                     keysPressed = { w: false, a: false, s: false, d: false };
+                    // Reset joystick
+                    joystickState = { active: false, x: 0, y: 0 };
                     // Clear movement interval
                     if (movementInterval) {
                         clearInterval(movementInterval);
@@ -1552,6 +2643,22 @@
                     }
                 });
             }
+
+            // Update mobile detection on window resize
+            window.addEventListener('resize', function() {
+                const wasMobile = isMobile;
+                isMobile = window.innerWidth <= 768;
+                
+                // Show/hide joystick based on mobile state
+                const adventureView = document.getElementById('adventure-view');
+                if (adventureView && adventureView.classList.contains('active')) {
+                    if (isMobile && !wasMobile) {
+                        showJoystick();
+                    } else if (!isMobile && wasMobile) {
+                        hideJoystick();
+                    }
+                }
+            });
         });
 
         // Global movement interval variable
@@ -1571,6 +2678,19 @@
             s: false,
             d: false
         };
+
+        // Joystick state
+        let joystickState = {
+            active: false,
+            x: 0,
+            y: 0
+        };
+
+        let joystickContainer = null;
+        let joystickStick = null;
+        let joystickBase = null;
+        let joystickBaseRect = null;
+        let isMobile = window.innerWidth <= 768;
 
         // Function to start the adventure
         function startAdventure(dragonId) {
@@ -1600,8 +2720,9 @@
             // Display pixelated dragon
             const pixelDragon = document.getElementById('pixel-dragon');
             if (pixelDragon) {
-                // Use the dragon ID directly as the class name (e.g., 'breezeflight', 'flamethorn')
-                pixelDragon.className = 'pixel-dragon ' + dragonId;
+                // Set the image source
+                pixelDragon.src = 'images/icons/aquarius-icon.jpg';
+                pixelDragon.alt = dragon.name;
                 
                 // Force visibility with inline styles
                 pixelDragon.style.display = 'block';
@@ -1618,7 +2739,12 @@
                 void pixelDragon.offsetHeight;
                 
                 // Log for debugging
-                console.log('Dragon initialized:', dragonId, pixelDragon.className);
+                console.log('Dragon initialized:', dragonId, pixelDragon.src);
+            }
+
+            // Show joystick on mobile
+            if (isMobile) {
+                showJoystick();
             }
 
             // Set up keyboard controls with a small delay to ensure view is rendered
@@ -1689,25 +2815,61 @@
 
                 let moved = false;
 
-                // W - Move up (increase bottom value)
-                if (keysPressed.w && dragonPosition.y < (caveHeight - dragonHeight - 10)) {
-                    dragonPosition.y += moveSpeed;
-                    moved = true;
-                }
-                // S - Move down (decrease bottom value)
-                if (keysPressed.s && dragonPosition.y > 10) {
-                    dragonPosition.y -= moveSpeed;
-                    moved = true;
-                }
-                // A - Move left (decrease x percentage)
-                if (keysPressed.a && dragonPosition.x > 3) {
-                    dragonPosition.x -= (moveSpeed * 100) / caveWidth;
-                    moved = true;
-                }
-                // D - Move right (increase x percentage)
-                if (keysPressed.d && dragonPosition.x < 97) {
-                    dragonPosition.x += (moveSpeed * 100) / caveWidth;
-                    moved = true;
+                // Check if using joystick (mobile) or keyboard
+                if (joystickState.active && isMobile) {
+                    // Use joystick input
+                    const joystickX = joystickState.x;
+                    const joystickY = joystickState.y;
+                    
+                    // Calculate movement based on joystick position
+                    if (Math.abs(joystickX) > 0.1 || Math.abs(joystickY) > 0.1) {
+                        // Move based on joystick direction
+                        const speed = Math.sqrt(joystickX * joystickX + joystickY * joystickY);
+                        const normalizedSpeed = Math.min(speed, 1);
+                        
+                        // Move up (joystick Y is positive)
+                        if (joystickY > 0 && dragonPosition.y < (caveHeight - dragonHeight - 10)) {
+                            dragonPosition.y += moveSpeed * normalizedSpeed * joystickY;
+                            moved = true;
+                        }
+                        // Move down (joystick Y is negative)
+                        if (joystickY < 0 && dragonPosition.y > 10) {
+                            dragonPosition.y += moveSpeed * normalizedSpeed * joystickY;
+                            moved = true;
+                        }
+                        // Move left (joystick X is negative)
+                        if (joystickX < 0 && dragonPosition.x > 3) {
+                            dragonPosition.x += (moveSpeed * normalizedSpeed * joystickX * 100) / caveWidth;
+                            moved = true;
+                        }
+                        // Move right (joystick X is positive)
+                        if (joystickX > 0 && dragonPosition.x < 97) {
+                            dragonPosition.x += (moveSpeed * normalizedSpeed * joystickX * 100) / caveWidth;
+                            moved = true;
+                        }
+                    }
+                } else {
+                    // Use keyboard input
+                    // W - Move up (increase bottom value)
+                    if (keysPressed.w && dragonPosition.y < (caveHeight - dragonHeight - 10)) {
+                        dragonPosition.y += moveSpeed;
+                        moved = true;
+                    }
+                    // S - Move down (decrease bottom value)
+                    if (keysPressed.s && dragonPosition.y > 10) {
+                        dragonPosition.y -= moveSpeed;
+                        moved = true;
+                    }
+                    // A - Move left (decrease x percentage)
+                    if (keysPressed.a && dragonPosition.x > 3) {
+                        dragonPosition.x -= (moveSpeed * 100) / caveWidth;
+                        moved = true;
+                    }
+                    // D - Move right (increase x percentage)
+                    if (keysPressed.d && dragonPosition.x < 97) {
+                        dragonPosition.x += (moveSpeed * 100) / caveWidth;
+                        moved = true;
+                    }
                 }
 
                 if (moved) {
@@ -1729,7 +2891,126 @@
                 pixelDragon.style.visibility = 'visible';
             }
         }
+
+        // Joystick functions
+        function showJoystick() {
+            joystickContainer = document.getElementById('joystick-container');
+            if (joystickContainer) {
+                joystickContainer.style.display = 'block';
+                joystickBase = joystickContainer.querySelector('.joystick-base');
+                joystickStick = joystickContainer.querySelector('.joystick-stick');
+                setupJoystickControls();
+            }
+        }
+
+        function hideJoystick() {
+            joystickContainer = document.getElementById('joystick-container');
+            if (joystickContainer) {
+                joystickContainer.style.display = 'none';
+                joystickState = { active: false, x: 0, y: 0 };
+                if (joystickStick) {
+                    joystickStick.style.transform = 'translate(-50%, -50%)';
+                }
+            }
+        }
+
+        function setupJoystickControls() {
+            if (!joystickBase || !joystickStick) return;
+
+            let touchId = null;
+
+            // Touch start
+            joystickBase.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                if (touchId !== null) return;
+                
+                const touch = e.touches[0];
+                touchId = touch.identifier;
+                joystickState.active = true;
+                joystickContainer.classList.add('active');
+                updateJoystickPosition(touch);
+            });
+
+            // Touch move
+            joystickBase.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (touchId === null) return;
+                
+                for (let i = 0; i < e.touches.length; i++) {
+                    if (e.touches[i].identifier === touchId) {
+                        updateJoystickPosition(e.touches[i]);
+                        break;
+                    }
+                }
+            });
+
+            // Touch end
+            joystickBase.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                let touchEnded = false;
+                
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === touchId) {
+                        touchEnded = true;
+                        break;
+                    }
+                }
+                
+                if (touchEnded) {
+                    touchId = null;
+                    joystickState.active = false;
+                    joystickState.x = 0;
+                    joystickState.y = 0;
+                    joystickContainer.classList.remove('active');
+                    joystickStick.style.transform = 'translate(-50%, -50%)';
+                }
+            });
+
+            // Also handle touch cancel
+            joystickBase.addEventListener('touchcancel', function(e) {
+                e.preventDefault();
+                touchId = null;
+                joystickState.active = false;
+                joystickState.x = 0;
+                joystickState.y = 0;
+                joystickContainer.classList.remove('active');
+                joystickStick.style.transform = 'translate(-50%, -50%)';
+            });
+        }
+
+        function updateJoystickPosition(touch) {
+            if (!joystickBase || !joystickStick) return;
+
+            const rect = joystickBase.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const radius = rect.width / 2;
+
+            // Calculate distance from center
+            // Note: Invert Y axis so that moving finger UP gives positive Y (for up movement)
+            const deltaX = touch.clientX - centerX;
+            const deltaY = centerY - touch.clientY; // Inverted: centerY - touch.clientY
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+            // Limit stick movement to joystick base radius
+            let stickX = deltaX;
+            let stickY = deltaY;
+            
+            if (distance > radius - 35) { // 35 is half the stick size
+                const angle = Math.atan2(deltaY, deltaX);
+                stickX = Math.cos(angle) * (radius - 35);
+                stickY = Math.sin(angle) * (radius - 35);
+            }
+
+            // Update stick visual position
+            // For visual, we need to invert Y back to screen coordinates
+            joystickStick.style.transform = `translate(calc(-50% + ${stickX}px), calc(-50% + ${-stickY}px))`;
+
+            // Normalize joystick input (-1 to 1)
+            // Y is already inverted for game logic (positive = up)
+            joystickState.x = stickX / (radius - 35);
+            joystickState.y = stickY / (radius - 35);
+        }
     </script>
 </body>
 </html>
-
