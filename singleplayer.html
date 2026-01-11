@@ -2009,9 +2009,10 @@
                 return;
             }
             
-            // Get available powers (exclude shield powers that have been used 3 times)
+            // Get available powers (exclude shield powers that have been used 3 times, and instant heal if used)
             const availablePowers = [];
             const healingPowers = [];
+            const instantHealPowers = [];
             const shieldPowers = [];
             const damagePowers = [];
             
@@ -2021,10 +2022,17 @@
                     return;
                 }
                 
+                if (power.isInstantHeal === true && battleState.dragon2InstantHealUsed) {
+                    // Skip instant heal powers that have been used
+                    return;
+                }
+                
                 availablePowers.push({ power: power, index: index });
                 
                 // Categorize powers
-                if (power.isHealing === true) {
+                if (power.isInstantHeal === true) {
+                    instantHealPowers.push({ power: power, index: index });
+                } else if (power.isHealing === true) {
                     healingPowers.push({ power: power, index: index });
                 } else if (power.isShield === true) {
                     shieldPowers.push({ power: power, index: index });

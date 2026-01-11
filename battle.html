@@ -2057,6 +2057,11 @@
                         this.value = '';
                         battleState.dragon1Power = null;
                         alert('Shield power has been used 3 times and cannot be used again!');
+                    } else if (selectedPower.isInstantHeal === true && battleState.dragon1InstantHealUsed) {
+                        // Reset to empty if trying to select an instant heal power that's been used
+                        this.value = '';
+                        battleState.dragon1Power = null;
+                        alert('Instant Heal power has been used and cannot be used again!');
                     } else {
                         battleState.dragon1Power = selectedPower;
                     }
