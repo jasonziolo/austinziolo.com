@@ -40,6 +40,8 @@
             max-width: 1400px;
             margin: 10px auto;
             padding: 10px;
+            position: relative;
+            z-index: 1;
         }
 
         .story-header {
@@ -279,6 +281,494 @@
         .selected-dragon.chaos .element { color: #FF88DD; }
         .selected-dragon.chaos img { border-color: #FF44AA; }
 
+        /* Selection Area Visibility */
+        .selection-area {
+            display: block;
+        }
+
+        .selection-area.hidden {
+            display: none;
+        }
+
+        /* Adventure Game View Styles */
+        .adventure-view {
+            display: none;
+        }
+
+        .adventure-view.active {
+            display: block !important;
+            visibility: visible !important;
+        }
+
+        .cave-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: linear-gradient(180deg, #2a2a3e 0%, #1f2a3e 50%, #1a1a2e 100%);
+            border: 4px solid #5a5a7a;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            min-height: 560px;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            display: block;
+            visibility: visible;
+        }
+
+        .cave-background {
+            width: 100%;
+            height: 500px;
+            min-height: 500px;
+            background: 
+                repeating-linear-gradient(90deg, 
+                    #3a3a4e 0px, #3a3a4e 16px,
+                    #2a2a3e 16px, #2a2a3e 32px),
+                repeating-linear-gradient(0deg,
+                    #4a4a5e 0px, #4a4a5e 16px,
+                    #3a3a4e 16px, #3a3a4e 32px),
+                radial-gradient(ellipse at top, #5a5a6e 0%, transparent 50%);
+            background-color: #2a2a3e;
+            border-radius: 10px;
+            position: relative;
+            overflow: visible;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            border: 3px solid #6a6a8a;
+            display: block;
+            visibility: visible;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .cave-stalactites {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-image: 
+                repeating-linear-gradient(90deg,
+                    transparent 0px, transparent 40px,
+                    rgba(0,0,0,0.4) 40px, rgba(0,0,0,0.4) 80px);
+            pointer-events: none;
+            clip-path: polygon(0% 0%, 10% 100%, 20% 0%, 30% 100%, 40% 0%, 50% 100%, 60% 0%, 70% 100%, 80% 0%, 90% 100%, 100% 0%);
+        }
+
+        .pixel-dragon {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            transition: none;
+            z-index: 10;
+            width: 80px;
+            height: 80px;
+            background-color: #666666;
+            border: 2px solid #888888;
+            visibility: visible;
+        }
+
+        /* Pixelated Dragon Sprites - Each dragon gets a unique pixelated design */
+        .pixel-dragon.breezeflight {
+            width: 80px;
+            height: 80px;
+            background: 
+                linear-gradient(135deg, #E8F4F8 0%, #C8E4F0 25%, #A8D4E8 50%, #88CCFF 75%, #E8F4F8 100%);
+            border: 3px solid #88CCFF;
+            box-shadow: 
+                0 0 0 2px #66AAFF,
+                0 0 20px rgba(136, 204, 255, 0.6);
+            border-radius: 0;
+            position: relative;
+        }
+
+        .pixel-dragon.breezeflight::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            width: 40px;
+            height: 20px;
+            background: #C8E4F0;
+            border: 2px solid #88CCFF;
+            clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+        }
+
+        .pixel-dragon.breezeflight::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 30px;
+            width: 20px;
+            height: 30px;
+            background: #A8D4E8;
+            border: 2px solid #66AAFF;
+        }
+
+        .pixel-dragon.chaosflare {
+            width: 80px;
+            height: 80px;
+            background: 
+                repeating-linear-gradient(45deg,
+                    #FF44AA 0px, #FF44AA 10px,
+                    #8844FF 10px, #8844FF 20px,
+                    #FF8844 20px, #FF8844 30px);
+            border: 2px solid #FF44AA;
+            box-shadow: 0 0 20px rgba(255, 68, 170, 0.8);
+            border-radius: 0;
+            animation: chaosPulse 2s infinite;
+        }
+
+        @keyframes chaosPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+        }
+
+        .pixel-dragon.crystalwing {
+            width: 80px;
+            height: 80px;
+            background: 
+                linear-gradient(45deg, #DD99FF 25%, transparent 25%),
+                linear-gradient(-45deg, #DD99FF 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #DD99FF 75%),
+                linear-gradient(-45deg, transparent 75%, #DD99FF 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            border: 3px solid #BB66FF;
+            box-shadow: 0 0 20px rgba(187, 102, 255, 0.8);
+            border-radius: 0;
+            position: relative;
+        }
+
+        .pixel-dragon.crystalwing::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid #DD99FF;
+        }
+
+        .pixel-dragon.earthheart {
+            width: 80px;
+            height: 80px;
+            background: 
+                repeating-linear-gradient(0deg,
+                    #8B6F47 0px, #8B6F47 8px,
+                    #6B5F37 8px, #6B5F37 16px);
+            border: 2px solid #5B4F27;
+            box-shadow: 0 0 10px rgba(139, 111, 71, 0.5);
+            border-radius: 0;
+            position: relative;
+        }
+
+        .pixel-dragon.earthheart::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 60px;
+            height: 60px;
+            background: repeating-linear-gradient(45deg, #44AA44 0px, #44AA44 4px, transparent 4px, transparent 8px);
+        }
+
+        .pixel-dragon.flamethorn {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(180deg, #FF8800 0%, #FF4444 50%, #FF0000 100%);
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.8), 0 0 60px rgba(255, 136, 0, 0.6);
+            border-radius: 0;
+            animation: fireFlicker 0.5s infinite;
+            position: relative;
+        }
+
+        .pixel-dragon.flamethorn::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 25px;
+            width: 30px;
+            height: 20px;
+            background: #FF8800;
+            border: 2px solid #FFD700;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation: fireFlicker 0.3s infinite;
+        }
+
+        .pixel-dragon.flamethorn::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 35px;
+            width: 10px;
+            height: 15px;
+            background: #FF4444;
+            border: 1px solid #FFD700;
+        }
+
+        @keyframes fireFlicker {
+            0%, 100% { box-shadow: 0 0 30px rgba(255, 68, 68, 0.8), 0 0 60px rgba(255, 136, 0, 0.6); }
+            50% { box-shadow: 0 0 40px rgba(255, 136, 0, 1), 0 0 80px rgba(255, 200, 0, 0.8); }
+        }
+
+        .pixel-dragon.frostbite {
+            width: 80px;
+            height: 80px;
+            background: 
+                repeating-linear-gradient(90deg,
+                    #88EEFF 0px, #88EEFF 10px,
+                    #AAFFFF 10px, #AAFFFF 20px);
+            border: 3px solid #66CCFF;
+            box-shadow: 0 0 20px rgba(136, 238, 255, 0.8), inset 0 0 20px rgba(170, 255, 255, 0.5);
+            border-radius: 0;
+            position: relative;
+        }
+
+        .pixel-dragon.frostbite::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 30px;
+            width: 20px;
+            height: 30px;
+            background: #AAFFFF;
+            border: 2px solid #88EEFF;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .pixel-dragon.radiant {
+            width: 80px;
+            height: 80px;
+            background: 
+                radial-gradient(circle, #FFFF88 0%, #FFD700 50%, #FFAA00 100%);
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 255, 136, 0.8);
+            border-radius: 0;
+            animation: lightPulse 1.5s infinite;
+            position: relative;
+        }
+
+        .pixel-dragon.radiant::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 25px;
+            width: 30px;
+            height: 30px;
+            background: #FFFF88;
+            border: 2px solid #FFD700;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        @keyframes lightPulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 255, 136, 0.8); }
+            50% { box-shadow: 0 0 40px rgba(255, 255, 136, 1), 0 0 80px rgba(255, 215, 0, 1); }
+        }
+
+        .pixel-dragon.stormwing {
+            width: 80px;
+            height: 80px;
+            background: 
+                repeating-linear-gradient(45deg,
+                    #FFDD00 0px, #FFDD00 8px,
+                    #FFFF44 8px, #FFFF44 16px);
+            border: 3px solid #FFDD00;
+            box-shadow: 0 0 25px rgba(255, 221, 0, 0.9), 0 0 50px rgba(255, 255, 68, 0.6);
+            border-radius: 0;
+            animation: lightningFlicker 0.3s infinite;
+            position: relative;
+        }
+
+        .pixel-dragon.stormwing::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 30px;
+            width: 20px;
+            height: 40px;
+            background: #FFFF44;
+            border: 2px solid #FFDD00;
+            clip-path: polygon(50% 0%, 0% 50%, 50% 100%, 100% 50%);
+        }
+
+        @keyframes lightningFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .pixel-dragon.metalbeak {
+            width: 80px;
+            height: 80px;
+            background: 
+                repeating-linear-gradient(90deg,
+                    #AAAAAA 0px, #AAAAAA 5px,
+                    #CCCCCC 5px, #CCCCCC 10px);
+            border: 3px solid #888888;
+            box-shadow: 0 0 15px rgba(170, 170, 170, 0.6), inset 0 0 10px rgba(204, 204, 204, 0.3);
+            border-radius: 0;
+            position: relative;
+        }
+
+        .pixel-dragon.metalbeak::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 25px;
+            width: 30px;
+            height: 20px;
+            background: #CCCCCC;
+            border: 2px solid #888888;
+            clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 20% 100%);
+        }
+
+        .pixel-dragon.vineclaw {
+            width: 80px;
+            height: 80px;
+            background: 
+                repeating-linear-gradient(45deg,
+                    #44AA44 0px, #44AA44 8px,
+                    #66DD66 8px, #66DD66 16px);
+            border: 2px solid #228822;
+            box-shadow: 0 0 20px rgba(68, 170, 68, 0.6);
+            border-radius: 0;
+            position: relative;
+        }
+
+        .pixel-dragon.vineclaw::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 20px;
+            width: 40px;
+            height: 20px;
+            background: #66DD66;
+            border: 1px solid #44AA44;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .pixel-dragon.shadowmaw {
+            width: 80px;
+            height: 80px;
+            background: #000000;
+            border: 3px solid #8844AA;
+            box-shadow: 0 0 25px rgba(136, 68, 170, 0.8), inset 0 0 20px rgba(187, 136, 221, 0.3);
+            border-radius: 0;
+            position: relative;
+        }
+
+        .pixel-dragon.shadowmaw::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: #8844AA;
+            border: 2px solid #BB88DD;
+        }
+
+        .pixel-dragon.shadowmaw::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 30px;
+            width: 20px;
+            height: 15px;
+            background: #BB88DD;
+            border: 1px solid #8844AA;
+            clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+        }
+
+        .pixel-dragon.aquaris {
+            width: 80px;
+            height: 80px;
+            background: 
+                repeating-linear-gradient(0deg,
+                    #4488FF 0px, #4488FF 10px,
+                    #66AAFF 10px, #66AAFF 20px);
+            border: 3px solid #2266FF;
+            box-shadow: 0 0 20px rgba(68, 136, 255, 0.7), inset 0 0 15px rgba(102, 170, 255, 0.4);
+            border-radius: 0;
+            animation: waterFlow 2s infinite;
+            position: relative;
+        }
+
+        .pixel-dragon.aquaris::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 25px;
+            width: 30px;
+            height: 20px;
+            background: #66AAFF;
+            border: 2px solid #4488FF;
+            clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+        }
+
+        .pixel-dragon.aquaris::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 20px;
+            width: 40px;
+            height: 20px;
+            background: #4488FF;
+            border: 2px solid #2266FF;
+            clip-path: polygon(0% 100%, 25% 0%, 75% 0%, 100% 100%);
+        }
+
+        @keyframes waterFlow {
+            0%, 100% { background-position: 0 0; }
+            50% { background-position: 0 20px; }
+        }
+
+        .adventure-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .adventure-header h1 {
+            color: #FFD700;
+            font-size: 28px;
+            margin: 5px 0;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        .adventure-actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-to-select-button {
+            background-color: #66AAFF;
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 25px;
+            border: 3px solid #88CCFF;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(102, 170, 255, 0.4);
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-to-select-button:hover {
+            background-color: #4488FF;
+            box-shadow: 0 6px 12px rgba(102, 170, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
         /* Mobile Responsive Styles */
         @media screen and (max-width: 768px) {
             .story-container {
@@ -380,6 +870,34 @@
                 margin: 2px auto;
                 width: fit-content;
             }
+
+            .cave-container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+
+            .cave-background {
+                height: 300px;
+            }
+
+            .pixel-dragon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .adventure-header h1 {
+                font-size: 20px;
+            }
+
+            .adventure-header p {
+                font-size: 14px;
+            }
+
+            .back-to-select-button {
+                font-size: 14px;
+                padding: 8px 15px;
+                margin: 5px;
+            }
         }
     </style>
 </head>
@@ -422,6 +940,26 @@
                 </div>
 
                 <div class="back-link-container">
+                    <a href="index.html" class="back-link">← Back to Dragon Lair</a>
+                </div>
+            </div>
+
+            <!-- Adventure Game View (hidden initially) -->
+            <div id="adventure-view" class="adventure-view">
+                <div class="adventure-header">
+                    <h1>YOUR ADVENTURE</h1>
+                    <p id="adventure-dragon-name" style="color: #E0E0E0; font-size: 18px; margin: 10px 0;"></p>
+                </div>
+
+                <div class="cave-container">
+                    <div class="cave-background">
+                        <div class="cave-stalactites"></div>
+                        <div id="pixel-dragon" class="pixel-dragon"></div>
+                    </div>
+                </div>
+
+                <div class="adventure-actions">
+                    <button id="back-to-select-button" class="back-to-select-button">Back to Selection</button>
                     <a href="index.html" class="back-link">← Back to Dragon Lair</a>
                 </div>
             </div>
@@ -695,11 +1233,189 @@
             startButton.addEventListener('click', function() {
                 const selectedDragon = dragonSelect.value;
                 if (selectedDragon) {
-                    // TODO: Implement story mode functionality
-                    alert('Story mode coming soon! You selected: ' + dragonData[selectedDragon].name);
+                    startAdventure(selectedDragon);
                 }
             });
+
+            // Back to selection button
+            const backToSelectButton = document.getElementById('back-to-select-button');
+            if (backToSelectButton) {
+                backToSelectButton.addEventListener('click', function() {
+                    // Hide adventure view
+                    document.getElementById('adventure-view').classList.remove('active');
+                    // Show selection area
+                    document.getElementById('selection-area').classList.remove('hidden');
+                    // Reset keys
+                    keysPressed = { w: false, a: false, s: false, d: false };
+                    // Clear movement interval
+                    if (movementInterval) {
+                        clearInterval(movementInterval);
+                        movementInterval = null;
+                    }
+                });
+            }
         });
+
+        // Global movement interval variable
+        let movementInterval = null;
+        let keyDownHandler = null;
+        let keyUpHandler = null;
+
+        // Dragon movement state
+        let dragonPosition = {
+            x: 50, // percentage from left
+            y: 50  // pixels from bottom
+        };
+
+        let keysPressed = {
+            w: false,
+            a: false,
+            s: false,
+            d: false
+        };
+
+        // Function to start the adventure
+        function startAdventure(dragonId) {
+            const dragon = dragonData[dragonId];
+            if (!dragon) {
+                return;
+            }
+
+            // Hide selection area
+            const selectionArea = document.getElementById('selection-area');
+            if (selectionArea) {
+                selectionArea.classList.add('hidden');
+            }
+            
+            // Show adventure view
+            const adventureView = document.getElementById('adventure-view');
+            if (adventureView) {
+                adventureView.classList.add('active');
+            }
+
+            // Update dragon name
+            const dragonNameElement = document.getElementById('adventure-dragon-name');
+            if (dragonNameElement) {
+                dragonNameElement.textContent = dragon.name + ' enters the cave... Use WASD keys to move!';
+            }
+
+            // Display pixelated dragon
+            const pixelDragon = document.getElementById('pixel-dragon');
+            if (pixelDragon) {
+                const elementClass = getElementClass(dragon.element);
+                pixelDragon.className = 'pixel-dragon ' + elementClass;
+                pixelDragon.style.display = 'block';
+                pixelDragon.style.visibility = 'visible';
+                
+                // Reset position
+                dragonPosition = { x: 50, y: 50 };
+                updateDragonPosition();
+            }
+
+            // Set up keyboard controls with a small delay to ensure view is rendered
+            setTimeout(function() {
+                setupMovementControls();
+            }, 100);
+        }
+
+        // Function to set up movement controls
+        function setupMovementControls() {
+            // Clear any existing interval
+            if (movementInterval) {
+                clearInterval(movementInterval);
+                movementInterval = null;
+            }
+
+            // Remove old listeners if they exist
+            if (keyDownHandler) {
+                document.removeEventListener('keydown', keyDownHandler);
+            }
+            if (keyUpHandler) {
+                document.removeEventListener('keyup', keyUpHandler);
+            }
+
+            // Key down event handler
+            keyDownHandler = function(event) {
+                const key = event.key.toLowerCase();
+                if (key === 'w' || key === 'a' || key === 's' || key === 'd') {
+                    if (document.getElementById('adventure-view').classList.contains('active')) {
+                        keysPressed[key] = true;
+                        event.preventDefault();
+                    }
+                }
+            };
+
+            // Key up event handler
+            keyUpHandler = function(event) {
+                const key = event.key.toLowerCase();
+                if (key === 'w' || key === 'a' || key === 's' || key === 'd') {
+                    keysPressed[key] = false;
+                    event.preventDefault();
+                }
+            };
+
+            // Add new listeners
+            document.addEventListener('keydown', keyDownHandler);
+            document.addEventListener('keyup', keyUpHandler);
+
+            // Movement loop
+            movementInterval = setInterval(function() {
+                const adventureView = document.getElementById('adventure-view');
+                if (!adventureView || !adventureView.classList.contains('active')) {
+                    if (movementInterval) {
+                        clearInterval(movementInterval);
+                        movementInterval = null;
+                    }
+                    return;
+                }
+
+                const moveSpeed = 2.5; // pixels per frame
+                const caveBackground = document.querySelector('.cave-background');
+                if (!caveBackground) return;
+
+                const caveWidth = caveBackground.offsetWidth;
+                const caveHeight = caveBackground.offsetHeight;
+                const dragonWidth = 80; // dragon width in pixels
+                const dragonHeight = 80; // dragon height in pixels
+
+                let moved = false;
+
+                // W - Move up (increase bottom value)
+                if (keysPressed.w && dragonPosition.y < (caveHeight - dragonHeight - 10)) {
+                    dragonPosition.y += moveSpeed;
+                    moved = true;
+                }
+                // S - Move down (decrease bottom value)
+                if (keysPressed.s && dragonPosition.y > 10) {
+                    dragonPosition.y -= moveSpeed;
+                    moved = true;
+                }
+                // A - Move left (decrease x percentage)
+                if (keysPressed.a && dragonPosition.x > 3) {
+                    dragonPosition.x -= (moveSpeed * 100) / caveWidth;
+                    moved = true;
+                }
+                // D - Move right (increase x percentage)
+                if (keysPressed.d && dragonPosition.x < 97) {
+                    dragonPosition.x += (moveSpeed * 100) / caveWidth;
+                    moved = true;
+                }
+
+                if (moved) {
+                    updateDragonPosition();
+                }
+            }, 16); // ~60 FPS
+        }
+
+        // Function to update dragon position
+        function updateDragonPosition() {
+            const pixelDragon = document.getElementById('pixel-dragon');
+            if (pixelDragon) {
+                pixelDragon.style.left = dragonPosition.x + '%';
+                pixelDragon.style.bottom = dragonPosition.y + 'px';
+                pixelDragon.style.transform = 'translateX(-50%)';
+            }
+        }
     </script>
 </body>
 </html>
