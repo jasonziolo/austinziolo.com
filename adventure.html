@@ -2099,6 +2099,92 @@
             transform: translateY(-2px);
         }
 
+        /* Room Map Styles */
+        .room-map-container {
+            max-width: 1200px;
+            margin: 15px auto;
+            padding: 15px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #2a2a3e 100%);
+            border: 3px solid #5a5a7a;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .room-map-title {
+            text-align: center;
+            color: #FFD700;
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .room-map-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            justify-items: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .room-map-cell {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #5a5a7a;
+            border-radius: 5px;
+            background-color: #2a2a3e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #888;
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .room-map-cell.visited {
+            background-color: #3a4a5e;
+            border-color: #6a7a8a;
+        }
+
+        .room-map-cell.current {
+            background-color: #FFD700;
+            border-color: #FFAA00;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            color: #000;
+            font-weight: bold;
+            transform: scale(1.1);
+        }
+
+        .room-map-cell.unreachable {
+            background-color: #1a1a1a;
+            border-color: #3a3a3a;
+            opacity: 0.3;
+        }
+
+        @media screen and (max-width: 768px) {
+            .room-map-container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+
+            .room-map-title {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+
+            .room-map-grid {
+                gap: 3px;
+                padding: 5px;
+            }
+
+            .room-map-cell {
+                width: 30px;
+                height: 30px;
+                font-size: 8px;
+            }
+        }
+
         /* Virtual Joystick for Mobile */
         .joystick-container {
             position: fixed;
@@ -2334,6 +2420,11 @@
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
                     </div>
+                </div>
+
+                <div class="room-map-container">
+                    <div class="room-map-title">MAP</div>
+                    <div id="room-map-grid" class="room-map-grid"></div>
                 </div>
 
                 <div class="adventure-actions">
@@ -2637,9 +2728,10 @@
                     // Reset joystick
                     joystickState = { active: false, x: 0, y: 0 };
                     // Reset room system
-                    currentRoom = 0;
+                    currentRoom = { x: 0, y: 0 };
                     roomMemory = {};
                     transitioning = false;
+                    updateMap();
                     // Clear movement interval
                     if (movementInterval) {
                         clearInterval(movementInterval);
@@ -2684,9 +2776,10 @@
         };
 
         // Room system with memory
-        let currentRoom = 0;
-        let roomMemory = {}; // Stores room states: { roomId: { background, seed, visited } }
+        let currentRoom = { x: 0, y: 0 }; // Grid coordinates (center is 0,0)
+        let roomMemory = {}; // Stores room states: { "x,y": { background, seed, visited } }
         let transitioning = false; // Prevents multiple transitions at once
+        const MAX_ROOMS = 3; // Maximum rooms in each direction from center
 
         // Joystick state
         let joystickState = {
@@ -2701,12 +2794,17 @@
         let joystickBaseRect = null;
         let isMobile = window.innerWidth <= 768;
 
+        // Store current dragon for room display
+        let currentDragon = null;
+
         // Function to start the adventure
         function startAdventure(dragonId) {
             const dragon = dragonData[dragonId];
             if (!dragon) {
                 return;
             }
+            
+            currentDragon = dragon;
 
             // Hide selection area
             const selectionArea = document.getElementById('selection-area');
@@ -2720,10 +2818,10 @@
                 adventureView.classList.add('active');
             }
 
-            // Update dragon name
+            // Update dragon name and room info
             const dragonNameElement = document.getElementById('adventure-dragon-name');
             if (dragonNameElement) {
-                dragonNameElement.textContent = dragon.name + ' enters the cave... Use WASD keys to move!';
+                updateRoomDisplay();
             }
 
             // Display pixelated dragon
@@ -2759,11 +2857,13 @@
                 pixelDragon.style.position = 'absolute';
                 
                 // Initialize room system
-                currentRoom = 0;
-                if (!roomMemory[currentRoom]) {
-                    roomMemory[currentRoom] = generateRoomState(currentRoom);
+                currentRoom = { x: 0, y: 0 };
+                const roomKey = getRoomKey(currentRoom);
+                if (!roomMemory[roomKey]) {
+                    roomMemory[roomKey] = generateRoomState(currentRoom);
                 }
                 loadRoom(currentRoom);
+                updateMap();
                 
                 // Reset position to center of cave
                 dragonPosition = { x: 50, y: 100 };
@@ -2866,8 +2966,8 @@
                             if (dragonPosition.y < (caveHeight - dragonHeight - 10)) {
                                 dragonPosition.y += moveSpeed * normalizedSpeed * joystickY;
                                 moved = true;
-                            } else if (!transitioning) {
-                                // Hit top wall - transition to room above
+                            } else if (!transitioning && canMoveInDirection('up')) {
+                                // Hit top wall - transition to room above (if allowed)
                                 transitionToRoom('up');
                             }
                         }
@@ -2876,8 +2976,8 @@
                             if (dragonPosition.y > 10) {
                                 dragonPosition.y += moveSpeed * normalizedSpeed * joystickY;
                                 moved = true;
-                            } else if (!transitioning) {
-                                // Hit bottom wall - transition to room below
+                            } else if (!transitioning && canMoveInDirection('down')) {
+                                // Hit bottom wall - transition to room below (if allowed)
                                 transitionToRoom('down');
                             }
                         }
@@ -2886,8 +2986,8 @@
                             if (dragonPosition.x > 3) {
                                 dragonPosition.x += (moveSpeed * normalizedSpeed * joystickX * 100) / caveWidth;
                                 moved = true;
-                            } else if (!transitioning) {
-                                // Hit left wall - transition to room to the left
+                            } else if (!transitioning && canMoveInDirection('left')) {
+                                // Hit left wall - transition to room to the left (if allowed)
                                 transitionToRoom('left');
                             }
                         }
@@ -2896,8 +2996,8 @@
                             if (dragonPosition.x < 97) {
                                 dragonPosition.x += (moveSpeed * normalizedSpeed * joystickX * 100) / caveWidth;
                                 moved = true;
-                            } else if (!transitioning) {
-                                // Hit right wall - transition to room to the right
+                            } else if (!transitioning && canMoveInDirection('right')) {
+                                // Hit right wall - transition to room to the right (if allowed)
                                 transitionToRoom('right');
                             }
                         }
@@ -2909,8 +3009,8 @@
                         if (dragonPosition.y < (caveHeight - dragonHeight - 10)) {
                             dragonPosition.y += moveSpeed;
                             moved = true;
-                        } else if (!transitioning) {
-                            // Hit top wall - transition to room above
+                        } else if (!transitioning && canMoveInDirection('up')) {
+                            // Hit top wall - transition to room above (if allowed)
                             transitionToRoom('up');
                         }
                     }
@@ -2919,8 +3019,8 @@
                         if (dragonPosition.y > 10) {
                             dragonPosition.y -= moveSpeed;
                             moved = true;
-                        } else if (!transitioning) {
-                            // Hit bottom wall - transition to room below
+                        } else if (!transitioning && canMoveInDirection('down')) {
+                            // Hit bottom wall - transition to room below (if allowed)
                             transitionToRoom('down');
                         }
                     }
@@ -2929,8 +3029,8 @@
                         if (dragonPosition.x > 3) {
                             dragonPosition.x -= (moveSpeed * 100) / caveWidth;
                             moved = true;
-                        } else if (!transitioning) {
-                            // Hit left wall - transition to room to the left
+                        } else if (!transitioning && canMoveInDirection('left')) {
+                            // Hit left wall - transition to room to the left (if allowed)
                             transitionToRoom('left');
                         }
                     }
@@ -2939,8 +3039,8 @@
                         if (dragonPosition.x < 97) {
                             dragonPosition.x += (moveSpeed * 100) / caveWidth;
                             moved = true;
-                        } else if (!transitioning) {
-                            // Hit right wall - transition to room to the right
+                        } else if (!transitioning && canMoveInDirection('right')) {
+                            // Hit right wall - transition to room to the right (if allowed)
                             transitionToRoom('right');
                         }
                     }
@@ -2967,9 +3067,13 @@
         }
 
         // Room system functions
-        function generateRoomState(roomId) {
-            // Generate a unique seed based on room ID for consistent room appearance
-            const seed = roomId * 12345; // Simple deterministic seed
+        function getRoomKey(roomCoord) {
+            return roomCoord.x + ',' + roomCoord.y;
+        }
+
+        function generateRoomState(roomCoord) {
+            // Generate a unique seed based on room coordinates for consistent room appearance
+            const seed = (roomCoord.x * 1000 + roomCoord.y) * 12345; // Simple deterministic seed
             const rng = seededRandom(seed);
             
             // Room background color variations
@@ -3001,12 +3105,13 @@
             };
         }
 
-        function loadRoom(roomId) {
-            if (!roomMemory[roomId]) {
-                roomMemory[roomId] = generateRoomState(roomId);
+        function loadRoom(roomCoord) {
+            const roomKey = getRoomKey(roomCoord);
+            if (!roomMemory[roomKey]) {
+                roomMemory[roomKey] = generateRoomState(roomCoord);
             }
             
-            const room = roomMemory[roomId];
+            const room = roomMemory[roomKey];
             const caveBackground = document.querySelector('.cave-background');
             
             if (caveBackground && room.background) {
@@ -3025,51 +3130,65 @@
             room.visited = true;
         }
 
+        function canMoveInDirection(direction) {
+            // Check if movement is allowed (within 3 rooms in each direction)
+            switch(direction) {
+                case 'up':
+                    return currentRoom.y < MAX_ROOMS;
+                case 'down':
+                    return currentRoom.y > -MAX_ROOMS;
+                case 'left':
+                    return currentRoom.x > -MAX_ROOMS;
+                case 'right':
+                    return currentRoom.x < MAX_ROOMS;
+                default:
+                    return false;
+            }
+        }
+
         function transitionToRoom(direction) {
             if (transitioning) return;
             
+            // Check if movement is allowed
+            if (!canMoveInDirection(direction)) {
+                // Can't move further - just prevent movement, don't teleport
+                transitioning = false;
+                return;
+            }
+            
             transitioning = true;
             
-            // Calculate new room ID based on direction
-            // Using a grid system: rooms are arranged in a grid
-            // Room IDs: currentRoom represents position in grid
-            // For simplicity, we'll use a simple incrementing system
-            let newRoomId = currentRoom;
-            
-            // Convert current room to grid coordinates (assuming a grid layout)
-            const roomX = currentRoom % 10; // X position in grid
-            const roomY = Math.floor(currentRoom / 10); // Y position in grid
+            // Calculate new room coordinates based on direction
+            let newRoom = { x: currentRoom.x, y: currentRoom.y };
             
             switch(direction) {
                 case 'up':
-                    newRoomId = currentRoom + 10; // Move up in grid
+                    newRoom.y = currentRoom.y + 1;
                     break;
                 case 'down':
-                    newRoomId = currentRoom - 10; // Move down in grid
+                    newRoom.y = currentRoom.y - 1;
                     break;
                 case 'left':
-                    newRoomId = currentRoom - 1; // Move left in grid
+                    newRoom.x = currentRoom.x - 1;
                     break;
                 case 'right':
-                    newRoomId = currentRoom + 1; // Move right in grid
+                    newRoom.x = currentRoom.x + 1;
                     break;
-            }
-            
-            // Ensure room ID doesn't go negative
-            if (newRoomId < 0) {
-                newRoomId = 0;
             }
             
             // Load or generate room state
-            if (!roomMemory[newRoomId]) {
-                roomMemory[newRoomId] = generateRoomState(newRoomId);
+            const roomKey = getRoomKey(newRoom);
+            if (!roomMemory[roomKey]) {
+                roomMemory[roomKey] = generateRoomState(newRoom);
             }
             
             // Update current room
-            currentRoom = newRoomId;
+            currentRoom = newRoom;
             
             // Load the room (this will restore its saved state)
             loadRoom(currentRoom);
+            updateMap();
+            updateRoomDisplay();
             
             // Position dragon on opposite side of the room based on direction
             const caveBackground = document.querySelector('.cave-background');
@@ -3107,6 +3226,60 @@
             setTimeout(function() {
                 transitioning = false;
             }, 500);
+        }
+
+        function getRoomName(roomCoord) {
+            // Return "Main Room" for the starting room (0,0)
+            if (roomCoord.x === 0 && roomCoord.y === 0) {
+                return 'Main Room';
+            }
+            return `Room (${roomCoord.x}, ${roomCoord.y})`;
+        }
+
+        function updateRoomDisplay() {
+            const dragonNameElement = document.getElementById('adventure-dragon-name');
+            if (dragonNameElement && currentDragon) {
+                const roomName = getRoomName(currentRoom);
+                dragonNameElement.textContent = `${currentDragon.name} - ${roomName}`;
+            }
+        }
+
+        function updateMap() {
+            const mapGrid = document.getElementById('room-map-grid');
+            if (!mapGrid) return;
+
+            // Clear existing map
+            mapGrid.innerHTML = '';
+
+            // Create 7x7 grid (from -3 to +3 in both directions)
+            // Note: Grid is displayed with Y inverted (top row is highest Y)
+            for (let y = MAX_ROOMS; y >= -MAX_ROOMS; y--) {
+                for (let x = -MAX_ROOMS; x <= MAX_ROOMS; x++) {
+                    const cell = document.createElement('div');
+                    const roomCoord = { x: x, y: y };
+                    const roomKey = getRoomKey(roomCoord);
+                    const isVisited = roomMemory[roomKey] && roomMemory[roomKey].visited;
+                    const isCurrent = currentRoom.x === x && currentRoom.y === y;
+                    const roomName = getRoomName(roomCoord);
+
+                    cell.className = 'room-map-cell';
+                    
+                    if (isCurrent) {
+                        cell.classList.add('current');
+                        cell.textContent = '★';
+                        cell.title = `Current: ${roomName}`;
+                    } else if (isVisited) {
+                        cell.classList.add('visited');
+                        cell.textContent = '•';
+                        cell.title = `Visited: ${roomName}`;
+                    } else {
+                        cell.textContent = '';
+                        cell.title = roomName;
+                    }
+
+                    mapGrid.appendChild(cell);
+                }
+            }
         }
 
         // Joystick functions
