@@ -340,6 +340,17 @@
             display: block;
             visibility: visible;
             box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+        
+        /* Ensure pixel-dragon is always visible when inside cave-background */
+        .cave-background .pixel-dragon {
+            position: absolute !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
         .cave-stalactites {
@@ -357,124 +368,130 @@
         }
 
         .pixel-dragon {
-            position: absolute;
-            bottom: 50px;
+            position: absolute !important;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%);
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
             transition: none;
-            z-index: 10;
+            z-index: 100;
             width: 100px;
-            height: 100px;
-            background-color: #666666;
+            height: 120px;
+            background-color: transparent;
             border: none;
-            visibility: visible;
+            visibility: visible !important;
+            display: block !important;
+            opacity: 1 !important;
         }
 
         /* Pixelated Dragon Sprites - Each dragon gets a unique pixelated design */
-        /* Body */
         .pixel-dragon.breezeflight {
-            width: 40px;
-            height: 50px;
-            background: #A8D4E8;
-            border: 2px solid #88CCFF;
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            box-shadow: 
-                0 0 20px rgba(136, 204, 255, 0.6);
+            background: #A8D4E8 !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #88CCFF;
+            position: relative;
+            overflow: visible;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(136, 204, 255, 0.5);
         }
 
         /* Head */
         .pixel-dragon.breezeflight::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
-            background: #E8F4F8;
+            height: 25px;
+            background: #E8F4F8 !important;
             border: 2px solid #88CCFF;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                /* Eyes */
-                6px 10px 0 0 #66AAFF,
-                18px 10px 0 0 #66AAFF,
-                /* Snout */
-                12px 20px 0 0 #C8E4F0;
+                8px 8px 0 0 #66AAFF,
+                18px 8px 0 0 #66AAFF;
+            z-index: 11;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
-        /* Wings */
+        /* Wings and Tail */
         .pixel-dragon.breezeflight::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
-            background: #C8E4F0;
+            height: 30px;
+            background: #C8E4F0 !important;
             border: 2px solid #88CCFF;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #C8E4F0,
-                70px 0 0 2px #88CCFF,
-                /* Tail */
-                45px 50px 0 0 #A8D4E8,
-                50px 55px 0 0 #A8D4E8,
-                55px 60px 0 0 #A8D4E8,
-                60px 65px 0 0 #A8D4E8,
-                65px 70px 0 0 #A8D4E8;
+                80px 0 0 0 #C8E4F0,
+                80px 0 0 2px #88CCFF,
+                45px 60px 0 0 #A8D4E8,
+                50px 65px 0 0 #A8D4E8,
+                55px 70px 0 0 #A8D4E8;
+            z-index: 9;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
         .pixel-dragon.chaosflare {
-            width: 40px;
-            height: 50px;
-            background: #FF44AA;
-            border: 2px solid #8844FF;
-            position: absolute;
-            top: 30px;
-            left: 30px;
+            background: #FF44AA !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #8844FF;
+            position: relative;
+            overflow: visible;
             animation: chaosPulse 2s infinite;
-            box-shadow: 
-                0 0 20px rgba(255, 68, 170, 0.8);
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(255, 68, 170, 0.5);
         }
 
         .pixel-dragon.chaosflare::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #8844FF;
-            border: 2px solid #FF8844;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            border: 2px solid #FF44AA;
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #FF8844,
-                18px 10px 0 0 #FF8844,
-                12px 20px 0 0 #FF44AA;
+                8px 8px 0 0 #FF8844,
+                18px 8px 0 0 #FF8844;
+            z-index: 1;
+            display: block;
         }
 
         .pixel-dragon.chaosflare::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
+            height: 30px;
             background: #FF8844;
             border: 2px solid #FF44AA;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #FF8844,
-                70px 0 0 2px #FF44AA,
-                45px 50px 0 0 #FF44AA,
-                50px 55px 0 0 #8844FF,
-                55px 60px 0 0 #FF44AA,
-                60px 65px 0 0 #FF8844,
-                65px 70px 0 0 #8844FF;
+                80px 0 0 0 #FF8844,
+                80px 0 0 2px #FF44AA,
+                45px 60px 0 0 #FF44AA,
+                50px 65px 0 0 #8844FF,
+                55px 70px 0 0 #FF8844;
+            z-index: 0;
+            display: block;
         }
 
         @keyframes chaosPulse {
@@ -483,156 +500,157 @@
         }
 
         .pixel-dragon.crystalwing {
-            width: 40px;
-            height: 50px;
-            background: #DD99FF;
-            border: 2px solid #BB66FF;
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            box-shadow: 
-                0 0 20px rgba(187, 102, 255, 0.8),
-                inset 0 0 10px rgba(255, 255, 255, 0.3);
+            background: #DD99FF !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #BB66FF;
+            position: relative;
+            overflow: visible;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(187, 102, 255, 0.5);
         }
 
         .pixel-dragon.crystalwing::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #BB66FF;
             border: 2px solid #DD99FF;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #DD99FF,
-                18px 10px 0 0 #DD99FF,
-                12px 20px 0 0 #BB66FF,
-                inset 0 0 5px rgba(255, 255, 255, 0.5);
+                8px 8px 0 0 #DD99FF,
+                18px 8px 0 0 #DD99FF;
+            z-index: 1;
+            display: block;
+            box-shadow: 8px 8px 0 0 #DD99FF, 18px 8px 0 0 #DD99FF;
+            filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
         }
 
         .pixel-dragon.crystalwing::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
+            height: 30px;
             background: #BB66FF;
             border: 2px solid #DD99FF;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #BB66FF,
-                70px 0 0 2px #DD99FF,
-                45px 50px 0 0 #DD99FF,
-                50px 55px 0 0 #BB66FF,
-                55px 60px 0 0 #DD99FF,
-                60px 65px 0 0 #BB66FF,
-                65px 70px 0 0 #DD99FF;
+                80px 0 0 0 #BB66FF,
+                80px 0 0 2px #DD99FF,
+                45px 60px 0 0 #DD99FF,
+                50px 65px 0 0 #BB66FF,
+                55px 70px 0 0 #DD99FF;
+            z-index: 0;
+            display: block;
         }
 
         .pixel-dragon.earthheart {
-            width: 40px;
-            height: 50px;
-            background: #8B6F47;
-            border: 2px solid #5B4F27;
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            box-shadow: 
-                0 0 10px rgba(139, 111, 71, 0.5),
-                inset 0 0 10px rgba(68, 170, 68, 0.2);
+            background: #8B6F47 !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #5B4F27;
+            position: relative;
+            overflow: visible;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(91, 79, 39, 0.5);
         }
 
         .pixel-dragon.earthheart::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #6B5F37;
             border: 2px solid #5B4F27;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #5B4F27,
-                18px 10px 0 0 #5B4F27,
-                12px 20px 0 0 #8B6F47,
-                inset 0 0 5px rgba(68, 170, 68, 0.3);
+                8px 8px 0 0 #5B4F27,
+                18px 8px 0 0 #5B4F27;
+            z-index: 1;
+            display: block;
         }
 
         .pixel-dragon.earthheart::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
+            height: 30px;
             background: #6B5F37;
             border: 2px solid #5B4F27;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #6B5F37,
-                70px 0 0 2px #5B4F27,
-                45px 50px 0 0 #8B6F47,
-                50px 55px 0 0 #6B5F37,
-                55px 60px 0 0 #8B6F47,
-                60px 65px 0 0 #6B5F37,
-                65px 70px 0 0 #8B6F47;
+                80px 0 0 0 #6B5F37,
+                80px 0 0 2px #5B4F27,
+                45px 60px 0 0 #8B6F47,
+                50px 65px 0 0 #6B5F37,
+                55px 70px 0 0 #8B6F47;
+            z-index: 0;
+            display: block;
         }
 
         .pixel-dragon.flamethorn {
-            width: 40px;
-            height: 50px;
-            background: linear-gradient(180deg, #FF8800 0%, #FF4444 50%, #FF0000 100%);
-            border: 2px solid #FFD700;
-            position: absolute;
-            top: 30px;
-            left: 30px;
+            background: #FF4444 !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #FFD700;
+            position: relative;
+            overflow: visible;
             animation: fireFlicker 0.5s infinite;
-            box-shadow: 
-                0 0 30px rgba(255, 68, 68, 0.8), 
-                0 0 60px rgba(255, 136, 0, 0.6);
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
         }
 
         .pixel-dragon.flamethorn::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #FF8800;
             border: 2px solid #FFD700;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #FFD700,
-                18px 10px 0 0 #FFD700,
-                12px 20px 0 0 #FF4444,
-                -5px -5px 0 0 #FF8800,
-                35px -5px 0 0 #FF8800;
+                8px 8px 0 0 #FFD700,
+                18px 8px 0 0 #FFD700;
+            z-index: 1;
+            display: block;
             animation: fireFlicker 0.3s infinite;
         }
 
         .pixel-dragon.flamethorn::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
-            background: #FF4444;
+            height: 30px;
+            background: #FF8800;
             border: 2px solid #FFD700;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #FF4444,
-                70px 0 0 2px #FFD700,
-                45px 50px 0 0 #FF0000,
-                50px 55px 0 0 #FF4444,
-                55px 60px 0 0 #FF0000,
-                60px 65px 0 0 #FF4444,
-                65px 70px 0 0 #FF0000;
+                80px 0 0 0 #FF8800,
+                80px 0 0 2px #FFD700,
+                45px 60px 0 0 #FF4444,
+                50px 65px 0 0 #FF0000,
+                55px 70px 0 0 #FF4444;
+            z-index: 0;
+            display: block;
         }
 
         @keyframes fireFlicker {
@@ -641,106 +659,104 @@
         }
 
         .pixel-dragon.frostbite {
-            width: 40px;
-            height: 50px;
-            background: #88EEFF;
-            border: 2px solid #66CCFF;
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            box-shadow: 
-                0 0 20px rgba(136, 238, 255, 0.8), 
-                inset 0 0 20px rgba(170, 255, 255, 0.5);
+            background: #88EEFF !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #66CCFF;
+            position: relative;
+            overflow: visible;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(102, 204, 255, 0.5);
         }
 
         .pixel-dragon.frostbite::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #AAFFFF;
             border: 2px solid #66CCFF;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #66CCFF,
-                18px 10px 0 0 #66CCFF,
-                12px 20px 0 0 #88EEFF,
-                -5px -5px 0 0 #AAFFFF,
-                35px -5px 0 0 #AAFFFF;
+                8px 8px 0 0 #66CCFF,
+                18px 8px 0 0 #66CCFF;
+            z-index: 1;
+            display: block;
         }
 
         .pixel-dragon.frostbite::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
+            height: 30px;
             background: #AAFFFF;
             border: 2px solid #66CCFF;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #AAFFFF,
-                70px 0 0 2px #66CCFF,
-                45px 50px 0 0 #88EEFF,
-                50px 55px 0 0 #AAFFFF,
-                55px 60px 0 0 #88EEFF,
-                60px 65px 0 0 #AAFFFF,
-                65px 70px 0 0 #88EEFF;
+                80px 0 0 0 #AAFFFF,
+                80px 0 0 2px #66CCFF,
+                45px 60px 0 0 #88EEFF,
+                50px 65px 0 0 #AAFFFF,
+                55px 70px 0 0 #88EEFF;
+            z-index: 0;
+            display: block;
         }
 
         .pixel-dragon.radiant {
-            width: 40px;
-            height: 50px;
-            background: radial-gradient(circle, #FFFF88 0%, #FFD700 50%, #FFAA00 100%);
-            border: 2px solid #FFD700;
-            position: absolute;
-            top: 30px;
-            left: 30px;
+            background: #FFD700 !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #FFAA00;
+            position: relative;
+            overflow: visible;
             animation: lightPulse 1.5s infinite;
-            box-shadow: 
-                0 0 30px rgba(255, 215, 0, 1), 
-                0 0 60px rgba(255, 255, 136, 0.8);
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .pixel-dragon.radiant::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #FFFF88;
             border: 2px solid #FFD700;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #FFD700,
-                18px 10px 0 0 #FFD700,
-                12px 20px 0 0 #FFAA00,
-                -5px -5px 0 0 #FFFF88,
-                35px -5px 0 0 #FFFF88;
+                8px 8px 0 0 #FFD700,
+                18px 8px 0 0 #FFD700;
+            z-index: 1;
+            display: block;
         }
 
         .pixel-dragon.radiant::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
-            background: #FFD700;
-            border: 2px solid #FFAA00;
+            height: 30px;
+            background: #FFFF88;
+            border: 2px solid #FFD700;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #FFD700,
-                70px 0 0 2px #FFAA00,
-                45px 50px 0 0 #FFAA00,
-                50px 55px 0 0 #FFD700,
-                55px 60px 0 0 #FFAA00,
-                60px 65px 0 0 #FFD700,
-                65px 70px 0 0 #FFAA00;
+                80px 0 0 0 #FFFF88,
+                80px 0 0 2px #FFD700,
+                45px 60px 0 0 #FFD700,
+                50px 65px 0 0 #FFAA00,
+                55px 70px 0 0 #FFD700;
+            z-index: 0;
+            display: block;
         }
 
         @keyframes lightPulse {
@@ -749,53 +765,54 @@
         }
 
         .pixel-dragon.stormwing {
-            width: 40px;
-            height: 50px;
-            background: #FFDD00;
-            border: 2px solid #FFFF44;
-            position: absolute;
-            top: 30px;
-            left: 30px;
+            background: #FFDD00 !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #FFFF44;
+            position: relative;
+            overflow: visible;
             animation: lightningFlicker 0.3s infinite;
-            box-shadow: 
-                0 0 25px rgba(255, 221, 0, 0.9), 
-                0 0 50px rgba(255, 255, 68, 0.6);
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(255, 221, 0, 0.5);
         }
 
         .pixel-dragon.stormwing::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #FFFF44;
             border: 2px solid #FFDD00;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #FFDD00,
-                18px 10px 0 0 #FFDD00,
-                12px 20px 0 0 #FFDD00;
+                8px 8px 0 0 #FFDD00,
+                18px 8px 0 0 #FFDD00;
+            z-index: 1;
+            display: block;
         }
 
         .pixel-dragon.stormwing::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
+            height: 30px;
             background: #FFFF44;
             border: 2px solid #FFDD00;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #FFFF44,
-                70px 0 0 2px #FFDD00,
-                45px 50px 0 0 #FFDD00,
-                50px 55px 0 0 #FFFF44,
-                55px 60px 0 0 #FFDD00,
-                60px 65px 0 0 #FFFF44,
-                65px 70px 0 0 #FFDD00;
+                80px 0 0 0 #FFFF44,
+                80px 0 0 2px #FFDD00,
+                45px 60px 0 0 #FFDD00,
+                50px 65px 0 0 #FFFF44,
+                55px 70px 0 0 #FFDD00;
+            z-index: 0;
+            display: block;
         }
 
         @keyframes lightningFlicker {
@@ -804,205 +821,206 @@
         }
 
         .pixel-dragon.metalbeak {
-            width: 40px;
-            height: 50px;
-            background: #AAAAAA;
-            border: 2px solid #888888;
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            box-shadow: 
-                0 0 15px rgba(170, 170, 170, 0.6), 
-                inset 0 0 10px rgba(204, 204, 204, 0.3);
+            background: #AAAAAA !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #888888;
+            position: relative;
+            overflow: visible;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(136, 136, 136, 0.5);
         }
 
         .pixel-dragon.metalbeak::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #CCCCCC;
             border: 2px solid #888888;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #888888,
-                18px 10px 0 0 #888888,
-                12px 20px 0 0 #AAAAAA,
-                8px 25px 0 0 #CCCCCC,
-                18px 25px 0 0 #CCCCCC;
+                8px 8px 0 0 #888888,
+                18px 8px 0 0 #888888;
+            z-index: 1;
+            display: block;
         }
 
         .pixel-dragon.metalbeak::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
+            height: 30px;
             background: #CCCCCC;
             border: 2px solid #888888;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #CCCCCC,
-                70px 0 0 2px #888888,
-                45px 50px 0 0 #AAAAAA,
-                50px 55px 0 0 #CCCCCC,
-                55px 60px 0 0 #AAAAAA,
-                60px 65px 0 0 #CCCCCC,
-                65px 70px 0 0 #AAAAAA;
+                80px 0 0 0 #CCCCCC,
+                80px 0 0 2px #888888,
+                45px 60px 0 0 #AAAAAA,
+                50px 65px 0 0 #CCCCCC,
+                55px 70px 0 0 #AAAAAA,
+                8px 25px 0 0 #CCCCCC,
+                18px 25px 0 0 #CCCCCC;
+            z-index: 0;
+            display: block;
         }
 
         .pixel-dragon.vineclaw {
-            width: 40px;
-            height: 50px;
-            background: #44AA44;
-            border: 2px solid #228822;
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            box-shadow: 
-                0 0 20px rgba(68, 170, 68, 0.6);
+            background: #44AA44 !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #228822;
+            position: relative;
+            overflow: visible;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(34, 136, 34, 0.5);
         }
 
         .pixel-dragon.vineclaw::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #66DD66;
             border: 2px solid #228822;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #228822,
-                18px 10px 0 0 #228822,
-                12px 20px 0 0 #44AA44,
-                -5px -5px 0 0 #66DD66,
-                35px -5px 0 0 #66DD66;
+                8px 8px 0 0 #228822,
+                18px 8px 0 0 #228822;
+            z-index: 1;
+            display: block;
         }
 
         .pixel-dragon.vineclaw::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
+            height: 30px;
             background: #66DD66;
             border: 2px solid #228822;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #66DD66,
-                70px 0 0 2px #228822,
-                45px 50px 0 0 #44AA44,
-                50px 55px 0 0 #66DD66,
-                55px 60px 0 0 #44AA44,
-                60px 65px 0 0 #66DD66,
-                65px 70px 0 0 #44AA44;
+                80px 0 0 0 #66DD66,
+                80px 0 0 2px #228822,
+                45px 60px 0 0 #44AA44,
+                50px 65px 0 0 #66DD66,
+                55px 70px 0 0 #44AA44;
+            z-index: 0;
+            display: block;
         }
 
         .pixel-dragon.shadowmaw {
-            width: 40px;
-            height: 50px;
-            background: #000000;
-            border: 2px solid #8844AA;
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            box-shadow: 
-                0 0 25px rgba(136, 68, 170, 0.8), 
-                inset 0 0 20px rgba(187, 136, 221, 0.3);
+            background: #000000 !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #8844AA;
+            position: relative;
+            overflow: visible;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(136, 68, 170, 0.5);
         }
 
         .pixel-dragon.shadowmaw::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #8844AA;
             border: 2px solid #BB88DD;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #BB88DD,
-                18px 10px 0 0 #BB88DD,
-                12px 20px 0 0 #8844AA,
-                -5px -5px 0 0 #BB88DD,
-                35px -5px 0 0 #BB88DD;
+                8px 8px 0 0 #BB88DD,
+                18px 8px 0 0 #BB88DD;
+            z-index: 1;
+            display: block;
         }
 
         .pixel-dragon.shadowmaw::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
+            height: 30px;
             background: #8844AA;
             border: 2px solid #BB88DD;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #8844AA,
-                70px 0 0 2px #BB88DD,
-                45px 50px 0 0 #000000,
-                50px 55px 0 0 #8844AA,
-                55px 60px 0 0 #000000,
-                60px 65px 0 0 #8844AA,
-                65px 70px 0 0 #000000;
+                80px 0 0 0 #8844AA,
+                80px 0 0 2px #BB88DD,
+                45px 60px 0 0 #000000,
+                50px 65px 0 0 #8844AA,
+                55px 70px 0 0 #000000;
+            z-index: 0;
+            display: block;
         }
 
         .pixel-dragon.aquaris {
-            width: 40px;
-            height: 50px;
-            background: #4488FF;
-            border: 2px solid #2266FF;
-            position: absolute;
-            top: 30px;
-            left: 30px;
+            background: #4488FF !important;
+            width: 60px;
+            height: 80px;
+            border: 3px solid #2266FF;
+            position: relative;
+            overflow: visible;
             animation: waterFlow 2s infinite;
-            box-shadow: 
-                0 0 20px rgba(68, 136, 255, 0.7), 
-                inset 0 0 15px rgba(102, 170, 255, 0.4);
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 10px rgba(34, 102, 255, 0.5);
         }
 
         .pixel-dragon.aquaris::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 20px;
+            top: -20px;
+            left: 5px;
             width: 30px;
-            height: 30px;
+            height: 25px;
             background: #66AAFF;
             border: 2px solid #2266FF;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 40%, 80% 100%, 20% 100%, 0% 40%);
             box-shadow: 
-                6px 10px 0 0 #2266FF,
-                18px 10px 0 0 #2266FF,
-                12px 20px 0 0 #4488FF;
+                8px 8px 0 0 #2266FF,
+                18px 8px 0 0 #2266FF;
+            z-index: 1;
+            display: block;
         }
 
         .pixel-dragon.aquaris::after {
             content: '';
             position: absolute;
-            top: 35px;
-            left: -15px;
+            top: 20px;
+            left: -20px;
             width: 20px;
-            height: 35px;
+            height: 30px;
             background: #66AAFF;
             border: 2px solid #2266FF;
             clip-path: polygon(0% 0%, 100% 10%, 90% 50%, 100% 90%, 0% 100%, 10% 50%);
             box-shadow: 
-                70px 0 0 0 #66AAFF,
-                70px 0 0 2px #2266FF,
-                45px 50px 0 0 #4488FF,
-                50px 55px 0 0 #66AAFF,
-                55px 60px 0 0 #4488FF,
-                60px 65px 0 0 #66AAFF,
-                65px 70px 0 0 #4488FF;
+                80px 0 0 0 #66AAFF,
+                80px 0 0 2px #2266FF,
+                45px 60px 0 0 #4488FF,
+                50px 65px 0 0 #66AAFF,
+                55px 70px 0 0 #4488FF;
+            z-index: 0;
+            display: block;
         }
 
         @keyframes waterFlow {
@@ -1582,14 +1600,25 @@
             // Display pixelated dragon
             const pixelDragon = document.getElementById('pixel-dragon');
             if (pixelDragon) {
-                const elementClass = getElementClass(dragon.element);
-                pixelDragon.className = 'pixel-dragon ' + elementClass;
+                // Use the dragon ID directly as the class name (e.g., 'breezeflight', 'flamethorn')
+                pixelDragon.className = 'pixel-dragon ' + dragonId;
+                
+                // Force visibility with inline styles
                 pixelDragon.style.display = 'block';
                 pixelDragon.style.visibility = 'visible';
+                pixelDragon.style.opacity = '1';
+                pixelDragon.style.zIndex = '100';
+                pixelDragon.style.position = 'absolute';
                 
-                // Reset position
-                dragonPosition = { x: 50, y: 50 };
+                // Reset position to center of cave
+                dragonPosition = { x: 50, y: 100 };
                 updateDragonPosition();
+                
+                // Force a reflow to ensure rendering
+                void pixelDragon.offsetHeight;
+                
+                // Log for debugging
+                console.log('Dragon initialized:', dragonId, pixelDragon.className);
             }
 
             // Set up keyboard controls with a small delay to ensure view is rendered
@@ -1691,9 +1720,13 @@
         function updateDragonPosition() {
             const pixelDragon = document.getElementById('pixel-dragon');
             if (pixelDragon) {
+                // Use left positioning with transform for centering
                 pixelDragon.style.left = dragonPosition.x + '%';
                 pixelDragon.style.bottom = dragonPosition.y + 'px';
                 pixelDragon.style.transform = 'translateX(-50%)';
+                pixelDragon.style.position = 'absolute';
+                pixelDragon.style.display = 'block';
+                pixelDragon.style.visibility = 'visible';
             }
         }
     </script>
