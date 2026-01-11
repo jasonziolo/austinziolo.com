@@ -2720,8 +2720,26 @@
             // Display pixelated dragon
             const pixelDragon = document.getElementById('pixel-dragon');
             if (pixelDragon) {
-                // Set the image source
-                pixelDragon.src = 'images/icons/aquarius-icon.jpg';
+                // Map dragon IDs to their icon images
+                const dragonIcons = {
+                    'breezeflight': 'images/icons/breezeflight-icon.jpg',
+                    'chaosflare': 'images/icons/chacosflare-icon.jpg',
+                    'crystalwing': 'images/icons/crystalwing-icon.jpg',
+                    'earthheart': 'images/icons/earthheart-icon.jpg',
+                    'flamethorn': 'images/icons/flamethorn-icon.jpg',
+                    'frostbite': 'images/icons/frostbite-icon.jpg',
+                    'metalbeak': 'images/icons/metalbeak-icon.jpg',
+                    'aquaris': 'images/icons/aquarius-icon.jpg',
+                    // Default icons for dragons not specified (use aquarius as fallback)
+                    'radiant': 'images/icons/aquarius-icon.jpg',
+                    'stormwing': 'images/icons/aquarius-icon.jpg',
+                    'vineclaw': 'images/icons/aquarius-icon.jpg',
+                    'shadowmaw': 'images/icons/aquarius-icon.jpg'
+                };
+                
+                // Set the image source based on dragon ID
+                const iconPath = dragonIcons[dragonId] || 'images/icons/aquarius-icon.jpg';
+                pixelDragon.src = iconPath;
                 pixelDragon.alt = dragon.name;
                 
                 // Force visibility with inline styles
