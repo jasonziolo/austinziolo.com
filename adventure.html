@@ -3266,7 +3266,7 @@
             const bgIndex = Math.floor(rng() * backgrounds.length);
             const background = backgrounds[bgIndex];
             
-            // Generate a clear path through the room
+            // Generate a clear path through the room with turns (L-shaped path)
             // Path goes from the wall closest to main room to the wall farthest from main room
             // Path is 120px wide (enough for 80px dragon with buffer)
             const caveWidthPx = 1200; // approximate width
@@ -3279,44 +3279,144 @@
             // Determine entry direction based on room position relative to main room (0,0)
             // Rooms are on axes only (x=0 OR y=0), so we can determine the entry wall
             if (roomCoord.y > 0) {
-                // Room is above main room - entered from bottom, path should go bottom to top (vertical)
-                const pathX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X position
+                // Room is above main room - entered from bottom, path should go bottom to top (vertical with turn)
+                // L-shaped: go up partway, then turn left or right, then continue to top
+                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% up the room
+                const firstSegmentX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X for first segment
+                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn left (-1) or right (1)
+                const turnAmount = rng() * 30 + 20; // Turn 20-50% of width
+                const secondSegmentX = Math.max(pathWidthPercent / 2, Math.min(100 - pathWidthPercent / 2, firstSegmentX + turnDirection * turnAmount));
+                
                 clearPath = {
-                    type: 'vertical',
-                    x: pathX, // Center X position in percentage
-                    width: pathWidthPercent,
-                    minY: 0,
-                    maxY: caveHeightPx // Full height (bottom to top)
+                    type: 'lshape',
+                    segments: [
+                        {
+                            type: 'vertical',
+                            x: firstSegmentX, // X position in percentage
+                            width: pathWidthPercent,
+                            minY: 0,
+                            maxY: caveHeightPx * turnPoint // From bottom to turn point
+                        },
+                        {
+                            type: 'horizontal',
+                            y: caveHeightPx * turnPoint, // Y position at turn point
+                            width: pathWidth,
+                            minX: Math.min(firstSegmentX, secondSegmentX) - pathWidthPercent / 2,
+                            maxX: Math.max(firstSegmentX, secondSegmentX) + pathWidthPercent / 2 // Horizontal segment for turn
+                        },
+                        {
+                            type: 'vertical',
+                            x: secondSegmentX, // X position in percentage
+                            width: pathWidthPercent,
+                            minY: caveHeightPx * turnPoint,
+                            maxY: caveHeightPx // From turn point to top
+                        }
+                    ]
                 };
             } else if (roomCoord.y < 0) {
-                // Room is below main room - entered from top, path should go top to bottom (vertical)
-                const pathX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X position
+                // Room is below main room - entered from top, path should go top to bottom (vertical with turn)
+                // L-shaped: go down partway, then turn left or right, then continue to bottom
+                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% down the room
+                const firstSegmentX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X for first segment
+                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn left (-1) or right (1)
+                const turnAmount = rng() * 30 + 20; // Turn 20-50% of width
+                const secondSegmentX = Math.max(pathWidthPercent / 2, Math.min(100 - pathWidthPercent / 2, firstSegmentX + turnDirection * turnAmount));
+                
                 clearPath = {
-                    type: 'vertical',
-                    x: pathX, // Center X position in percentage
-                    width: pathWidthPercent,
-                    minY: 0,
-                    maxY: caveHeightPx // Full height (top to bottom)
+                    type: 'lshape',
+                    segments: [
+                        {
+                            type: 'vertical',
+                            x: firstSegmentX, // X position in percentage
+                            width: pathWidthPercent,
+                            minY: caveHeightPx * turnPoint,
+                            maxY: caveHeightPx // From top to turn point
+                        },
+                        {
+                            type: 'horizontal',
+                            y: caveHeightPx * turnPoint, // Y position at turn point
+                            width: pathWidth,
+                            minX: Math.min(firstSegmentX, secondSegmentX) - pathWidthPercent / 2,
+                            maxX: Math.max(firstSegmentX, secondSegmentX) + pathWidthPercent / 2 // Horizontal segment for turn
+                        },
+                        {
+                            type: 'vertical',
+                            x: secondSegmentX, // X position in percentage
+                            width: pathWidthPercent,
+                            minY: 0,
+                            maxY: caveHeightPx * turnPoint // From turn point to bottom
+                        }
+                    ]
                 };
             } else if (roomCoord.x > 0) {
-                // Room is to the right of main room - entered from left, path should go left to right (horizontal)
-                const pathY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y position
+                // Room is to the right of main room - entered from left, path should go left to right (horizontal with turn)
+                // L-shaped: go right partway, then turn up or down, then continue to right
+                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% across the room
+                const firstSegmentY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y for first segment
+                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn up (1) or down (-1)
+                const turnAmount = rng() * 150 + 100; // Turn 100-250px
+                const secondSegmentY = Math.max(pathWidth / 2, Math.min(caveHeightPx - pathWidth / 2, firstSegmentY + turnDirection * turnAmount));
+                
                 clearPath = {
-                    type: 'horizontal',
-                    y: pathY, // Center Y position in pixels from bottom
-                    width: pathWidth,
-                    minX: 0,
-                    maxX: 100 // Full width (left to right)
+                    type: 'lshape',
+                    segments: [
+                        {
+                            type: 'horizontal',
+                            y: firstSegmentY, // Y position in pixels from bottom
+                            width: pathWidth,
+                            minX: 0,
+                            maxX: turnPoint * 100 // From left to turn point
+                        },
+                        {
+                            type: 'vertical',
+                            x: turnPoint * 100, // X position at turn point
+                            width: pathWidthPercent,
+                            minY: Math.min(firstSegmentY, secondSegmentY) - pathWidth / 2,
+                            maxY: Math.max(firstSegmentY, secondSegmentY) + pathWidth / 2 // Vertical segment for turn
+                        },
+                        {
+                            type: 'horizontal',
+                            y: secondSegmentY, // Y position in pixels from bottom
+                            width: pathWidth,
+                            minX: turnPoint * 100,
+                            maxX: 100 // From turn point to right
+                        }
+                    ]
                 };
             } else if (roomCoord.x < 0) {
-                // Room is to the left of main room - entered from right, path should go right to left (horizontal)
-                const pathY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y position
+                // Room is to the left of main room - entered from right, path should go right to left (horizontal with turn)
+                // L-shaped: go left partway, then turn up or down, then continue to left
+                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% across the room
+                const firstSegmentY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y for first segment
+                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn up (1) or down (-1)
+                const turnAmount = rng() * 150 + 100; // Turn 100-250px
+                const secondSegmentY = Math.max(pathWidth / 2, Math.min(caveHeightPx - pathWidth / 2, firstSegmentY + turnDirection * turnAmount));
+                
                 clearPath = {
-                    type: 'horizontal',
-                    y: pathY, // Center Y position in pixels from bottom
-                    width: pathWidth,
-                    minX: 0,
-                    maxX: 100 // Full width (right to left, but same path structure)
+                    type: 'lshape',
+                    segments: [
+                        {
+                            type: 'horizontal',
+                            y: firstSegmentY, // Y position in pixels from bottom
+                            width: pathWidth,
+                            minX: turnPoint * 100,
+                            maxX: 100 // From right to turn point
+                        },
+                        {
+                            type: 'vertical',
+                            x: turnPoint * 100, // X position at turn point
+                            width: pathWidthPercent,
+                            minY: Math.min(firstSegmentY, secondSegmentY) - pathWidth / 2,
+                            maxY: Math.max(firstSegmentY, secondSegmentY) + pathWidth / 2 // Vertical segment for turn
+                        },
+                        {
+                            type: 'horizontal',
+                            y: secondSegmentY, // Y position in pixels from bottom
+                            width: pathWidth,
+                            minX: 0,
+                            maxX: turnPoint * 100 // From turn point to left
+                        }
+                    ]
                 };
             } else {
                 // Main room (0,0) - no path needed (no obstacles)
@@ -3426,18 +3526,11 @@
         }
 
         // Check if obstacles block any paths
-        function pathsBlocked(obstacles) {
-            if (!obstacles || obstacles.length === 0) return false;
+        function pathsBlocked(obstacles, clearPath) {
+            if (!obstacles || obstacles.length === 0 || !clearPath) return false;
             
             const caveWidthPx = 1200;
-            const LEFT_PATH_MIN = 0;
-            const LEFT_PATH_MAX = 25;
-            const RIGHT_PATH_MIN = 75;
-            const RIGHT_PATH_MAX = 100;
-            const BOTTOM_PATH_TOP = 200;
-            const TOP_PATH_BOTTOM = 300;
-            const VERTICAL_CORRIDOR_MIN = 35;
-            const VERTICAL_CORRIDOR_MAX = 65;
+            const caveHeightPx = 500;
             
             for (let i = 0; i < obstacles.length; i++) {
                 const obstacle = obstacles[i];
@@ -3447,20 +3540,43 @@
                 const obstacleBottom = obstacle.y - obstacle.height / 2;
                 const obstacleTop = obstacle.y + obstacle.height / 2;
                 
-                // Check if blocks any path
-                const blocksLeftPath = (obstacleRight > LEFT_PATH_MIN && obstacleLeft < LEFT_PATH_MAX);
-                const blocksRightPath = (obstacleRight > RIGHT_PATH_MIN && obstacleLeft < RIGHT_PATH_MAX);
-                
-                const inBottomPathHeight = (obstacleTop > 0 && obstacleBottom < BOTTOM_PATH_TOP);
-                const inBottomPathWidth = (obstacleRight > VERTICAL_CORRIDOR_MIN && obstacleLeft < VERTICAL_CORRIDOR_MAX);
-                const blocksBottomPath = inBottomPathHeight && inBottomPathWidth;
-                
-                const inTopPathHeight = (obstacleTop > TOP_PATH_BOTTOM && obstacleBottom < 500);
-                const inTopPathWidth = (obstacleRight > VERTICAL_CORRIDOR_MIN && obstacleLeft < VERTICAL_CORRIDOR_MAX);
-                const blocksTopPath = inTopPathHeight && inTopPathWidth;
-                
-                if (blocksLeftPath || blocksRightPath || blocksBottomPath || blocksTopPath) {
-                    return true; // Paths are blocked
+                // Check if obstacle blocks any segment of the clear path
+                if (clearPath.type === 'lshape' && clearPath.segments) {
+                    for (let segIdx = 0; segIdx < clearPath.segments.length; segIdx++) {
+                        const segment = clearPath.segments[segIdx];
+                        
+                        if (segment.type === 'horizontal') {
+                            const pathTop = segment.y + segment.width / 2;
+                            const pathBottom = segment.y - segment.width / 2;
+                            const pathLeft = segment.minX;
+                            const pathRight = segment.maxX;
+                            if (obstacleTop > pathBottom && obstacleBottom < pathTop &&
+                                obstacleRight > pathLeft && obstacleLeft < pathRight) {
+                                return true; // Path is blocked
+                            }
+                        } else if (segment.type === 'vertical') {
+                            const pathLeft = segment.x - segment.width / 2;
+                            const pathRight = segment.x + segment.width / 2;
+                            const pathBottom = segment.minY;
+                            const pathTop = segment.maxY;
+                            if (obstacleRight > pathLeft && obstacleLeft < pathRight &&
+                                obstacleTop > pathBottom && obstacleBottom < pathTop) {
+                                return true; // Path is blocked
+                            }
+                        }
+                    }
+                } else if (clearPath.type === 'horizontal') {
+                    const pathTop = clearPath.y + clearPath.width / 2;
+                    const pathBottom = clearPath.y - clearPath.width / 2;
+                    if (obstacleTop > pathBottom && obstacleBottom < pathTop) {
+                        return true; // Path is blocked
+                    }
+                } else if (clearPath.type === 'vertical') {
+                    const pathLeft = clearPath.x - clearPath.width / 2;
+                    const pathRight = clearPath.x + clearPath.width / 2;
+                    if (obstacleRight > pathLeft && obstacleLeft < pathRight) {
+                        return true; // Path is blocked
+                    }
                 }
             }
             
@@ -3519,10 +3635,39 @@
                         const obstacleBottom = y - size / 2; // from bottom
                         const obstacleTop = y + size / 2; // from bottom
                         
-                        // Check if obstacle overlaps with the clear path
+                        // Check if obstacle overlaps with the clear path segments
                         let blocksPath = false;
                         
-                        if (clearPath.type === 'horizontal') {
+                        if (clearPath.type === 'lshape' && clearPath.segments) {
+                            // L-shaped path: check each segment
+                            for (let segIdx = 0; segIdx < clearPath.segments.length; segIdx++) {
+                                const segment = clearPath.segments[segIdx];
+                                
+                                if (segment.type === 'horizontal') {
+                                    // Horizontal segment: check if obstacle is within path height range
+                                    const pathTop = segment.y + segment.width / 2;
+                                    const pathBottom = segment.y - segment.width / 2;
+                                    const pathLeft = segment.minX;
+                                    const pathRight = segment.maxX;
+                                    if (obstacleTop > pathBottom && obstacleBottom < pathTop &&
+                                        obstacleRight > pathLeft && obstacleLeft < pathRight) {
+                                        blocksPath = true;
+                                        break;
+                                    }
+                                } else if (segment.type === 'vertical') {
+                                    // Vertical segment: check if obstacle is within path width range
+                                    const pathLeft = segment.x - segment.width / 2;
+                                    const pathRight = segment.x + segment.width / 2;
+                                    const pathBottom = segment.minY;
+                                    const pathTop = segment.maxY;
+                                    if (obstacleRight > pathLeft && obstacleLeft < pathRight &&
+                                        obstacleTop > pathBottom && obstacleBottom < pathTop) {
+                                        blocksPath = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        } else if (clearPath.type === 'horizontal') {
                             // Horizontal path: check if obstacle is within path height range
                             const pathTop = clearPath.y + clearPath.width / 2;
                             const pathBottom = clearPath.y - clearPath.width / 2;
@@ -3532,29 +3677,6 @@
                             const pathLeft = clearPath.x - clearPath.width / 2;
                             const pathRight = clearPath.x + clearPath.width / 2;
                             blocksPath = (obstacleRight > pathLeft && obstacleLeft < pathRight);
-                        } else if (clearPath.type === 'diagonal') {
-                            // Diagonal path: check if obstacle is close to the diagonal line
-                            const diagonalWidth = clearPath.widthPercent * 2; // Wider tolerance for diagonal
-                            
-                            // Calculate distance from obstacle center to diagonal line
-                            let distanceToDiagonal = 0;
-                            if (clearPath.startSide === 0) { // top-left to bottom-right
-                                const diagonalY = (caveHeightPx / 100) * x;
-                                distanceToDiagonal = Math.abs(y - diagonalY);
-                            } else if (clearPath.startSide === 1) { // top-right to bottom-left
-                                const diagonalY = caveHeightPx - (caveHeightPx / 100) * x;
-                                distanceToDiagonal = Math.abs(y - diagonalY);
-                            } else if (clearPath.startSide === 2) { // bottom-left to top-right
-                                const diagonalY = (caveHeightPx / 100) * x;
-                                distanceToDiagonal = Math.abs(y - diagonalY);
-                            } else { // bottom-right to top-left
-                                const diagonalY = caveHeightPx - (caveHeightPx / 100) * x;
-                                distanceToDiagonal = Math.abs(y - diagonalY);
-                            }
-                            
-                            // Check if obstacle is within diagonal path width
-                            const pathRadius = clearPath.width / 2;
-                            blocksPath = (distanceToDiagonal < pathRadius + size / 2);
                         }
                         
                         // Position is valid if it doesn't block the clear path
@@ -3880,7 +4002,41 @@
                 
                 if (clearPath) {
                     // Spawn on the clear path at the entry end
-                    if (clearPath.type === 'vertical') {
+                    if (clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                        // L-shaped path: spawn on first segment at entry end
+                        const firstSegment = clearPath.segments[0];
+                        if (firstSegment.type === 'vertical') {
+                            // First segment is vertical: spawn at entry end based on direction
+                            spawnX = firstSegment.x; // Use the segment's X position (percentage)
+                            if (direction === 'up') {
+                                // Entered from bottom, spawn at bottom of path
+                                spawnY = 30; // Near bottom edge
+                            } else if (direction === 'down') {
+                                // Entered from top, spawn at top of path
+                                spawnY = caveHeight - 110; // Near top edge
+                            } else {
+                                // Default to bottom of segment
+                                spawnY = firstSegment.minY + 30;
+                            }
+                        } else if (firstSegment.type === 'horizontal') {
+                            // First segment is horizontal: spawn at entry end based on direction
+                            spawnY = firstSegment.y; // Use the segment's Y position (pixels from bottom)
+                            if (direction === 'right') {
+                                // Entered from left, spawn at left of path
+                                spawnX = 5; // Near left edge
+                            } else if (direction === 'left') {
+                                // Entered from right, spawn at right of path
+                                spawnX = 95; // Near right edge
+                            } else {
+                                // Default to left of segment
+                                spawnX = firstSegment.minX + 2;
+                            }
+                        } else {
+                            // Unknown segment type - use default
+                            spawnX = 50;
+                            spawnY = 100;
+                        }
+                    } else if (clearPath.type === 'vertical') {
                         // Vertical path: spawn at entry end based on direction
                         spawnX = clearPath.x; // Use the path's X position (percentage)
                         if (direction === 'up') {
@@ -3907,7 +4063,7 @@
                             spawnX = 50;
                         }
                     } else {
-                        // Diagonal path or unknown - use default
+                        // Unknown path type - use default
                         spawnX = 50;
                         spawnY = 100;
                     }
