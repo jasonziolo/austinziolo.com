@@ -463,6 +463,47 @@
             font-family: Arial, sans-serif;
         }
         
+        /* Timer Display */
+        .timer-display {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #FF4444 0%, #AA0000 100%);
+            color: #FFFFFF;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px 25px;
+            border: 3px solid #FF6666;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(255, 68, 68, 0.6), 0 0 20px rgba(255, 68, 68, 0.4);
+            z-index: 200;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: Arial, sans-serif;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .timer-display.warning {
+            background: linear-gradient(135deg, #FFAA00 0%, #FF6600 100%);
+            border-color: #FFCC44;
+            box-shadow: 0 4px 12px rgba(255, 170, 0, 0.6), 0 0 20px rgba(255, 170, 0, 0.4);
+            animation: timerPulse 1s infinite;
+        }
+        
+        .timer-display.critical {
+            background: linear-gradient(135deg, #FF0000 0%, #AA0000 100%);
+            border-color: #FF4444;
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.6);
+            animation: timerPulse 0.5s infinite;
+        }
+        
+        @keyframes timerPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+        }
+        
         /* Teleport to Main Room Button */
         .teleport-main-button {
             position: absolute;
@@ -500,6 +541,12 @@
                 padding: 8px 15px;
                 top: 10px;
                 right: 10px;
+            }
+            
+            .timer-display {
+                font-size: 18px;
+                padding: 8px 15px;
+                min-width: 60px;
             }
         }
 
@@ -2625,6 +2672,7 @@
                 <div class="cave-container">
                     <div class="cave-background">
                         <div id="level-display" class="level-display">Level: 1</div>
+                        <div id="timer-display" class="timer-display">60</div>
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
                         <button id="teleport-main-button" class="teleport-main-button">⚡ Main Room</button>
@@ -2946,6 +2994,9 @@
                         clearInterval(movementInterval);
                         movementInterval = null;
                     }
+                    // Stop the timer when going back to selection
+                    stopTimer();
+                    timerStarted = false;
                 });
             }
 
@@ -3009,6 +3060,11 @@
         // Level system
         let currentLevel = 1;
         let lastLevelUpTime = 0; // Track when level was last incremented to prevent rapid increments
+        
+        // Timer system
+        let timerSeconds = 60;
+        let timerInterval = null;
+        let timerStarted = false; // Track if timer has started
 
         // Joystick state
         let joystickState = {
@@ -3044,6 +3100,12 @@
             keyCollected = false;
             lastLevelUpTime = 0;
             updateLevelDisplay();
+            
+            // Reset timer state (don't start it yet - wait for first movement)
+            timerStarted = false;
+            stopTimer();
+            timerSeconds = 60;
+            updateTimerDisplay();
             
             currentDragon = dragon;
 
@@ -3197,6 +3259,16 @@
                 const dragonHeight = 80; // dragon height in pixels
 
                 let moved = false;
+                
+                // Start timer on first movement
+                if (!timerStarted) {
+                    const hasMovementInput = (joystickState.active && isMobile && (Math.abs(joystickState.x) > 0.1 || Math.abs(joystickState.y) > 0.1)) ||
+                                           (keysPressed.w || keysPressed.a || keysPressed.s || keysPressed.d);
+                    if (hasMovementInput) {
+                        startTimer();
+                        timerStarted = true;
+                    }
+                }
 
                 // Check if using joystick (mobile) or keyboard
                 if (joystickState.active && isMobile) {
@@ -3355,6 +3427,115 @@
             }
         }
         
+        // Function to update timer display
+        function updateTimerDisplay() {
+            const timerDisplay = document.getElementById('timer-display');
+            if (timerDisplay) {
+                timerDisplay.textContent = timerSeconds;
+                
+                // Update styling based on time remaining
+                timerDisplay.classList.remove('warning', 'critical');
+                if (timerSeconds <= 15) {
+                    timerDisplay.classList.add('critical');
+                } else if (timerSeconds <= 30) {
+                    timerDisplay.classList.add('warning');
+                }
+            }
+        }
+        
+        // Function to start the timer
+        function startTimer() {
+            // Clear any existing timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            // Reset timer to 60 seconds
+            timerSeconds = 60;
+            updateTimerDisplay();
+            
+            // Start countdown
+            timerInterval = setInterval(function() {
+                timerSeconds--;
+                updateTimerDisplay();
+                
+                // When timer reaches 0, reset to level 1
+                if (timerSeconds <= 0) {
+                    resetToLevelOne();
+                }
+            }, 1000);
+            
+            // Debug: verify timer started at 60
+            console.log('Timer started at:', timerSeconds, 'seconds');
+        }
+        
+        // Function to stop the timer
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+        
+        // Function to reset to level 1 when timer expires
+        function resetToLevelOne() {
+            // Stop the timer
+            stopTimer();
+            timerStarted = false; // Reset timer started flag
+            
+            // Reset level to 1
+            currentLevel = 1;
+            lastLevelUpTime = 0;
+            updateLevelDisplay();
+            
+            // Regenerate session seed to change all rooms
+            sessionSeed = Math.floor(Math.random() * 1000000000);
+            
+            // Clear room memory to force regeneration of all rooms
+            roomMemory = {};
+            
+            // Reset key collection
+            keyCollected = false;
+            
+            // Remove the key from display
+            const keyEl = document.getElementById('adventure-key');
+            if (keyEl) {
+                keyEl.remove();
+            }
+            
+            // Teleport to main room
+            currentRoom = { x: 0, y: 0 };
+            loadRoom(currentRoom);
+            updateMap();
+            updateRoomDisplay();
+            
+            // Reset dragon position to center of main room
+            const caveBackground = document.querySelector('.cave-background');
+            if (caveBackground) {
+                const caveWidth = caveBackground.offsetWidth;
+                const caveHeight = caveBackground.offsetHeight;
+                const safePosition = findSafeSpawnPosition(50, 100, null, caveWidth, caveHeight);
+                dragonPosition.x = safePosition.x;
+                dragonPosition.y = safePosition.y;
+            } else {
+                dragonPosition = { x: 50, y: 100 };
+            }
+            updateDragonPosition();
+            
+            // Reset timer display but don't start it yet (wait for next movement)
+            timerSeconds = 60;
+            updateTimerDisplay();
+            
+            // Show visual feedback that timer reset
+            const timerDisplay = document.getElementById('timer-display');
+            if (timerDisplay) {
+                timerDisplay.style.boxShadow = '0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8)';
+                setTimeout(function() {
+                    timerDisplay.style.boxShadow = '';
+                }, 1000);
+            }
+        }
+        
         // Function to check if dragon + key + box collide (level up)
         function checkLevelUp() {
             // Only check in main room and if key is collected
@@ -3412,6 +3593,12 @@
                     currentLevel++;
                     lastLevelUpTime = now;
                     updateLevelDisplay();
+                    
+                    // Reset timer on level up (but don't start until next movement)
+                    stopTimer();
+                    timerStarted = false;
+                    timerSeconds = 60;
+                    updateTimerDisplay();
                     
                     // Regenerate session seed to change all rooms
                     sessionSeed = Math.floor(Math.random() * 1000000000);
