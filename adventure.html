@@ -220,6 +220,68 @@
             transform: translateY(-2px);
         }
 
+        /* Instructions Styles */
+        .instructions-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: linear-gradient(180deg, #2a2a3e 0%, #1f2a3e 100%);
+            border: 3px solid #8844AA;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .instructions-container h3 {
+            color: #FFD700;
+            font-size: 20px;
+            margin: 0 0 15px 0;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .instructions-container ul {
+            color: #E0E0E0;
+            line-height: 1.8;
+            padding-left: 25px;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .instructions-container li {
+            margin-bottom: 10px;
+        }
+
+        .instructions-container li strong {
+            color: #66AAFF;
+        }
+
+        .instructions-container .warning {
+            color: #FF6666;
+            font-weight: bold;
+        }
+
+        @media screen and (max-width: 768px) {
+            .instructions-container {
+                padding: 15px;
+                margin: 10px auto;
+            }
+
+            .instructions-container h3 {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            .instructions-container ul {
+                font-size: 12px;
+                line-height: 1.6;
+                padding-left: 20px;
+            }
+
+            .instructions-container li {
+                margin-bottom: 8px;
+            }
+        }
+
         /* Element-specific colors for selected dragons */
         .selected-dragon.fire { border-color: #FF4444; }
         .selected-dragon.fire h3 { color: #FF6666; }
@@ -343,6 +405,8 @@
             padding: 20px;
             box-sizing: border-box;
             z-index: 1;
+            transform: translateZ(0); /* GPU acceleration */
+            will-change: contents; /* Optimize for frequent updates */
         }
         
         /* Ensure pixel-dragon is always visible when inside cave-background */
@@ -362,6 +426,8 @@
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
             z-index: 50;
             image-rendering: pixelated;
+            transform: translateZ(0); /* GPU acceleration */
+            backface-visibility: hidden; /* Performance optimization */
         }
 
         .obstacle.rock {
@@ -379,6 +445,34 @@
             background: linear-gradient(180deg, #7a7a8a 0%, #3a3a4a 100%);
             border-color: #6a6a7a;
             clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+        }
+
+        .obstacle.lava {
+            background: linear-gradient(135deg, #FF4444 0%, #AA0000 50%, #FF6600 100%);
+            border-color: #FF8888;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.5), 
+                0 2px 6px rgba(0, 0, 0, 0.3), 
+                0 0 15px rgba(255, 68, 68, 0.6),
+                0 0 30px rgba(255, 136, 0, 0.4);
+            animation: lavaGlow 2s infinite;
+        }
+
+        @keyframes lavaGlow {
+            0%, 100% { 
+                box-shadow: 
+                    inset 0 2px 4px rgba(0, 0, 0, 0.5), 
+                    0 2px 6px rgba(0, 0, 0, 0.3), 
+                    0 0 15px rgba(255, 68, 68, 0.6),
+                    0 0 30px rgba(255, 136, 0, 0.4);
+            }
+            50% { 
+                box-shadow: 
+                    inset 0 2px 4px rgba(0, 0, 0, 0.5), 
+                    0 2px 6px rgba(0, 0, 0, 0.3), 
+                    0 0 25px rgba(255, 68, 68, 0.9),
+                    0 0 50px rgba(255, 136, 0, 0.7);
+            }
         }
 
         /* Box styles */
@@ -586,6 +680,7 @@
             padding: 0 !important;
             margin: 0 !important;
             overflow: hidden !important;
+            will-change: transform, left, bottom; /* GPU acceleration */
         }
 
         /* Override all dragon-specific classes to ensure uniform size and appearance */
@@ -2653,6 +2748,20 @@
                     </div>
                 </div>
 
+                <div class="instructions-container">
+                    <h3>📜 How to Play</h3>
+                    <ul>
+                        <li><strong>Movement:</strong> Use <strong>W/A/S/D</strong> keys (or joystick on mobile) to move your dragon</li>
+                        <li><strong>Timer:</strong> A 60-second timer starts when you first move. When it reaches 0, you reset to Level 1</li>
+                        <li><strong>Objective:</strong> Find the golden key in one of the rooms and bring it back to the main room</li>
+                        <li><strong>Level Up:</strong> Touch the box in the main room while holding the key to level up</li>
+                        <li><strong>Obstacles:</strong> Avoid rocks, crystals, and stalagmites - they block your path</li>
+                        <li><strong class="warning">Lava:</strong> Touch red lava to instantly teleport back to the main room (you'll lose the key if you have it!)</li>
+                        <li><strong>Rooms:</strong> Move to the edges of rooms to explore new areas. Use the map to track your progress</li>
+                        <li><strong>Teleport:</strong> Click the "⚡ Main Room" button to instantly return to the starting room</li>
+                    </ul>
+                </div>
+
                 <div class="story-button-container">
                     <button id="story-start-button" class="story-start-button" disabled>Start Adventure</button>
                 </div>
@@ -2989,11 +3098,19 @@
                     roomMemory = {};
                     transitioning = false;
                     updateMap();
-                    // Clear movement interval
+                    // Clear movement interval and animation frame
+                    if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId);
+                        animationFrameId = null;
+                    }
                     if (movementInterval) {
                         clearInterval(movementInterval);
                         movementInterval = null;
                     }
+                    // Clear cached references
+                    cachedAdventureView = null;
+                    cachedCaveBackground = null;
+                    cachedPixelDragon = null;
                     // Stop the timer when going back to selection
                     stopTimer();
                     timerStarted = false;
@@ -3027,8 +3144,16 @@
 
         // Global movement interval variable
         let movementInterval = null;
+        let animationFrameId = null;
         let keyDownHandler = null;
         let keyUpHandler = null;
+        
+        // Cache DOM references for performance
+        let cachedAdventureView = null;
+        let cachedCaveBackground = null;
+        let cachedPixelDragon = null;
+        let cachedLevelDisplay = null;
+        let cachedTimerDisplay = null;
 
         // Dragon movement state
         let dragonPosition = {
@@ -3198,13 +3323,29 @@
             }, 100);
         }
 
+        // Function to cache DOM references
+        function cacheDOMElements() {
+            cachedAdventureView = document.getElementById('adventure-view');
+            cachedCaveBackground = document.querySelector('.cave-background');
+            cachedPixelDragon = document.getElementById('pixel-dragon');
+            cachedLevelDisplay = document.getElementById('level-display');
+            cachedTimerDisplay = document.getElementById('timer-display');
+        }
+
         // Function to set up movement controls
         function setupMovementControls() {
-            // Clear any existing interval
+            // Clear any existing animation frame
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
             if (movementInterval) {
                 clearInterval(movementInterval);
                 movementInterval = null;
             }
+
+            // Cache DOM elements
+            cacheDOMElements();
 
             // Remove old listeners if they exist
             if (keyDownHandler) {
@@ -3218,7 +3359,7 @@
             keyDownHandler = function(event) {
                 const key = event.key.toLowerCase();
                 if (key === 'w' || key === 'a' || key === 's' || key === 'd') {
-                    if (document.getElementById('adventure-view').classList.contains('active')) {
+                    if (cachedAdventureView && cachedAdventureView.classList.contains('active')) {
                         keysPressed[key] = true;
                         event.preventDefault();
                     }
@@ -3238,23 +3379,39 @@
             document.addEventListener('keydown', keyDownHandler);
             document.addEventListener('keyup', keyUpHandler);
 
-            // Movement loop
-            movementInterval = setInterval(function() {
-                const adventureView = document.getElementById('adventure-view');
-                if (!adventureView || !adventureView.classList.contains('active')) {
-                    if (movementInterval) {
-                        clearInterval(movementInterval);
-                        movementInterval = null;
-                    }
+            // Cache dimensions to avoid repeated queries
+            let cachedCaveWidth = 0;
+            let cachedCaveHeight = 0;
+            let lastDimensionCheck = 0;
+
+            // Movement loop using requestAnimationFrame for better performance
+            function movementLoop() {
+                // Check if adventure view is active (only check every 30 frames to reduce overhead)
+                if (!cachedAdventureView || !cachedAdventureView.classList.contains('active')) {
+                    animationFrameId = null;
                     return;
                 }
 
-                const moveSpeed = 5; // pixels per frame (increased for faster movement)
-                const caveBackground = document.querySelector('.cave-background');
-                if (!caveBackground) return;
+                // Update cached dimensions periodically (every 60 frames ~1 second)
+                const now = Date.now();
+                if (now - lastDimensionCheck > 1000 || cachedCaveWidth === 0) {
+                    if (cachedCaveBackground) {
+                        cachedCaveWidth = cachedCaveBackground.offsetWidth;
+                        cachedCaveHeight = cachedCaveBackground.offsetHeight;
+                    } else {
+                        cachedCaveBackground = document.querySelector('.cave-background');
+                        if (cachedCaveBackground) {
+                            cachedCaveWidth = cachedCaveBackground.offsetWidth;
+                            cachedCaveHeight = cachedCaveBackground.offsetHeight;
+                        } else {
+                            animationFrameId = requestAnimationFrame(movementLoop);
+                            return;
+                        }
+                    }
+                    lastDimensionCheck = now;
+                }
 
-                const caveWidth = caveBackground.offsetWidth;
-                const caveHeight = caveBackground.offsetHeight;
+                const moveSpeed = 5; // pixels per frame
                 const dragonWidth = 80; // dragon width in pixels
                 const dragonHeight = 80; // dragon height in pixels
 
@@ -3311,7 +3468,7 @@
                         // Move left (joystick X is negative)
                         if (joystickX < 0) {
                             if (dragonPosition.x > 3) {
-                                const newX = dragonPosition.x + (moveSpeed * normalizedSpeed * joystickX * 100) / caveWidth;
+                                const newX = dragonPosition.x + (moveSpeed * normalizedSpeed * joystickX * 100) / cachedCaveWidth;
                                 if (!checkCollision(newX, dragonPosition.y)) {
                                     dragonPosition.x = newX;
                                     moved = true;
@@ -3324,7 +3481,7 @@
                         // Move right (joystick X is positive)
                         if (joystickX > 0) {
                             if (dragonPosition.x < 97) {
-                                const newX = dragonPosition.x + (moveSpeed * normalizedSpeed * joystickX * 100) / caveWidth;
+                                const newX = dragonPosition.x + (moveSpeed * normalizedSpeed * joystickX * 100) / cachedCaveWidth;
                                 if (!checkCollision(newX, dragonPosition.y)) {
                                     dragonPosition.x = newX;
                                     moved = true;
@@ -3339,7 +3496,7 @@
                     // Use keyboard input
                     // W - Move up (increase bottom value)
                     if (keysPressed.w) {
-                        if (dragonPosition.y < (caveHeight - dragonHeight - 10)) {
+                        if (dragonPosition.y < (cachedCaveHeight - dragonHeight - 10)) {
                             const newY = dragonPosition.y + moveSpeed;
                             if (!checkCollision(dragonPosition.x, newY)) {
                                 dragonPosition.y = newY;
@@ -3366,7 +3523,7 @@
                     // A - Move left (decrease x percentage)
                     if (keysPressed.a) {
                         if (dragonPosition.x > 3) {
-                            const newX = dragonPosition.x - (moveSpeed * 100) / caveWidth;
+                            const newX = dragonPosition.x - (moveSpeed * 100) / cachedCaveWidth;
                             if (!checkCollision(newX, dragonPosition.y)) {
                                 dragonPosition.x = newX;
                                 moved = true;
@@ -3379,7 +3536,7 @@
                     // D - Move right (increase x percentage)
                     if (keysPressed.d) {
                         if (dragonPosition.x < 97) {
-                            const newX = dragonPosition.x + (moveSpeed * 100) / caveWidth;
+                            const newX = dragonPosition.x + (moveSpeed * 100) / cachedCaveWidth;
                             if (!checkCollision(newX, dragonPosition.y)) {
                                 dragonPosition.x = newX;
                                 moved = true;
@@ -3394,51 +3551,69 @@
                 if (moved) {
                     updateDragonPosition();
                 }
-            }, 16); // ~60 FPS
+                
+                // Continue animation loop
+                animationFrameId = requestAnimationFrame(movementLoop);
+            }
+            
+            // Start the animation loop
+            animationFrameId = requestAnimationFrame(movementLoop);
         }
 
         // Function to update dragon position
         function updateDragonPosition() {
-            const pixelDragon = document.getElementById('pixel-dragon');
-            if (pixelDragon) {
-                // Use left positioning with transform for centering
-                pixelDragon.style.left = dragonPosition.x + '%';
-                pixelDragon.style.bottom = dragonPosition.y + 'px';
-                pixelDragon.style.transform = 'translateX(-50%)';
-                pixelDragon.style.position = 'absolute';
-                pixelDragon.style.display = 'block';
-                pixelDragon.style.visibility = 'visible';
+            // Use cached reference
+            if (!cachedPixelDragon) {
+                cachedPixelDragon = document.getElementById('pixel-dragon');
             }
             
-            // Update key position if collected
-            if (keyCollected) {
+            if (cachedPixelDragon) {
+                // Use transform for better performance (GPU accelerated)
+                cachedPixelDragon.style.left = dragonPosition.x + '%';
+                cachedPixelDragon.style.bottom = dragonPosition.y + 'px';
+                // Only set these once if not already set
+                if (cachedPixelDragon.style.position !== 'absolute') {
+                    cachedPixelDragon.style.position = 'absolute';
+                    cachedPixelDragon.style.display = 'block';
+                    cachedPixelDragon.style.visibility = 'visible';
+                }
+            }
+            
+            // Update key position if collected (throttle to every other frame)
+            if (keyCollected && (Math.floor(Date.now() / 16) % 2 === 0)) {
                 updateKeyPosition();
             }
             
-            // Check for level up (dragon + key + box collision in main room)
-            checkLevelUp();
+            // Check for level up (throttle to every 10 frames to reduce overhead)
+            if (Math.floor(Date.now() / 16) % 10 === 0) {
+                checkLevelUp();
+            }
         }
         
         // Function to update level display
         function updateLevelDisplay() {
-            const levelDisplay = document.getElementById('level-display');
-            if (levelDisplay) {
-                levelDisplay.textContent = 'Level: ' + currentLevel;
+            if (!cachedLevelDisplay) {
+                cachedLevelDisplay = document.getElementById('level-display');
+            }
+            if (cachedLevelDisplay) {
+                cachedLevelDisplay.textContent = 'Level: ' + currentLevel;
             }
         }
         
         // Function to update timer display
         function updateTimerDisplay() {
-            const timerDisplay = document.getElementById('timer-display');
-            if (timerDisplay) {
-                timerDisplay.textContent = timerSeconds;
+            if (!cachedTimerDisplay) {
+                cachedTimerDisplay = document.getElementById('timer-display');
+            }
+            if (cachedTimerDisplay) {
+                cachedTimerDisplay.textContent = timerSeconds;
                 
                 // Update styling based on time remaining
-                timerDisplay.classList.remove('warning', 'critical');
+                cachedTimerDisplay.classList.remove('warning', 'critical');
                 if (timerSeconds <= 15) {
-                    timerDisplay.classList.add('critical');
+                    cachedTimerDisplay.classList.add('critical');
                 } else if (timerSeconds <= 30) {
-                    timerDisplay.classList.add('warning');
+                    cachedTimerDisplay.classList.add('warning');
                 }
             }
         }
@@ -3827,7 +4002,9 @@
             // Generate obstacles (10-50 obstacles per room, excluding main room)
             const obstacles = [];
             const numObstacles = roomCoord.x === 0 && roomCoord.y === 0 ? 0 : Math.floor(rng() * 41) + 10;
-            const obstacleTypes = ['rock', 'crystal', 'stalagmite'];
+            const obstacleTypes = ['rock', 'crystal', 'stalagmite', 'lava'];
+            let lavaCount = 0; // Track number of lava obstacles
+            const maxLava = 10; // Maximum lava obstacles per room
             
             for (let i = 0; i < numObstacles; i++) {
                 let attempts = 0;
@@ -3842,7 +4019,17 @@
                     x = rng() * 100; // 0% to 100% of width
                     y = rng() * 500; // 0 to 500px from bottom
                     size = Math.floor(rng() * 30) + 20; // 20px to 50px
-                    type = obstacleTypes[Math.floor(rng() * obstacleTypes.length)];
+                    
+                    // Select obstacle type, but limit lava to max 10
+                    const availableTypes = lavaCount >= maxLava 
+                        ? ['rock', 'crystal', 'stalagmite'] 
+                        : obstacleTypes;
+                    type = availableTypes[Math.floor(rng() * availableTypes.length)];
+                    
+                    // If this is lava and we're at the limit, skip it
+                    if (type === 'lava' && lavaCount >= maxLava) {
+                        continue;
+                    }
                     
                     // Convert obstacle bounds
                     const sizePercent = (size / caveWidthPx) * 100;
@@ -3934,6 +4121,11 @@
                         height: size,
                         type: type
                     });
+                    
+                    // Increment lava count if this is lava
+                    if (type === 'lava') {
+                        lavaCount++;
+                    }
                 }
             }
             
@@ -3970,30 +4162,44 @@
                         const segment = clearPath.segments[segmentIndex];
                         
                         if (segment.type === 'horizontal') {
-                            // Random position along horizontal segment
-                            const segmentLength = segment.maxX - segment.minX;
-                            keyX = segment.minX + rng() * segmentLength;
-                            keyY = segment.y; // Use the segment's Y position
+                            // Random position along horizontal segment, but avoid edges
+                            const minDistancePercent = (50 / caveWidthPx) * 100; // 50px as percentage
+                            const safeMinX = Math.max(segment.minX, minDistancePercent);
+                            const safeMaxX = Math.min(segment.maxX, 100 - minDistancePercent);
+                            const safeSegmentLength = Math.max(0, safeMaxX - safeMinX);
+                            if (safeSegmentLength > 0) {
+                                keyX = safeMinX + rng() * safeSegmentLength;
+                                keyY = segment.y; // Use the segment's Y position
+                            }
                         } else if (segment.type === 'vertical') {
-                            // Random position along vertical segment
+                            // Random position along vertical segment, but avoid edges
                             keyX = segment.x; // Use the segment's X position
-                            const segmentLength = segment.maxY - segment.minY;
-                            keyY = segment.minY + rng() * segmentLength;
+                            const minDistancePx = 50; // 50px minimum
+                            const safeMinY = Math.max(segment.minY, minDistancePx);
+                            const safeMaxY = Math.min(segment.maxY, caveHeightPx - minDistancePx);
+                            const safeSegmentLength = Math.max(0, safeMaxY - safeMinY);
+                            if (safeSegmentLength > 0) {
+                                keyY = safeMinY + rng() * safeSegmentLength;
+                            }
                         }
                     } else if (clearPath.type === 'horizontal') {
-                        // Random position along horizontal path
-                        keyX = rng() * 100; // Random X position (0-100%)
+                        // Random position along horizontal path, but avoid edges
+                        const minDistancePercent = (50 / caveWidthPx) * 100; // 50px as percentage
+                        keyX = minDistancePercent + rng() * (100 - 2 * minDistancePercent); // Random X position with margins
                         keyY = clearPath.y; // Use the path's Y position
                     } else if (clearPath.type === 'vertical') {
-                        // Random position along vertical path
+                        // Random position along vertical path, but avoid edges
                         keyX = clearPath.x; // Use the path's X position
-                        keyY = rng() * caveHeightPx; // Random Y position (0-500px)
+                        const minDistancePx = 50; // 50px minimum
+                        keyY = minDistancePx + rng() * (caveHeightPx - 2 * minDistancePx); // Random Y position with margins
                     }
                     
                     if (keyX !== undefined && keyY !== undefined) {
+                        // Ensure key is at least 50px away from walls
+                        const clampedPos = clampKeyPosition(keyX, keyY, caveWidthPx, caveHeightPx);
                         key = {
-                            x: keyX,
-                            y: keyY
+                            x: clampedPos.x,
+                            y: clampedPos.y
                         };
                     }
                 }
@@ -4016,6 +4222,27 @@
                 value = (value * 9301 + 49297) % 233280;
                 return value / 233280;
             };
+        }
+
+        // Function to ensure key is at least 50 pixels away from walls
+        function clampKeyPosition(keyX, keyY, caveWidthPx, caveHeightPx) {
+            const minDistance = 50; // Minimum distance from walls in pixels
+            
+            // Convert percentage to pixels for X
+            const keyXPx = (keyX / 100) * caveWidthPx;
+            
+            // Clamp X position (keep at least 50px from left and right walls)
+            const minXPx = minDistance;
+            const maxXPx = caveWidthPx - minDistance;
+            const clampedXPx = Math.max(minXPx, Math.min(maxXPx, keyXPx));
+            const clampedX = (clampedXPx / caveWidthPx) * 100;
+            
+            // Clamp Y position (keep at least 50px from bottom and top walls)
+            const minYPx = minDistance;
+            const maxYPx = caveHeightPx - minDistance;
+            const clampedY = Math.max(minYPx, Math.min(maxYPx, keyY));
+            
+            return { x: clampedX, y: clampedY };
         }
 
         // Check if obstacles block any paths
@@ -4082,6 +4309,9 @@
                 roomMemory[roomKey] = generateRoomState(roomCoord);
             }
             
+            // Refresh cached cave background reference when loading new room
+            cachedCaveBackground = document.querySelector('.cave-background');
+            
             const room = roomMemory[roomKey];
             
             // Ensure room has obstacles if it's not the main room, and regenerate if paths are blocked
@@ -4100,7 +4330,9 @@
                 const rng = seededRandom(seed);
                 const obstacles = [];
                 const numObstacles = Math.floor(rng() * 41) + 10; // 10-50 obstacles
-                const obstacleTypes = ['rock', 'crystal', 'stalagmite'];
+                const obstacleTypes = ['rock', 'crystal', 'stalagmite', 'lava'];
+                let lavaCount = 0; // Track number of lava obstacles
+                const maxLava = 10; // Maximum lava obstacles per room
                 
                 const caveWidthPx = 1200; // approximate width
                 const caveHeightPx = 500; // approximate height
@@ -4119,7 +4351,17 @@
                         x = rng() * 100; // 0% to 100% of width
                         y = rng() * 500; // 0 to 500px from bottom
                         size = Math.floor(rng() * 30) + 20; // 20px to 50px
-                        type = obstacleTypes[Math.floor(rng() * obstacleTypes.length)];
+                        
+                        // Select obstacle type, but limit lava to max 10
+                        const availableTypes = lavaCount >= maxLava 
+                            ? ['rock', 'crystal', 'stalagmite'] 
+                            : obstacleTypes;
+                        type = availableTypes[Math.floor(rng() * availableTypes.length)];
+                        
+                        // If this is lava and we're at the limit, skip it
+                        if (type === 'lava' && lavaCount >= maxLava) {
+                            continue;
+                        }
                         
                         // Convert obstacle bounds
                         const sizePercent = (size / caveWidthPx) * 100;
@@ -4185,6 +4427,11 @@
                             height: size,
                             type: type
                         });
+                        
+                        // Increment lava count if this is lava
+                        if (type === 'lava') {
+                            lavaCount++;
+                        }
                     }
                 }
                 
@@ -4243,9 +4490,11 @@
                         }
                         
                         if (keyX !== undefined && keyY !== undefined) {
+                            // Ensure key is at least 50px away from walls
+                            const clampedPos = clampKeyPosition(keyX, keyY, caveWidthPx, caveHeightPx);
                             room.key = {
-                                x: keyX,
-                                y: keyY
+                                x: clampedPos.x,
+                                y: clampedPos.y
                             };
                         }
                     }
@@ -4438,17 +4687,20 @@
         }
 
         function checkCollision(newX, newY) {
-            const caveBackground = document.querySelector('.cave-background');
-            if (!caveBackground) return false;
+            // Use cached reference
+            if (!cachedCaveBackground) {
+                cachedCaveBackground = document.querySelector('.cave-background');
+            }
+            if (!cachedCaveBackground) return false;
             
             const roomKey = getRoomKey(currentRoom);
             const room = roomMemory[roomKey];
-            if (!room || !room.obstacles) return false;
+            if (!room || !room.obstacles || room.obstacles.length === 0) return false;
             
             const dragonWidth = 80;
             const dragonHeight = 80;
-            const caveWidth = caveBackground.offsetWidth;
-            const caveHeight = caveBackground.offsetHeight;
+            const caveWidth = cachedCaveBackground.offsetWidth;
+            const caveHeight = cachedCaveBackground.offsetHeight;
             
             // Convert dragon position to pixels
             const dragonLeft = (newX / 100) * caveWidth - dragonWidth / 2;
@@ -4456,18 +4708,50 @@
             const dragonTop = caveHeight - newY - dragonHeight;
             const dragonBottom = dragonTop + dragonHeight;
             
-            // Check collision with each obstacle
+            // Quick bounds check - only check obstacles that could possibly collide
+            // Calculate rough bounds of dragon position
+            const dragonBoundsLeft = dragonLeft - 50; // Add padding
+            const dragonBoundsRight = dragonRight + 50;
+            const dragonBoundsTop = dragonTop - 50;
+            const dragonBoundsBottom = dragonBottom + 50;
+            
+            // Check collision with each obstacle (optimized with early bounds check)
             for (let i = 0; i < room.obstacles.length; i++) {
                 const obstacle = room.obstacles[i];
+                
+                // Quick bounds check first (faster than full collision)
                 const obstacleLeft = (obstacle.x / 100) * caveWidth - obstacle.width / 2;
                 const obstacleRight = obstacleLeft + obstacle.width;
                 const obstacleTop = caveHeight - obstacle.y - obstacle.height;
                 const obstacleBottom = obstacleTop + obstacle.height;
                 
-                // Check for overlap
+                // Early exit if obstacle is far away
+                if (obstacleRight < dragonBoundsLeft || obstacleLeft > dragonBoundsRight ||
+                    obstacleBottom < dragonBoundsTop || obstacleTop > dragonBoundsBottom) {
+                    continue; // Skip this obstacle, it's too far away
+                }
+                
+                // Full collision check only for nearby obstacles
                 if (dragonLeft < obstacleRight && dragonRight > obstacleLeft &&
                     dragonTop < obstacleBottom && dragonBottom > obstacleTop) {
-                    return true; // Collision detected
+                    // Special handling for lava - teleport to main room and reset key
+                    if (obstacle.type === 'lava') {
+                        // Reset key collection
+                        keyCollected = false;
+                        
+                        // Remove the key from display
+                        const keyEl = document.getElementById('adventure-key');
+                        if (keyEl) {
+                            keyEl.remove();
+                        }
+                        
+                        // Teleport to main room
+                        teleportToMainRoom();
+                        
+                        // Return false to allow movement (teleport handles position)
+                        return false;
+                    }
+                    return true; // Collision detected for other obstacles
                 }
             }
             
