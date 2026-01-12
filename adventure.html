@@ -381,6 +381,23 @@
             clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
         }
 
+        /* Box styles */
+        .main-room-box {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #8a7a5a 0%, #6a5a4a 100%);
+            border: 4px solid #a09a7a;
+            border-radius: 8px;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.5),
+                0 4px 8px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(160, 154, 122, 0.3);
+            z-index: 55;
+            image-rendering: pixelated;
+            transform: translateX(-50%);
+        }
+        
         /* Key styles */
         .key {
             position: absolute !important;
@@ -427,6 +444,25 @@
             transform: translateY(-50%);
         }
 
+        /* Level Display */
+        .level-display {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(135deg, #4a4a6a 0%, #2a2a4a 100%);
+            color: #E0E0E0;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 3px solid #6a6a8a;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(100, 100, 150, 0.4);
+            z-index: 200;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: Arial, sans-serif;
+        }
+        
         /* Teleport to Main Room Button */
         .teleport-main-button {
             position: absolute;
@@ -2588,6 +2624,7 @@
 
                 <div class="cave-container">
                     <div class="cave-background">
+                        <div id="level-display" class="level-display">Level: 1</div>
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
                         <button id="teleport-main-button" class="teleport-main-button">⚡ Main Room</button>
@@ -2967,6 +3004,10 @@
         
         // Key collection state
         let keyCollected = false;
+        
+        // Level system
+        let currentLevel = 1;
+        let lastLevelUpTime = 0; // Track when level was last incremented to prevent rapid increments
 
         // Joystick state
         let joystickState = {
@@ -2996,6 +3037,12 @@
             roomMemory = {};
             currentRoom = { x: 0, y: 0 };
             transitioning = false;
+            
+            // Reset level system
+            currentLevel = 1;
+            keyCollected = false;
+            lastLevelUpTime = 0;
+            updateLevelDisplay();
             
             currentDragon = dragon;
 
@@ -3293,6 +3340,86 @@
             // Update key position if collected
             if (keyCollected) {
                 updateKeyPosition();
+            }
+            
+            // Check for level up (dragon + key + box collision in main room)
+            checkLevelUp();
+        }
+        
+        // Function to update level display
+        function updateLevelDisplay() {
+            const levelDisplay = document.getElementById('level-display');
+            if (levelDisplay) {
+                levelDisplay.textContent = 'Level: ' + currentLevel;
+            }
+        }
+        
+        // Function to check if dragon + key + box collide (level up)
+        function checkLevelUp() {
+            // Only check in main room and if key is collected
+            if (currentRoom.x !== 0 || currentRoom.y !== 0 || !keyCollected) {
+                return;
+            }
+            
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) return;
+            
+            const boxEl = document.getElementById('main-room-box');
+            const keyEl = document.getElementById('adventure-key');
+            
+            if (!boxEl || !keyEl) return;
+            
+            // Get box bounds
+            const boxRect = boxEl.getBoundingClientRect();
+            const caveRect = caveBackground.getBoundingClientRect();
+            const boxLeft = ((boxRect.left - caveRect.left) / caveRect.width) * 100;
+            const boxRight = ((boxRect.right - caveRect.left) / caveRect.width) * 100;
+            const boxBottom = caveRect.height - (boxRect.bottom - caveRect.top);
+            const boxTop = caveRect.height - (boxRect.top - caveRect.top);
+            
+            // Get dragon bounds
+            const dragonWidth = 80;
+            const dragonHeight = 80;
+            const dragonLeft = dragonPosition.x - (dragonWidth / caveRect.width * 100) / 2;
+            const dragonRight = dragonPosition.x + (dragonWidth / caveRect.width * 100) / 2;
+            const dragonBottom = dragonPosition.y;
+            const dragonTop = dragonPosition.y + dragonHeight;
+            
+            // Get key bounds (when collected, it follows dragon)
+            const keySize = 30;
+            const keyLeft = dragonPosition.x - (keySize / caveRect.width * 100) / 2;
+            const keyRight = dragonPosition.x + (keySize / caveRect.width * 100) / 2;
+            const keyBottom = dragonPosition.y + 90;
+            const keyTop = dragonPosition.y + 90 + keySize;
+            
+            // Check if all three overlap
+            const dragonBoxCollision = (
+                dragonLeft < boxRight && dragonRight > boxLeft &&
+                dragonBottom < boxTop && dragonTop > boxBottom
+            );
+            
+            const keyBoxCollision = (
+                keyLeft < boxRight && keyRight > boxLeft &&
+                keyBottom < boxTop && keyTop > boxBottom
+            );
+            
+            if (dragonBoxCollision && keyBoxCollision) {
+                // Prevent rapid level increments (only once per second)
+                const now = Date.now();
+                if (now - lastLevelUpTime > 1000) {
+                    // Level up!
+                    currentLevel++;
+                    lastLevelUpTime = now;
+                    updateLevelDisplay();
+                    
+                    // Visual feedback
+                    if (boxEl) {
+                        boxEl.style.boxShadow = '0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8)';
+                        setTimeout(function() {
+                            boxEl.style.boxShadow = '';
+                        }, 500);
+                    }
+                }
             }
         }
         
@@ -3936,6 +4063,14 @@
             // Render obstacles for this room
             renderObstacles(room.obstacles || []);
             
+            // Render box ONLY in main room, hide it in other rooms
+            if (roomCoord.x === 0 && roomCoord.y === 0) {
+                renderMainRoomBox();
+            } else {
+                // Remove/hide box when not in main room
+                hideMainRoomBox();
+            }
+            
             // Always render key if it exists (even if collected, it should follow the dragon)
             // Also ensure key is generated if it should exist but doesn't
             const clearPath = room.clearPath;
@@ -4021,6 +4156,40 @@
                 obstacleEl.setAttribute('data-obstacle-index', index);
                 caveBackground.appendChild(obstacleEl);
             });
+        }
+
+        function renderMainRoomBox() {
+            // Remove existing box first
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) return;
+            
+            const oldBox = caveBackground.querySelector('.main-room-box');
+            if (oldBox) {
+                oldBox.remove();
+            }
+            
+            // Create box in the center of the main room
+            const boxEl = document.createElement('div');
+            boxEl.className = 'main-room-box';
+            boxEl.id = 'main-room-box';
+            boxEl.style.left = '50%'; // Center horizontally - fixed position
+            boxEl.style.bottom = '200px'; // Position vertically - fixed position
+            boxEl.style.display = 'block';
+            boxEl.style.visibility = 'visible';
+            boxEl.style.opacity = '1';
+            boxEl.style.position = 'absolute'; // Ensure it stays in place
+            caveBackground.appendChild(boxEl);
+        }
+        
+        function hideMainRoomBox() {
+            // Hide/remove box when not in main room
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) return;
+            
+            const boxEl = caveBackground.querySelector('.main-room-box');
+            if (boxEl) {
+                boxEl.remove(); // Remove it completely when leaving main room
+            }
         }
 
         function renderKey(key) {
