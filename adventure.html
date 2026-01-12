@@ -3000,7 +3000,8 @@
         
         // Session seed that changes each time the game is played
         // This makes rooms different every play session
-        const sessionSeed = Math.floor(Math.random() * 1000000000);
+        // Also changes when leveling up to regenerate rooms
+        let sessionSeed = Math.floor(Math.random() * 1000000000);
         
         // Key collection state
         let keyCollected = false;
@@ -3411,6 +3412,25 @@
                     currentLevel++;
                     lastLevelUpTime = now;
                     updateLevelDisplay();
+                    
+                    // Regenerate session seed to change all rooms
+                    sessionSeed = Math.floor(Math.random() * 1000000000);
+                    
+                    // Clear room memory to force regeneration of all rooms
+                    roomMemory = {};
+                    
+                    // Reset key collection (key will be in a new room)
+                    keyCollected = false;
+                    
+                    // Remove the key from display
+                    const keyEl = document.getElementById('adventure-key');
+                    if (keyEl) {
+                        keyEl.remove();
+                    }
+                    
+                    // Reload current room (main room) with new seed
+                    loadRoom(currentRoom);
+                    updateMap();
                     
                     // Visual feedback
                     if (boxEl) {
