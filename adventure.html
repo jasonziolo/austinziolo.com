@@ -629,6 +629,20 @@
             transform: scale(0.95);
         }
 
+        .teleport-main-button:disabled {
+            background: linear-gradient(135deg, #666666 0%, #444444 100%);
+            border-color: #888888;
+            color: #AAAAAA;
+            cursor: not-allowed;
+            opacity: 0.5;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .teleport-main-button:disabled:hover {
+            transform: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
         @media screen and (max-width: 768px) {
             .teleport-main-button {
                 font-size: 12px;
@@ -3225,6 +3239,7 @@
             keyCollected = false;
             lastLevelUpTime = 0;
             updateLevelDisplay();
+            updateTeleportButtonState(); // Update teleport button state
             
             // Reset timer state (don't start it yet - wait for first movement)
             timerStarted = false;
@@ -3321,6 +3336,9 @@
             setTimeout(function() {
                 setupMovementControls();
             }, 100);
+            
+            // Update teleport button state on adventure start
+            updateTeleportButtonState();
         }
 
         // Function to cache DOM references
@@ -3671,6 +3689,7 @@
             
             // Reset key collection
             keyCollected = false;
+            updateTeleportButtonState(); // Re-enable teleport button
             
             // Remove the key from display
             const keyEl = document.getElementById('adventure-key');
@@ -3783,6 +3802,7 @@
                     
                     // Reset key collection (key will be in a new room)
                     keyCollected = false;
+                    updateTeleportButtonState(); // Re-enable teleport button
                     
                     // Remove the key from display
                     const keyEl = document.getElementById('adventure-key');
@@ -3815,6 +3835,24 @@
                 keyEl.style.left = dragonPosition.x + '%';
                 keyEl.style.bottom = (dragonPosition.y + 90) + 'px';
                 keyEl.style.transform = 'translateX(-50%) rotate(-20deg)';
+            }
+        }
+        
+        // Function to update teleport button state based on key collection
+        function updateTeleportButtonState() {
+            const teleportButton = document.getElementById('teleport-main-button');
+            if (teleportButton) {
+                if (keyCollected) {
+                    teleportButton.disabled = true;
+                    teleportButton.style.opacity = '0.5';
+                    teleportButton.style.cursor = 'not-allowed';
+                    teleportButton.title = 'Cannot teleport while holding the key!';
+                } else {
+                    teleportButton.disabled = false;
+                    teleportButton.style.opacity = '1';
+                    teleportButton.style.cursor = 'pointer';
+                    teleportButton.title = 'Teleport to Main Room';
+                }
             }
         }
 
@@ -4736,17 +4774,18 @@
                     dragonTop < obstacleBottom && dragonBottom > obstacleTop) {
                     // Special handling for lava - teleport to main room and reset key
                     if (obstacle.type === 'lava') {
-                        // Reset key collection
-                        keyCollected = false;
-                        
-                        // Remove the key from display
-                        const keyEl = document.getElementById('adventure-key');
-                        if (keyEl) {
-                            keyEl.remove();
-                        }
-                        
-                        // Teleport to main room
-                        teleportToMainRoom();
+            // Reset key collection
+            keyCollected = false;
+            updateTeleportButtonState(); // Re-enable teleport button
+            
+            // Remove the key from display
+            const keyEl = document.getElementById('adventure-key');
+            if (keyEl) {
+                keyEl.remove();
+            }
+            
+            // Teleport to main room
+            teleportToMainRoom();
                         
                         // Return false to allow movement (teleport handles position)
                         return false;
@@ -4770,6 +4809,8 @@
                     keyCollected = true;
                     // Update key position to follow dragon
                     renderKey(room.key);
+                    // Update teleport button state
+                    updateTeleportButtonState();
                 }
             }
             
@@ -4852,6 +4893,24 @@
             // Only teleport if not already in main room
             if (currentRoom.x === 0 && currentRoom.y === 0) {
                 return; // Already in main room
+            }
+
+            // Prevent teleport if player has the key
+            if (keyCollected) {
+                // Show visual feedback that teleport is blocked
+                const teleportButton = document.getElementById('teleport-main-button');
+                if (teleportButton) {
+                    const originalText = teleportButton.textContent;
+                    teleportButton.textContent = '🔒 Need to drop key!';
+                    teleportButton.style.background = 'linear-gradient(135deg, #AA0000 0%, #660000 100%)';
+                    teleportButton.style.borderColor = '#FF6666';
+                    setTimeout(function() {
+                        teleportButton.textContent = originalText;
+                        teleportButton.style.background = '';
+                        teleportButton.style.borderColor = '';
+                    }, 1500);
+                }
+                return; // Cannot teleport with key
             }
 
             // Prevent transition during teleport
