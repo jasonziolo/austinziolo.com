@@ -381,6 +381,52 @@
             clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
         }
 
+        /* Key styles */
+        .key {
+            position: absolute !important;
+            width: 30px !important;
+            height: 30px !important;
+            background: linear-gradient(135deg, #FFD700 0%, #FFAA00 100%) !important;
+            border: 3px solid #FFEE88 !important;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40% !important;
+            box-shadow: 
+                0 0 10px rgba(255, 215, 0, 0.8),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3),
+                0 2px 6px rgba(0, 0, 0, 0.4) !important;
+            z-index: 60 !important;
+            image-rendering: pixelated;
+            transform: translateX(-50%) rotate(-20deg) !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .key::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 20%;
+            width: 6px;
+            height: 8px;
+            background: #FFD700;
+            border: 2px solid #FFEE88;
+            border-radius: 0 50% 50% 0;
+            transform: translateY(-50%);
+        }
+
+        .key::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 15%;
+            width: 4px;
+            height: 12px;
+            background: #FFD700;
+            border: 2px solid #FFEE88;
+            border-radius: 2px;
+            transform: translateY(-50%);
+        }
+
         /* Teleport to Main Room Button */
         .teleport-main-button {
             position: absolute;
@@ -2918,6 +2964,9 @@
         // Session seed that changes each time the game is played
         // This makes rooms different every play session
         const sessionSeed = Math.floor(Math.random() * 1000000000);
+        
+        // Key collection state
+        let keyCollected = false;
 
         // Joystick state
         let joystickState = {
@@ -3240,6 +3289,24 @@
                 pixelDragon.style.display = 'block';
                 pixelDragon.style.visibility = 'visible';
             }
+            
+            // Update key position if collected
+            if (keyCollected) {
+                updateKeyPosition();
+            }
+        }
+        
+        // Function to update key position when collected
+        function updateKeyPosition() {
+            const keyEl = document.getElementById('adventure-key');
+            const pixelDragon = document.getElementById('pixel-dragon');
+            
+            if (keyEl && pixelDragon) {
+                // Position key above and to the right of the dragon
+                keyEl.style.left = dragonPosition.x + '%';
+                keyEl.style.bottom = (dragonPosition.y + 90) + 'px';
+                keyEl.style.transform = 'translateX(-50%) rotate(-20deg)';
+            }
         }
 
         // Room system functions
@@ -3453,7 +3520,36 @@
                     // Check if obstacle overlaps with the clear path
                     let blocksPath = false;
                     
-                    if (clearPath.type === 'horizontal') {
+                    if (clearPath.type === 'lshape' && clearPath.segments) {
+                        // L-shaped path: check each segment
+                        for (let segIdx = 0; segIdx < clearPath.segments.length; segIdx++) {
+                            const segment = clearPath.segments[segIdx];
+                            
+                            if (segment.type === 'horizontal') {
+                                // Horizontal segment: check if obstacle is within path height range
+                                const pathTop = segment.y + segment.width / 2;
+                                const pathBottom = segment.y - segment.width / 2;
+                                const pathLeft = segment.minX;
+                                const pathRight = segment.maxX;
+                                if (obstacleTop > pathBottom && obstacleBottom < pathTop &&
+                                    obstacleRight > pathLeft && obstacleLeft < pathRight) {
+                                    blocksPath = true;
+                                    break;
+                                }
+                            } else if (segment.type === 'vertical') {
+                                // Vertical segment: check if obstacle is within path width range
+                                const pathLeft = segment.x - segment.width / 2;
+                                const pathRight = segment.x + segment.width / 2;
+                                const pathBottom = segment.minY;
+                                const pathTop = segment.maxY;
+                                if (obstacleRight > pathLeft && obstacleLeft < pathRight &&
+                                    obstacleTop > pathBottom && obstacleBottom < pathTop) {
+                                    blocksPath = true;
+                                    break;
+                                }
+                            }
+                        }
+                    } else if (clearPath.type === 'horizontal') {
                         // Horizontal path: check if obstacle is within path height range
                         const pathTop = clearPath.y + clearPath.width / 2;
                         const pathBottom = clearPath.y - clearPath.width / 2;
@@ -3507,11 +3603,74 @@
                 }
             }
             
+            // Generate a key on the clear path (only in one randomly selected room)
+            let key = null;
+            if (clearPath && roomCoord.x !== 0 && roomCoord.y !== 0) {
+                // Determine which room should have the key based on session seed
+                // Get all valid room coordinates
+                const validRooms = [];
+                for (let x = -MAX_ROOMS; x <= MAX_ROOMS; x++) {
+                    for (let y = -MAX_ROOMS; y <= MAX_ROOMS; y++) {
+                        const coord = { x: x, y: y };
+                        if ((x === 0 || y === 0) && !(x === 0 && y === 0)) {
+                            validRooms.push(coord);
+                        }
+                    }
+                }
+                
+                // Use session seed to deterministically select one room for the key
+                const keyRoomSeed = sessionSeed * 7919; // Use a prime multiplier
+                const keyRoomIndex = Math.floor((keyRoomSeed % 1000000) / (1000000 / validRooms.length));
+                const keyRoom = validRooms[Math.min(keyRoomIndex, validRooms.length - 1)];
+                
+                // Only generate key if this is the selected room
+                if (roomCoord.x === keyRoom.x && roomCoord.y === keyRoom.y) {
+                    // Find a random position on the clear path
+                    let keyX, keyY;
+                    const caveWidthPx = 1200;
+                    const caveHeightPx = 500;
+                    
+                    if (clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                        // For L-shaped paths, randomly select one of the segments
+                        const segmentIndex = Math.floor(rng() * clearPath.segments.length);
+                        const segment = clearPath.segments[segmentIndex];
+                        
+                        if (segment.type === 'horizontal') {
+                            // Random position along horizontal segment
+                            const segmentLength = segment.maxX - segment.minX;
+                            keyX = segment.minX + rng() * segmentLength;
+                            keyY = segment.y; // Use the segment's Y position
+                        } else if (segment.type === 'vertical') {
+                            // Random position along vertical segment
+                            keyX = segment.x; // Use the segment's X position
+                            const segmentLength = segment.maxY - segment.minY;
+                            keyY = segment.minY + rng() * segmentLength;
+                        }
+                    } else if (clearPath.type === 'horizontal') {
+                        // Random position along horizontal path
+                        keyX = rng() * 100; // Random X position (0-100%)
+                        keyY = clearPath.y; // Use the path's Y position
+                    } else if (clearPath.type === 'vertical') {
+                        // Random position along vertical path
+                        keyX = clearPath.x; // Use the path's X position
+                        keyY = rng() * caveHeightPx; // Random Y position (0-500px)
+                    }
+                    
+                    if (keyX !== undefined && keyY !== undefined) {
+                        key = {
+                            x: keyX,
+                            y: keyY
+                        };
+                    }
+                }
+            }
+            
             return {
                 seed: seed,
                 background: background,
                 obstacles: obstacles,
                 clearPath: clearPath, // Store the clear path
+                key: key, // Store the key position
                 visited: false
             };
         }
@@ -3696,6 +3855,67 @@
                 }
                 
                 room.obstacles = obstacles;
+                
+                // Preserve the key if it exists, or regenerate if missing (only if this room should have the key)
+                // Note: We preserve the key even when obstacles are regenerated
+                if (!room.key && clearPath) {
+                    // Determine which room should have the key based on session seed
+                    const validRooms = [];
+                    for (let x = -MAX_ROOMS; x <= MAX_ROOMS; x++) {
+                        for (let y = -MAX_ROOMS; y <= MAX_ROOMS; y++) {
+                            const coord = { x: x, y: y };
+                            if ((x === 0 || y === 0) && !(x === 0 && y === 0)) {
+                                validRooms.push(coord);
+                            }
+                        }
+                    }
+                    
+                    // Use session seed to deterministically select one room for the key
+                    const keyRoomSeed = sessionSeed * 7919; // Use a prime multiplier
+                    const keyRoomIndex = Math.floor((keyRoomSeed % 1000000) / (1000000 / validRooms.length));
+                    const keyRoom = validRooms[Math.min(keyRoomIndex, validRooms.length - 1)];
+                    
+                    // Only generate key if this is the selected room
+                    if (roomCoord.x === keyRoom.x && roomCoord.y === keyRoom.y) {
+                        // Generate a key on the clear path
+                        let keyX, keyY;
+                        const caveWidthPx = 1200;
+                        const caveHeightPx = 500;
+                        
+                        if (clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                            // For L-shaped paths, randomly select one of the segments
+                            const segmentIndex = Math.floor(rng() * clearPath.segments.length);
+                            const segment = clearPath.segments[segmentIndex];
+                            
+                            if (segment.type === 'horizontal') {
+                                // Random position along horizontal segment
+                                const segmentLength = segment.maxX - segment.minX;
+                                keyX = segment.minX + rng() * segmentLength;
+                                keyY = segment.y; // Use the segment's Y position
+                            } else if (segment.type === 'vertical') {
+                                // Random position along vertical segment
+                                keyX = segment.x; // Use the segment's X position
+                                const segmentLength = segment.maxY - segment.minY;
+                                keyY = segment.minY + rng() * segmentLength;
+                            }
+                        } else if (clearPath.type === 'horizontal') {
+                            // Random position along horizontal path
+                            keyX = rng() * 100; // Random X position (0-100%)
+                            keyY = clearPath.y; // Use the path's Y position
+                        } else if (clearPath.type === 'vertical') {
+                            // Random position along vertical path
+                            keyX = clearPath.x; // Use the path's X position
+                            keyY = rng() * caveHeightPx; // Random Y position (0-500px)
+                        }
+                        
+                        if (keyX !== undefined && keyY !== undefined) {
+                            room.key = {
+                                x: keyX,
+                                y: keyY
+                            };
+                        }
+                    }
+                }
             }
             
             const caveBackground = document.querySelector('.cave-background');
@@ -3715,6 +3935,67 @@
             
             // Render obstacles for this room
             renderObstacles(room.obstacles || []);
+            
+            // Always render key if it exists (even if collected, it should follow the dragon)
+            // Also ensure key is generated if it should exist but doesn't
+            const clearPath = room.clearPath;
+            if (!room.key && clearPath && (roomCoord.x !== 0 || roomCoord.y !== 0)) {
+                // Key should exist but doesn't - regenerate it
+                const seed = ((roomCoord.x * 1000 + roomCoord.y) * 12345) + sessionSeed;
+                const rng = seededRandom(seed);
+                
+                // Determine which room should have the key based on session seed
+                const validRooms = [];
+                for (let x = -MAX_ROOMS; x <= MAX_ROOMS; x++) {
+                    for (let y = -MAX_ROOMS; y <= MAX_ROOMS; y++) {
+                        const coord = { x: x, y: y };
+                        if ((x === 0 || y === 0) && !(x === 0 && y === 0)) {
+                            validRooms.push(coord);
+                        }
+                    }
+                }
+                
+                // Use session seed to deterministically select one room for the key
+                const keyRoomSeed = sessionSeed * 7919;
+                const keyRoomIndex = Math.floor((keyRoomSeed % 1000000) / (1000000 / validRooms.length));
+                const keyRoom = validRooms[Math.min(keyRoomIndex, validRooms.length - 1)];
+                
+                // Only generate key if this is the selected room
+                if (roomCoord.x === keyRoom.x && roomCoord.y === keyRoom.y) {
+                    let keyX, keyY;
+                    const caveWidthPx = 1200;
+                    const caveHeightPx = 500;
+                    
+                    if (clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                        const segmentIndex = Math.floor(rng() * clearPath.segments.length);
+                        const segment = clearPath.segments[segmentIndex];
+                        
+                        if (segment.type === 'horizontal') {
+                            const segmentLength = segment.maxX - segment.minX;
+                            keyX = segment.minX + rng() * segmentLength;
+                            keyY = segment.y;
+                        } else if (segment.type === 'vertical') {
+                            keyX = segment.x;
+                            const segmentLength = segment.maxY - segment.minY;
+                            keyY = segment.minY + rng() * segmentLength;
+                        }
+                    } else if (clearPath.type === 'horizontal') {
+                        keyX = rng() * 100;
+                        keyY = clearPath.y;
+                    } else if (clearPath.type === 'vertical') {
+                        keyX = clearPath.x;
+                        keyY = rng() * caveHeightPx;
+                    }
+                    
+                    if (keyX !== undefined && keyY !== undefined) {
+                        room.key = { x: keyX, y: keyY };
+                    }
+                }
+            }
+            
+            if (room.key) {
+                renderKey(room.key);
+            }
             
             room.visited = true;
         }
@@ -3740,6 +4021,44 @@
                 obstacleEl.setAttribute('data-obstacle-index', index);
                 caveBackground.appendChild(obstacleEl);
             });
+        }
+
+        function renderKey(key) {
+            // Remove existing key
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) return;
+            
+            const oldKey = caveBackground.querySelector('.key');
+            if (oldKey) {
+                oldKey.remove();
+            }
+            
+            // Create key if it exists
+            if (key && key.x !== undefined && key.y !== undefined) {
+                const keyEl = document.createElement('div');
+                keyEl.className = 'key';
+                keyEl.id = 'adventure-key';
+                
+                if (keyCollected) {
+                    // Key is collected - position it above the dragon using dragonPosition
+                    // Position key above and to the right of the dragon
+                    keyEl.style.left = dragonPosition.x + '%';
+                    keyEl.style.bottom = (dragonPosition.y + 90) + 'px';
+                    keyEl.style.transform = 'translateX(-50%) rotate(-20deg)';
+                } else {
+                    // Key is on the ground - use original position
+                    keyEl.style.left = key.x + '%';
+                    keyEl.style.bottom = key.y + 'px';
+                    keyEl.style.transform = 'translateX(-50%) rotate(-20deg)';
+                }
+                
+                keyEl.style.display = 'block';
+                keyEl.style.visibility = 'visible';
+                keyEl.style.opacity = '1';
+                keyEl.style.zIndex = '60';
+                keyEl.setAttribute('data-key', 'true');
+                caveBackground.appendChild(keyEl);
+            }
         }
 
         function checkCollision(newX, newY) {
@@ -3773,6 +4092,24 @@
                 if (dragonLeft < obstacleRight && dragonRight > obstacleLeft &&
                     dragonTop < obstacleBottom && dragonBottom > obstacleTop) {
                     return true; // Collision detected
+                }
+            }
+            
+            // Check collision with key (if not collected)
+            if (!keyCollected && room.key && room.key.x !== undefined && room.key.y !== undefined) {
+                const keySize = 30;
+                const keyLeft = (room.key.x / 100) * caveWidth - keySize / 2;
+                const keyRight = keyLeft + keySize;
+                const keyTop = caveHeight - room.key.y - keySize;
+                const keyBottom = keyTop + keySize;
+                
+                // Check for overlap with key
+                if (dragonLeft < keyRight && dragonRight > keyLeft &&
+                    dragonTop < keyBottom && dragonBottom > keyTop) {
+                    // Key collected!
+                    keyCollected = true;
+                    // Update key position to follow dragon
+                    renderKey(room.key);
                 }
             }
             
