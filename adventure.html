@@ -3266,47 +3266,61 @@
             const bgIndex = Math.floor(rng() * backgrounds.length);
             const background = backgrounds[bgIndex];
             
-            // Generate a clear path through the room first
-            // This path ensures the dragon can always navigate through the room
+            // Generate a clear path through the room
+            // Path goes from the wall closest to main room to the wall farthest from main room
             // Path is 120px wide (enough for 80px dragon with buffer)
             const caveWidthPx = 1200; // approximate width
             const caveHeightPx = 500; // approximate height
             const pathWidth = 120; // Path width in pixels (enough for dragon + buffer)
             const pathWidthPercent = (pathWidth / caveWidthPx) * 100; // ~10%
             
-            // Generate a path type: horizontal, vertical, or diagonal
-            const pathType = Math.floor(rng() * 3); // 0=horizontal, 1=vertical, 2=diagonal
-            
             let clearPath = null;
-            if (pathType === 0) {
-                // Horizontal path: left to right (or right to left)
-                const pathY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y position
-                clearPath = {
-                    type: 'horizontal',
-                    y: pathY, // Center Y position in pixels from bottom
-                    width: pathWidth,
-                    minX: 0,
-                    maxX: 100 // Full width
-                };
-            } else if (pathType === 1) {
-                // Vertical path: top to bottom (or bottom to top)
+            
+            // Determine entry direction based on room position relative to main room (0,0)
+            // Rooms are on axes only (x=0 OR y=0), so we can determine the entry wall
+            if (roomCoord.y > 0) {
+                // Room is above main room - entered from bottom, path should go bottom to top (vertical)
                 const pathX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X position
                 clearPath = {
                     type: 'vertical',
                     x: pathX, // Center X position in percentage
                     width: pathWidthPercent,
                     minY: 0,
-                    maxY: caveHeightPx // Full height
+                    maxY: caveHeightPx // Full height (bottom to top)
+                };
+            } else if (roomCoord.y < 0) {
+                // Room is below main room - entered from top, path should go top to bottom (vertical)
+                const pathX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X position
+                clearPath = {
+                    type: 'vertical',
+                    x: pathX, // Center X position in percentage
+                    width: pathWidthPercent,
+                    minY: 0,
+                    maxY: caveHeightPx // Full height (top to bottom)
+                };
+            } else if (roomCoord.x > 0) {
+                // Room is to the right of main room - entered from left, path should go left to right (horizontal)
+                const pathY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y position
+                clearPath = {
+                    type: 'horizontal',
+                    y: pathY, // Center Y position in pixels from bottom
+                    width: pathWidth,
+                    minX: 0,
+                    maxX: 100 // Full width (left to right)
+                };
+            } else if (roomCoord.x < 0) {
+                // Room is to the left of main room - entered from right, path should go right to left (horizontal)
+                const pathY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y position
+                clearPath = {
+                    type: 'horizontal',
+                    y: pathY, // Center Y position in pixels from bottom
+                    width: pathWidth,
+                    minX: 0,
+                    maxX: 100 // Full width (right to left, but same path structure)
                 };
             } else {
-                // Diagonal path: from one corner to opposite corner
-                const startSide = Math.floor(rng() * 4); // 0=top-left, 1=top-right, 2=bottom-left, 3=bottom-right
-                clearPath = {
-                    type: 'diagonal',
-                    startSide: startSide,
-                    width: pathWidth,
-                    widthPercent: pathWidthPercent
-                };
+                // Main room (0,0) - no path needed (no obstacles)
+                clearPath = null;
             }
             
             // Generate obstacles (10-50 obstacles per room, excluding main room)
@@ -3852,41 +3866,55 @@
             updateMap();
             updateRoomDisplay();
             
-            // Position dragon on opposite side of the room based on direction
+            // Position dragon on the clear path at the entry point
             const caveBackground = document.querySelector('.cave-background');
             if (caveBackground) {
                 const caveWidth = caveBackground.offsetWidth;
                 const caveHeight = caveBackground.offsetHeight;
                 
-                // Initial spawn positions based on direction
+                // Get the room's clear path
+                const room = roomMemory[roomKey];
+                const clearPath = room ? room.clearPath : null;
+                
                 let spawnX, spawnY;
                 
-                switch(direction) {
-                    case 'up':
-                        // Entered from bottom, position at bottom
-                        spawnY = 20;
+                if (clearPath) {
+                    // Spawn on the clear path at the entry end
+                    if (clearPath.type === 'vertical') {
+                        // Vertical path: spawn at entry end based on direction
+                        spawnX = clearPath.x; // Use the path's X position (percentage)
+                        if (direction === 'up') {
+                            // Entered from bottom, spawn at bottom of path
+                            spawnY = 30; // Near bottom edge
+                        } else if (direction === 'down') {
+                            // Entered from top, spawn at top of path
+                            spawnY = caveHeight - 110; // Near top edge
+                        } else {
+                            // Default to center of path
+                            spawnY = caveHeight / 2;
+                        }
+                    } else if (clearPath.type === 'horizontal') {
+                        // Horizontal path: spawn at entry end based on direction
+                        spawnY = clearPath.y; // Use the path's Y position (pixels from bottom)
+                        if (direction === 'right') {
+                            // Entered from left, spawn at left of path
+                            spawnX = 5; // Near left edge
+                        } else if (direction === 'left') {
+                            // Entered from right, spawn at right of path
+                            spawnX = 95; // Near right edge
+                        } else {
+                            // Default to center of path
+                            spawnX = 50;
+                        }
+                    } else {
+                        // Diagonal path or unknown - use default
                         spawnX = 50;
-                        break;
-                    case 'down':
-                        // Entered from top, position at top
-                        spawnY = caveHeight - 100;
-                        spawnX = 50;
-                        break;
-                    case 'left':
-                        // Entered from right, position at right
-                        spawnX = 90;
                         spawnY = 100;
-                        break;
-                    case 'right':
-                        // Entered from left, position at left
-                        spawnX = 10;
-                        spawnY = 100;
-                        break;
-                    default:
-                        // Default spawn (center) for main room
-                        spawnX = 50;
-                        spawnY = 100;
-                        break;
+                    }
+                } else {
+                    // No clear path (main room) - use default spawn
+                    spawnX = 50;
+                    spawnY = 100;
                 }
                 
                 // Check for collision and find a safe spawn position
