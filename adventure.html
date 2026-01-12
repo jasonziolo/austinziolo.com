@@ -2795,7 +2795,7 @@
                 <div class="cave-container">
                     <div class="cave-background">
                         <div id="level-display" class="level-display">Level: 1</div>
-                        <div id="timer-display" class="timer-display">60</div>
+                        <div id="timer-display" class="timer-display">80</div>
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
                         <button id="teleport-main-button" class="teleport-main-button">⚡ Main Room</button>
@@ -3201,7 +3201,7 @@
         let lastLevelUpTime = 0; // Track when level was last incremented to prevent rapid increments
         
         // Timer system
-        let timerSeconds = 60;
+        let timerSeconds = 80;
         let timerInterval = null;
         let timerStarted = false; // Track if timer has started
 
@@ -3244,7 +3244,7 @@
             // Reset timer state (don't start it yet - wait for first movement)
             timerStarted = false;
             stopTimer();
-            timerSeconds = 60;
+            timerSeconds = 80;
             updateTimerDisplay();
             
             currentDragon = dragon;
@@ -3628,9 +3628,9 @@
                 
                 // Update styling based on time remaining
                 cachedTimerDisplay.classList.remove('warning', 'critical');
-                if (timerSeconds <= 15) {
+                if (timerSeconds <= 20) {
                     cachedTimerDisplay.classList.add('critical');
-                } else if (timerSeconds <= 30) {
+                } else if (timerSeconds <= 40) {
                     cachedTimerDisplay.classList.add('warning');
                 }
             }
@@ -3643,8 +3643,8 @@
                 clearInterval(timerInterval);
             }
             
-            // Reset timer to 60 seconds
-            timerSeconds = 60;
+            // Reset timer to 80 seconds
+            timerSeconds = 80;
             updateTimerDisplay();
             
             // Start countdown
@@ -3717,7 +3717,7 @@
             updateDragonPosition();
             
             // Reset timer display but don't start it yet (wait for next movement)
-            timerSeconds = 60;
+            timerSeconds = 80;
             updateTimerDisplay();
             
             // Show visual feedback that timer reset
@@ -3791,7 +3791,7 @@
                     // Reset timer on level up (but don't start until next movement)
                     stopTimer();
                     timerStarted = false;
-                    timerSeconds = 60;
+                    timerSeconds = 80;
                     updateTimerDisplay();
                     
                     // Regenerate session seed to change all rooms
