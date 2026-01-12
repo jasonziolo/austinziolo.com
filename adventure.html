@@ -353,6 +353,74 @@
             opacity: 1 !important;
         }
 
+        /* Obstacle styles */
+        .obstacle {
+            position: absolute;
+            background-color: #5a5a7a;
+            border: 3px solid #8a8aaa;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
+            z-index: 50;
+            image-rendering: pixelated;
+        }
+
+        .obstacle.rock {
+            background: linear-gradient(135deg, #6a6a7a 0%, #4a4a5a 100%);
+            border-color: #8a8a9a;
+        }
+
+        .obstacle.crystal {
+            background: linear-gradient(135deg, #7a6a9a 0%, #5a4a7a 100%);
+            border-color: #9a8aaa;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 10px rgba(187, 136, 221, 0.3);
+        }
+
+        .obstacle.stalagmite {
+            background: linear-gradient(180deg, #7a7a8a 0%, #3a3a4a 100%);
+            border-color: #6a6a7a;
+            clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+        }
+
+        /* Teleport to Main Room Button */
+        .teleport-main-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFAA00 100%);
+            color: #000000;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 3px solid #FFEE88;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.4);
+            z-index: 200;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: Arial, sans-serif;
+        }
+
+        .teleport-main-button:hover {
+            background: linear-gradient(135deg, #FFEE44 0%, #FFD700 100%);
+            box-shadow: 0 6px 16px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6);
+            transform: scale(1.05);
+        }
+
+        .teleport-main-button:active {
+            transform: scale(0.95);
+        }
+
+        @media screen and (max-width: 768px) {
+            .teleport-main-button {
+                font-size: 12px;
+                padding: 8px 15px;
+                top: 10px;
+                right: 10px;
+            }
+        }
+
         .cave-stalactites {
             position: absolute;
             top: 0;
@@ -377,12 +445,69 @@
             image-rendering: crisp-edges;
             transition: none;
             z-index: 100;
-            width: 120px;
-            height: 120px;
-            object-fit: contain;
+            width: 80px !important;
+            height: 80px !important;
+            object-fit: contain !important;
             visibility: visible !important;
             display: block !important;
             opacity: 1 !important;
+            border: none !important;
+            background: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* Override all dragon-specific classes to ensure uniform size and appearance */
+        .pixel-dragon.breezeflight,
+        .pixel-dragon.chaosflare,
+        .pixel-dragon.crystalwing,
+        .pixel-dragon.earthheart,
+        .pixel-dragon.flamethorn,
+        .pixel-dragon.frostbite,
+        .pixel-dragon.radiant,
+        .pixel-dragon.stormwing,
+        .pixel-dragon.metalbeak,
+        .pixel-dragon.vineclaw,
+        .pixel-dragon.shadowmaw,
+        .pixel-dragon.aquaris {
+            width: 80px !important;
+            height: 80px !important;
+            border: none !important;
+            background: none !important;
+            box-shadow: none !important;
+            object-fit: contain !important;
+            overflow: hidden !important;
+        }
+
+        /* Hide pseudo-elements (::before and ::after) since we're using images now */
+        .pixel-dragon.breezeflight::before,
+        .pixel-dragon.chaosflare::before,
+        .pixel-dragon.crystalwing::before,
+        .pixel-dragon.earthheart::before,
+        .pixel-dragon.flamethorn::before,
+        .pixel-dragon.frostbite::before,
+        .pixel-dragon.radiant::before,
+        .pixel-dragon.stormwing::before,
+        .pixel-dragon.metalbeak::before,
+        .pixel-dragon.vineclaw::before,
+        .pixel-dragon.shadowmaw::before,
+        .pixel-dragon.aquaris::before,
+        .pixel-dragon.breezeflight::after,
+        .pixel-dragon.chaosflare::after,
+        .pixel-dragon.crystalwing::after,
+        .pixel-dragon.earthheart::after,
+        .pixel-dragon.flamethorn::after,
+        .pixel-dragon.frostbite::after,
+        .pixel-dragon.radiant::after,
+        .pixel-dragon.stormwing::after,
+        .pixel-dragon.metalbeak::after,
+        .pixel-dragon.vineclaw::after,
+        .pixel-dragon.shadowmaw::after,
+        .pixel-dragon.aquaris::after {
+            display: none !important;
+            content: none !important;
         }
 
         /* Pixelated Dragon Sprites - Each dragon gets a unique pixelated design */
@@ -2345,8 +2470,8 @@
             }
 
             .pixel-dragon {
-                width: 60px;
-                height: 60px;
+                width: 50px;
+                height: 50px;
             }
 
             .adventure-header h1 {
@@ -2419,6 +2544,7 @@
                     <div class="cave-background">
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
+                        <button id="teleport-main-button" class="teleport-main-button">⚡ Main Room</button>
                     </div>
                 </div>
 
@@ -2727,7 +2853,7 @@
                     keysPressed = { w: false, a: false, s: false, d: false };
                     // Reset joystick
                     joystickState = { active: false, x: 0, y: 0 };
-                    // Reset room system
+                    // Reset room system (this will generate new rooms on next adventure start)
                     currentRoom = { x: 0, y: 0 };
                     roomMemory = {};
                     transitioning = false;
@@ -2737,6 +2863,14 @@
                         clearInterval(movementInterval);
                         movementInterval = null;
                     }
+                });
+            }
+
+            // Teleport to Main Room button
+            const teleportMainButton = document.getElementById('teleport-main-button');
+            if (teleportMainButton) {
+                teleportMainButton.addEventListener('click', function() {
+                    teleportToMainRoom();
                 });
             }
 
@@ -2780,6 +2914,10 @@
         let roomMemory = {}; // Stores room states: { "x,y": { background, seed, visited } }
         let transitioning = false; // Prevents multiple transitions at once
         const MAX_ROOMS = 3; // Maximum rooms in each direction from center
+        
+        // Session seed that changes each time the game is played
+        // This makes rooms different every play session
+        const sessionSeed = Math.floor(Math.random() * 1000000000);
 
         // Joystick state
         let joystickState = {
@@ -2803,6 +2941,12 @@
             if (!dragon) {
                 return;
             }
+            
+            // Clear room memory when starting a new adventure
+            // This ensures fresh rooms are generated with the current session seed
+            roomMemory = {};
+            currentRoom = { x: 0, y: 0 };
+            transitioning = false;
             
             currentDragon = dragon;
 
@@ -2865,8 +3009,16 @@
                 loadRoom(currentRoom);
                 updateMap();
                 
-                // Reset position to center of cave
-                dragonPosition = { x: 50, y: 100 };
+                // Reset position to center of cave (check for collision first)
+                let spawnX = 50;
+                let spawnY = 100;
+                const caveBackground = document.querySelector('.cave-background');
+                if (caveBackground) {
+                    const safePosition = findSafeSpawnPosition(spawnX, spawnY, null, caveBackground.offsetWidth, caveBackground.offsetHeight);
+                    dragonPosition = { x: safePosition.x, y: safePosition.y };
+                } else {
+                    dragonPosition = { x: spawnX, y: spawnY };
+                }
                 updateDragonPosition();
                 
                 // Force a reflow to ensure rendering
@@ -2964,8 +3116,11 @@
                         // Move up (joystick Y is positive)
                         if (joystickY > 0) {
                             if (dragonPosition.y < (caveHeight - dragonHeight - 10)) {
-                                dragonPosition.y += moveSpeed * normalizedSpeed * joystickY;
-                                moved = true;
+                                const newY = dragonPosition.y + moveSpeed * normalizedSpeed * joystickY;
+                                if (!checkCollision(dragonPosition.x, newY)) {
+                                    dragonPosition.y = newY;
+                                    moved = true;
+                                }
                             } else if (!transitioning && canMoveInDirection('up')) {
                                 // Hit top wall - transition to room above (if allowed)
                                 transitionToRoom('up');
@@ -2974,8 +3129,11 @@
                         // Move down (joystick Y is negative)
                         if (joystickY < 0) {
                             if (dragonPosition.y > 10) {
-                                dragonPosition.y += moveSpeed * normalizedSpeed * joystickY;
-                                moved = true;
+                                const newY = dragonPosition.y + moveSpeed * normalizedSpeed * joystickY;
+                                if (!checkCollision(dragonPosition.x, newY)) {
+                                    dragonPosition.y = newY;
+                                    moved = true;
+                                }
                             } else if (!transitioning && canMoveInDirection('down')) {
                                 // Hit bottom wall - transition to room below (if allowed)
                                 transitionToRoom('down');
@@ -2984,8 +3142,11 @@
                         // Move left (joystick X is negative)
                         if (joystickX < 0) {
                             if (dragonPosition.x > 3) {
-                                dragonPosition.x += (moveSpeed * normalizedSpeed * joystickX * 100) / caveWidth;
-                                moved = true;
+                                const newX = dragonPosition.x + (moveSpeed * normalizedSpeed * joystickX * 100) / caveWidth;
+                                if (!checkCollision(newX, dragonPosition.y)) {
+                                    dragonPosition.x = newX;
+                                    moved = true;
+                                }
                             } else if (!transitioning && canMoveInDirection('left')) {
                                 // Hit left wall - transition to room to the left (if allowed)
                                 transitionToRoom('left');
@@ -2994,8 +3155,11 @@
                         // Move right (joystick X is positive)
                         if (joystickX > 0) {
                             if (dragonPosition.x < 97) {
-                                dragonPosition.x += (moveSpeed * normalizedSpeed * joystickX * 100) / caveWidth;
-                                moved = true;
+                                const newX = dragonPosition.x + (moveSpeed * normalizedSpeed * joystickX * 100) / caveWidth;
+                                if (!checkCollision(newX, dragonPosition.y)) {
+                                    dragonPosition.x = newX;
+                                    moved = true;
+                                }
                             } else if (!transitioning && canMoveInDirection('right')) {
                                 // Hit right wall - transition to room to the right (if allowed)
                                 transitionToRoom('right');
@@ -3007,8 +3171,11 @@
                     // W - Move up (increase bottom value)
                     if (keysPressed.w) {
                         if (dragonPosition.y < (caveHeight - dragonHeight - 10)) {
-                            dragonPosition.y += moveSpeed;
-                            moved = true;
+                            const newY = dragonPosition.y + moveSpeed;
+                            if (!checkCollision(dragonPosition.x, newY)) {
+                                dragonPosition.y = newY;
+                                moved = true;
+                            }
                         } else if (!transitioning && canMoveInDirection('up')) {
                             // Hit top wall - transition to room above (if allowed)
                             transitionToRoom('up');
@@ -3017,8 +3184,11 @@
                     // S - Move down (decrease bottom value)
                     if (keysPressed.s) {
                         if (dragonPosition.y > 10) {
-                            dragonPosition.y -= moveSpeed;
-                            moved = true;
+                            const newY = dragonPosition.y - moveSpeed;
+                            if (!checkCollision(dragonPosition.x, newY)) {
+                                dragonPosition.y = newY;
+                                moved = true;
+                            }
                         } else if (!transitioning && canMoveInDirection('down')) {
                             // Hit bottom wall - transition to room below (if allowed)
                             transitionToRoom('down');
@@ -3027,8 +3197,11 @@
                     // A - Move left (decrease x percentage)
                     if (keysPressed.a) {
                         if (dragonPosition.x > 3) {
-                            dragonPosition.x -= (moveSpeed * 100) / caveWidth;
-                            moved = true;
+                            const newX = dragonPosition.x - (moveSpeed * 100) / caveWidth;
+                            if (!checkCollision(newX, dragonPosition.y)) {
+                                dragonPosition.x = newX;
+                                moved = true;
+                            }
                         } else if (!transitioning && canMoveInDirection('left')) {
                             // Hit left wall - transition to room to the left (if allowed)
                             transitionToRoom('left');
@@ -3037,8 +3210,11 @@
                     // D - Move right (increase x percentage)
                     if (keysPressed.d) {
                         if (dragonPosition.x < 97) {
-                            dragonPosition.x += (moveSpeed * 100) / caveWidth;
-                            moved = true;
+                            const newX = dragonPosition.x + (moveSpeed * 100) / caveWidth;
+                            if (!checkCollision(newX, dragonPosition.y)) {
+                                dragonPosition.x = newX;
+                                moved = true;
+                            }
                         } else if (!transitioning && canMoveInDirection('right')) {
                             // Hit right wall - transition to room to the right (if allowed)
                             transitionToRoom('right');
@@ -3072,8 +3248,9 @@
         }
 
         function generateRoomState(roomCoord) {
-            // Generate a unique seed based on room coordinates for consistent room appearance
-            const seed = (roomCoord.x * 1000 + roomCoord.y) * 12345; // Simple deterministic seed
+            // Generate a unique seed based on room coordinates AND session seed
+            // This makes rooms consistent within a session but different each play session
+            const seed = ((roomCoord.x * 1000 + roomCoord.y) * 12345) + sessionSeed;
             const rng = seededRandom(seed);
             
             // Room background color variations
@@ -3089,9 +3266,138 @@
             const bgIndex = Math.floor(rng() * backgrounds.length);
             const background = backgrounds[bgIndex];
             
+            // Generate a clear path through the room first
+            // This path ensures the dragon can always navigate through the room
+            // Path is 120px wide (enough for 80px dragon with buffer)
+            const caveWidthPx = 1200; // approximate width
+            const caveHeightPx = 500; // approximate height
+            const pathWidth = 120; // Path width in pixels (enough for dragon + buffer)
+            const pathWidthPercent = (pathWidth / caveWidthPx) * 100; // ~10%
+            
+            // Generate a path type: horizontal, vertical, or diagonal
+            const pathType = Math.floor(rng() * 3); // 0=horizontal, 1=vertical, 2=diagonal
+            
+            let clearPath = null;
+            if (pathType === 0) {
+                // Horizontal path: left to right (or right to left)
+                const pathY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y position
+                clearPath = {
+                    type: 'horizontal',
+                    y: pathY, // Center Y position in pixels from bottom
+                    width: pathWidth,
+                    minX: 0,
+                    maxX: 100 // Full width
+                };
+            } else if (pathType === 1) {
+                // Vertical path: top to bottom (or bottom to top)
+                const pathX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X position
+                clearPath = {
+                    type: 'vertical',
+                    x: pathX, // Center X position in percentage
+                    width: pathWidthPercent,
+                    minY: 0,
+                    maxY: caveHeightPx // Full height
+                };
+            } else {
+                // Diagonal path: from one corner to opposite corner
+                const startSide = Math.floor(rng() * 4); // 0=top-left, 1=top-right, 2=bottom-left, 3=bottom-right
+                clearPath = {
+                    type: 'diagonal',
+                    startSide: startSide,
+                    width: pathWidth,
+                    widthPercent: pathWidthPercent
+                };
+            }
+            
+            // Generate obstacles (10-50 obstacles per room, excluding main room)
+            const obstacles = [];
+            const numObstacles = roomCoord.x === 0 && roomCoord.y === 0 ? 0 : Math.floor(rng() * 41) + 10;
+            const obstacleTypes = ['rock', 'crystal', 'stalagmite'];
+            
+            for (let i = 0; i < numObstacles; i++) {
+                let attempts = 0;
+                let validPosition = false;
+                let x, y, size, type;
+                
+                // Try to find a valid position that doesn't block the clear path
+                while (!validPosition && attempts < 200) {
+                    attempts++;
+                    
+                    // Generate random position anywhere in the room
+                    x = rng() * 100; // 0% to 100% of width
+                    y = rng() * 500; // 0 to 500px from bottom
+                    size = Math.floor(rng() * 30) + 20; // 20px to 50px
+                    type = obstacleTypes[Math.floor(rng() * obstacleTypes.length)];
+                    
+                    // Convert obstacle bounds
+                    const sizePercent = (size / caveWidthPx) * 100;
+                    const obstacleLeft = x - sizePercent / 2;
+                    const obstacleRight = x + sizePercent / 2;
+                    const obstacleBottom = y - size / 2; // from bottom
+                    const obstacleTop = y + size / 2; // from bottom
+                    
+                    // Check if obstacle overlaps with the clear path
+                    let blocksPath = false;
+                    
+                    if (clearPath.type === 'horizontal') {
+                        // Horizontal path: check if obstacle is within path height range
+                        const pathTop = clearPath.y + clearPath.width / 2;
+                        const pathBottom = clearPath.y - clearPath.width / 2;
+                        blocksPath = (obstacleTop > pathBottom && obstacleBottom < pathTop);
+                    } else if (clearPath.type === 'vertical') {
+                        // Vertical path: check if obstacle is within path width range
+                        const pathLeft = clearPath.x - clearPath.width / 2;
+                        const pathRight = clearPath.x + clearPath.width / 2;
+                        blocksPath = (obstacleRight > pathLeft && obstacleLeft < pathRight);
+                    } else if (clearPath.type === 'diagonal') {
+                        // Diagonal path: check if obstacle is close to the diagonal line
+                        // For simplicity, we'll use a wider diagonal band
+                        const diagonalWidth = clearPath.widthPercent * 2; // Wider tolerance for diagonal
+                        
+                        // Calculate distance from obstacle center to diagonal line
+                        // Diagonal goes from corner to opposite corner
+                        let distanceToDiagonal = 0;
+                        if (clearPath.startSide === 0) { // top-left to bottom-right
+                            // Line: y = (height/width) * x converted to percentage/pixel coordinates
+                            const diagonalY = (caveHeightPx / 100) * x;
+                            distanceToDiagonal = Math.abs(y - diagonalY);
+                        } else if (clearPath.startSide === 1) { // top-right to bottom-left
+                            const diagonalY = caveHeightPx - (caveHeightPx / 100) * x;
+                            distanceToDiagonal = Math.abs(y - diagonalY);
+                        } else if (clearPath.startSide === 2) { // bottom-left to top-right
+                            const diagonalY = (caveHeightPx / 100) * x;
+                            distanceToDiagonal = Math.abs(y - diagonalY);
+                        } else { // bottom-right to top-left
+                            const diagonalY = caveHeightPx - (caveHeightPx / 100) * x;
+                            distanceToDiagonal = Math.abs(y - diagonalY);
+                        }
+                        
+                        // Check if obstacle is within diagonal path width
+                        const pathRadius = clearPath.width / 2;
+                        blocksPath = (distanceToDiagonal < pathRadius + size / 2);
+                    }
+                    
+                    // Position is valid if it doesn't block the clear path
+                    validPosition = !blocksPath;
+                }
+                
+                // If we found a valid position, add the obstacle
+                if (validPosition) {
+                    obstacles.push({
+                        x: x, // percentage
+                        y: y, // pixels from bottom
+                        width: size,
+                        height: size,
+                        type: type
+                    });
+                }
+            }
+            
             return {
                 seed: seed,
                 background: background,
+                obstacles: obstacles,
+                clearPath: clearPath, // Store the clear path
                 visited: false
             };
         }
@@ -3105,6 +3411,48 @@
             };
         }
 
+        // Check if obstacles block any paths
+        function pathsBlocked(obstacles) {
+            if (!obstacles || obstacles.length === 0) return false;
+            
+            const caveWidthPx = 1200;
+            const LEFT_PATH_MIN = 0;
+            const LEFT_PATH_MAX = 25;
+            const RIGHT_PATH_MIN = 75;
+            const RIGHT_PATH_MAX = 100;
+            const BOTTOM_PATH_TOP = 200;
+            const TOP_PATH_BOTTOM = 300;
+            const VERTICAL_CORRIDOR_MIN = 35;
+            const VERTICAL_CORRIDOR_MAX = 65;
+            
+            for (let i = 0; i < obstacles.length; i++) {
+                const obstacle = obstacles[i];
+                const sizePercent = (obstacle.width / caveWidthPx) * 100;
+                const obstacleLeft = obstacle.x - sizePercent / 2;
+                const obstacleRight = obstacle.x + sizePercent / 2;
+                const obstacleBottom = obstacle.y - obstacle.height / 2;
+                const obstacleTop = obstacle.y + obstacle.height / 2;
+                
+                // Check if blocks any path
+                const blocksLeftPath = (obstacleRight > LEFT_PATH_MIN && obstacleLeft < LEFT_PATH_MAX);
+                const blocksRightPath = (obstacleRight > RIGHT_PATH_MIN && obstacleLeft < RIGHT_PATH_MAX);
+                
+                const inBottomPathHeight = (obstacleTop > 0 && obstacleBottom < BOTTOM_PATH_TOP);
+                const inBottomPathWidth = (obstacleRight > VERTICAL_CORRIDOR_MIN && obstacleLeft < VERTICAL_CORRIDOR_MAX);
+                const blocksBottomPath = inBottomPathHeight && inBottomPathWidth;
+                
+                const inTopPathHeight = (obstacleTop > TOP_PATH_BOTTOM && obstacleBottom < 500);
+                const inTopPathWidth = (obstacleRight > VERTICAL_CORRIDOR_MIN && obstacleLeft < VERTICAL_CORRIDOR_MAX);
+                const blocksTopPath = inTopPathHeight && inTopPathWidth;
+                
+                if (blocksLeftPath || blocksRightPath || blocksBottomPath || blocksTopPath) {
+                    return true; // Paths are blocked
+                }
+            }
+            
+            return false; // No paths blocked
+        }
+
         function loadRoom(roomCoord) {
             const roomKey = getRoomKey(roomCoord);
             if (!roomMemory[roomKey]) {
@@ -3112,6 +3460,108 @@
             }
             
             const room = roomMemory[roomKey];
+            
+            // Ensure room has obstacles if it's not the main room, and regenerate if paths are blocked
+            if ((roomCoord.x !== 0 || roomCoord.y !== 0) && 
+                (!room.obstacles || room.obstacles.length < 10 || !room.clearPath || pathsBlocked(room.obstacles || [], room.clearPath))) {
+                // Regenerate obstacles - first ensure we have a clear path
+                // If room doesn't have a clear path, regenerate the entire room state
+                if (!room.clearPath) {
+                    // Regenerate entire room to get a clear path
+                    roomMemory[roomKey] = generateRoomState(roomCoord);
+                    loadRoom(roomCoord); // Recursive call to load the new room
+                    return;
+                }
+                
+                const seed = ((roomCoord.x * 1000 + roomCoord.y) * 12345) + sessionSeed;
+                const rng = seededRandom(seed);
+                const obstacles = [];
+                const numObstacles = Math.floor(rng() * 41) + 10; // 10-50 obstacles
+                const obstacleTypes = ['rock', 'crystal', 'stalagmite'];
+                
+                const caveWidthPx = 1200; // approximate width
+                const caveHeightPx = 500; // approximate height
+                const clearPath = room.clearPath; // Use existing clear path
+                
+                for (let i = 0; i < numObstacles; i++) {
+                    let attempts = 0;
+                    let validPosition = false;
+                    let x, y, size, type;
+                    
+                    // Try to find a valid position that doesn't block the clear path
+                    while (!validPosition && attempts < 200) {
+                        attempts++;
+                        
+                        // Generate random position anywhere in the room
+                        x = rng() * 100; // 0% to 100% of width
+                        y = rng() * 500; // 0 to 500px from bottom
+                        size = Math.floor(rng() * 30) + 20; // 20px to 50px
+                        type = obstacleTypes[Math.floor(rng() * obstacleTypes.length)];
+                        
+                        // Convert obstacle bounds
+                        const sizePercent = (size / caveWidthPx) * 100;
+                        const obstacleLeft = x - sizePercent / 2;
+                        const obstacleRight = x + sizePercent / 2;
+                        const obstacleBottom = y - size / 2; // from bottom
+                        const obstacleTop = y + size / 2; // from bottom
+                        
+                        // Check if obstacle overlaps with the clear path
+                        let blocksPath = false;
+                        
+                        if (clearPath.type === 'horizontal') {
+                            // Horizontal path: check if obstacle is within path height range
+                            const pathTop = clearPath.y + clearPath.width / 2;
+                            const pathBottom = clearPath.y - clearPath.width / 2;
+                            blocksPath = (obstacleTop > pathBottom && obstacleBottom < pathTop);
+                        } else if (clearPath.type === 'vertical') {
+                            // Vertical path: check if obstacle is within path width range
+                            const pathLeft = clearPath.x - clearPath.width / 2;
+                            const pathRight = clearPath.x + clearPath.width / 2;
+                            blocksPath = (obstacleRight > pathLeft && obstacleLeft < pathRight);
+                        } else if (clearPath.type === 'diagonal') {
+                            // Diagonal path: check if obstacle is close to the diagonal line
+                            const diagonalWidth = clearPath.widthPercent * 2; // Wider tolerance for diagonal
+                            
+                            // Calculate distance from obstacle center to diagonal line
+                            let distanceToDiagonal = 0;
+                            if (clearPath.startSide === 0) { // top-left to bottom-right
+                                const diagonalY = (caveHeightPx / 100) * x;
+                                distanceToDiagonal = Math.abs(y - diagonalY);
+                            } else if (clearPath.startSide === 1) { // top-right to bottom-left
+                                const diagonalY = caveHeightPx - (caveHeightPx / 100) * x;
+                                distanceToDiagonal = Math.abs(y - diagonalY);
+                            } else if (clearPath.startSide === 2) { // bottom-left to top-right
+                                const diagonalY = (caveHeightPx / 100) * x;
+                                distanceToDiagonal = Math.abs(y - diagonalY);
+                            } else { // bottom-right to top-left
+                                const diagonalY = caveHeightPx - (caveHeightPx / 100) * x;
+                                distanceToDiagonal = Math.abs(y - diagonalY);
+                            }
+                            
+                            // Check if obstacle is within diagonal path width
+                            const pathRadius = clearPath.width / 2;
+                            blocksPath = (distanceToDiagonal < pathRadius + size / 2);
+                        }
+                        
+                        // Position is valid if it doesn't block the clear path
+                        validPosition = !blocksPath;
+                    }
+                    
+                    // If we found a valid position, add the obstacle
+                    if (validPosition) {
+                        obstacles.push({
+                            x: x, // percentage
+                            y: y, // pixels from bottom
+                            width: size,
+                            height: size,
+                            type: type
+                        });
+                    }
+                }
+                
+                room.obstacles = obstacles;
+            }
+            
             const caveBackground = document.querySelector('.cave-background');
             
             if (caveBackground && room.background) {
@@ -3127,20 +3577,226 @@
                 caveBackground.style.backgroundColor = room.background.base;
             }
             
+            // Render obstacles for this room
+            renderObstacles(room.obstacles || []);
+            
             room.visited = true;
         }
 
-        function canMoveInDirection(direction) {
-            // Check if movement is allowed (within 3 rooms in each direction)
+        function renderObstacles(obstacles) {
+            // Remove existing obstacles
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) return;
+            
+            // Remove old obstacles
+            const oldObstacles = caveBackground.querySelectorAll('.obstacle');
+            oldObstacles.forEach(obs => obs.remove());
+            
+            // Create new obstacles
+            obstacles.forEach(function(obstacle, index) {
+                const obstacleEl = document.createElement('div');
+                obstacleEl.className = 'obstacle ' + obstacle.type;
+                obstacleEl.style.left = obstacle.x + '%';
+                obstacleEl.style.bottom = obstacle.y + 'px';
+                obstacleEl.style.width = obstacle.width + 'px';
+                obstacleEl.style.height = obstacle.height + 'px';
+                obstacleEl.style.transform = 'translateX(-50%)';
+                obstacleEl.setAttribute('data-obstacle-index', index);
+                caveBackground.appendChild(obstacleEl);
+            });
+        }
+
+        function checkCollision(newX, newY) {
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) return false;
+            
+            const roomKey = getRoomKey(currentRoom);
+            const room = roomMemory[roomKey];
+            if (!room || !room.obstacles) return false;
+            
+            const dragonWidth = 80;
+            const dragonHeight = 80;
+            const caveWidth = caveBackground.offsetWidth;
+            const caveHeight = caveBackground.offsetHeight;
+            
+            // Convert dragon position to pixels
+            const dragonLeft = (newX / 100) * caveWidth - dragonWidth / 2;
+            const dragonRight = dragonLeft + dragonWidth;
+            const dragonTop = caveHeight - newY - dragonHeight;
+            const dragonBottom = dragonTop + dragonHeight;
+            
+            // Check collision with each obstacle
+            for (let i = 0; i < room.obstacles.length; i++) {
+                const obstacle = room.obstacles[i];
+                const obstacleLeft = (obstacle.x / 100) * caveWidth - obstacle.width / 2;
+                const obstacleRight = obstacleLeft + obstacle.width;
+                const obstacleTop = caveHeight - obstacle.y - obstacle.height;
+                const obstacleBottom = obstacleTop + obstacle.height;
+                
+                // Check for overlap
+                if (dragonLeft < obstacleRight && dragonRight > obstacleLeft &&
+                    dragonTop < obstacleBottom && dragonBottom > obstacleTop) {
+                    return true; // Collision detected
+                }
+            }
+            
+            return false; // No collision
+        }
+
+        function findSafeSpawnPosition(initialX, initialY, direction, caveWidth, caveHeight) {
+            // Try the initial position first
+            if (!checkCollision(initialX, initialY)) {
+                return { x: initialX, y: initialY };
+            }
+            
+            // If initial position has collision, try nearby positions
+            const dragonWidth = 80;
+            const dragonHeight = 80;
+            const offsetX = (dragonWidth / caveWidth) * 100; // Convert to percentage
+            const offsetY = dragonHeight; // In pixels
+            
+            // Try positions in a spiral pattern around the initial position
+            const attempts = [
+                // Try slightly offset positions
+                { x: initialX + offsetX, y: initialY },
+                { x: initialX - offsetX, y: initialY },
+                { x: initialX, y: initialY + offsetY },
+                { x: initialX, y: initialY - offsetY },
+                // Try diagonal positions
+                { x: initialX + offsetX, y: initialY + offsetY },
+                { x: initialX - offsetX, y: initialY + offsetY },
+                { x: initialX + offsetX, y: initialY - offsetY },
+                { x: initialX - offsetX, y: initialY - offsetY },
+                // Try positions along the wall based on direction
+            ];
+            
+            // Add direction-specific safe positions
             switch(direction) {
                 case 'up':
-                    return currentRoom.y < MAX_ROOMS;
+                    // Bottom wall - try positions along the bottom
+                    attempts.push({ x: 50, y: 30 });
+                    attempts.push({ x: 50, y: 50 });
+                    attempts.push({ x: 40, y: 30 });
+                    attempts.push({ x: 60, y: 30 });
+                    break;
                 case 'down':
-                    return currentRoom.y > -MAX_ROOMS;
+                    // Top wall - try positions along the top
+                    attempts.push({ x: 50, y: caveHeight - 130 });
+                    attempts.push({ x: 50, y: caveHeight - 150 });
+                    attempts.push({ x: 40, y: caveHeight - 130 });
+                    attempts.push({ x: 60, y: caveHeight - 130 });
+                    break;
                 case 'left':
-                    return currentRoom.x > -MAX_ROOMS;
+                    // Right wall - try positions along the right
+                    attempts.push({ x: 85, y: 100 });
+                    attempts.push({ x: 85, y: 150 });
+                    attempts.push({ x: 85, y: 50 });
+                    break;
                 case 'right':
-                    return currentRoom.x < MAX_ROOMS;
+                    // Left wall - try positions along the left
+                    attempts.push({ x: 15, y: 100 });
+                    attempts.push({ x: 15, y: 150 });
+                    attempts.push({ x: 15, y: 50 });
+                    break;
+            }
+            
+            // Try each position
+            for (let i = 0; i < attempts.length; i++) {
+                const pos = attempts[i];
+                // Ensure position is within bounds
+                if (pos.x >= 5 && pos.x <= 95 && pos.y >= 20 && pos.y <= caveHeight - 80) {
+                    if (!checkCollision(pos.x, pos.y)) {
+                        return pos;
+                    }
+                }
+            }
+            
+            // If all attempts fail, return a safe default position (center, slightly offset)
+            return { x: 50, y: 150 };
+        }
+
+        function teleportToMainRoom() {
+            // Only teleport if not already in main room
+            if (currentRoom.x === 0 && currentRoom.y === 0) {
+                return; // Already in main room
+            }
+
+            // Prevent transition during teleport
+            if (transitioning) {
+                transitioning = false;
+            }
+
+            // Set current room to main room
+            currentRoom = { x: 0, y: 0 };
+
+            // Load the main room
+            loadRoom(currentRoom);
+            updateMap();
+            updateRoomDisplay();
+
+            // Position dragon in center of main room
+            const caveBackground = document.querySelector('.cave-background');
+            if (caveBackground) {
+                const caveWidth = caveBackground.offsetWidth;
+                const caveHeight = caveBackground.offsetHeight;
+                
+                // Find a safe spawn position in the center
+                const safePosition = findSafeSpawnPosition(50, 100, null, caveWidth, caveHeight);
+                dragonPosition.x = safePosition.x;
+                dragonPosition.y = safePosition.y;
+            } else {
+                dragonPosition = { x: 50, y: 100 };
+            }
+
+            updateDragonPosition();
+        }
+
+        function isValidRoom(roomCoord) {
+            // Only allow rooms that are branches from main room (on axes: x=0 OR y=0)
+            // Main room (0,0) is always valid
+            if (roomCoord.x === 0 && roomCoord.y === 0) {
+                return true;
+            }
+            // Rooms on axes are valid (x=0 OR y=0, but not both non-zero)
+            return (roomCoord.x === 0 || roomCoord.y === 0);
+        }
+
+        function canMoveInDirection(direction) {
+            // Calculate where we would move to
+            let newRoom = { x: currentRoom.x, y: currentRoom.y };
+            
+            switch(direction) {
+                case 'up':
+                    newRoom.y = currentRoom.y + 1;
+                    break;
+                case 'down':
+                    newRoom.y = currentRoom.y - 1;
+                    break;
+                case 'left':
+                    newRoom.x = currentRoom.x - 1;
+                    break;
+                case 'right':
+                    newRoom.x = currentRoom.x + 1;
+                    break;
+                default:
+                    return false;
+            }
+            
+            // Check if the new room is valid and within bounds
+            if (!isValidRoom(newRoom)) {
+                return false;
+            }
+            
+            // Check bounds (within 3 rooms from center)
+            switch(direction) {
+                case 'up':
+                    return newRoom.y <= MAX_ROOMS;
+                case 'down':
+                    return newRoom.y >= -MAX_ROOMS;
+                case 'left':
+                    return newRoom.x >= -MAX_ROOMS;
+                case 'right':
+                    return newRoom.x <= MAX_ROOMS;
                 default:
                     return false;
             }
@@ -3176,6 +3832,12 @@
                     break;
             }
             
+            // Validate the new room is a valid branch
+            if (!isValidRoom(newRoom)) {
+                transitioning = false;
+                return;
+            }
+            
             // Load or generate room state
             const roomKey = getRoomKey(newRoom);
             if (!roomMemory[roomKey]) {
@@ -3196,28 +3858,41 @@
                 const caveWidth = caveBackground.offsetWidth;
                 const caveHeight = caveBackground.offsetHeight;
                 
+                // Initial spawn positions based on direction
+                let spawnX, spawnY;
+                
                 switch(direction) {
                     case 'up':
                         // Entered from bottom, position at bottom
-                        dragonPosition.y = 20;
-                        dragonPosition.x = 50;
+                        spawnY = 20;
+                        spawnX = 50;
                         break;
                     case 'down':
                         // Entered from top, position at top
-                        dragonPosition.y = caveHeight - 100;
-                        dragonPosition.x = 50;
+                        spawnY = caveHeight - 100;
+                        spawnX = 50;
                         break;
                     case 'left':
                         // Entered from right, position at right
-                        dragonPosition.x = 90;
-                        dragonPosition.y = 100;
+                        spawnX = 90;
+                        spawnY = 100;
                         break;
                     case 'right':
                         // Entered from left, position at left
-                        dragonPosition.x = 10;
-                        dragonPosition.y = 100;
+                        spawnX = 10;
+                        spawnY = 100;
+                        break;
+                    default:
+                        // Default spawn (center) for main room
+                        spawnX = 50;
+                        spawnY = 100;
                         break;
                 }
+                
+                // Check for collision and find a safe spawn position
+                const safePosition = findSafeSpawnPosition(spawnX, spawnY, direction, caveWidth, caveHeight);
+                dragonPosition.x = safePosition.x;
+                dragonPosition.y = safePosition.y;
             }
             
             updateDragonPosition();
@@ -3253,10 +3928,23 @@
 
             // Create 7x7 grid (from -3 to +3 in both directions)
             // Note: Grid is displayed with Y inverted (top row is highest Y)
+            // Only show rooms that are branches from main room (on axes)
             for (let y = MAX_ROOMS; y >= -MAX_ROOMS; y--) {
                 for (let x = -MAX_ROOMS; x <= MAX_ROOMS; x++) {
-                    const cell = document.createElement('div');
                     const roomCoord = { x: x, y: y };
+                    
+                    // Only show valid rooms (branches from main room)
+                    if (!isValidRoom(roomCoord)) {
+                        // Create empty cell for invalid rooms
+                        const cell = document.createElement('div');
+                        cell.className = 'room-map-cell unreachable';
+                        cell.textContent = '';
+                        cell.title = '';
+                        mapGrid.appendChild(cell);
+                        continue;
+                    }
+                    
+                    const cell = document.createElement('div');
                     const roomKey = getRoomKey(roomCoord);
                     const isVisited = roomMemory[roomKey] && roomMemory[roomKey].visited;
                     const isCurrent = currentRoom.x === x && currentRoom.y === y;
