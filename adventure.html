@@ -2766,13 +2766,13 @@
                     <h3>📜 How to Play</h3>
                     <ul>
                         <li><strong>Movement:</strong> Use <strong>W/A/S/D</strong> keys (or joystick on mobile) to move your dragon</li>
-                        <li><strong>Timer:</strong> A 60-second timer starts when you first move. When it reaches 0, you reset to Level 1</li>
+                        <li><strong>Timer:</strong> A 60-second timer starts when you first move. When it reaches 0, you move back 5 rooms toward the main room (and lose the key if you have it)</li>
                         <li><strong>Objective:</strong> Find the golden key in one of the rooms and bring it back to the main room</li>
-                        <li><strong>Level Up:</strong> Touch the box in the main room while holding the key to level up</li>
+                        <li><strong>Level Up:</strong> Touch the box in the main room while holding the key to level up. This regenerates all rooms!</li>
                         <li><strong>Obstacles:</strong> Avoid rocks, crystals, and stalagmites - they block your path</li>
                         <li><strong class="warning">Lava:</strong> Touch red lava to instantly teleport back to the main room (you'll lose the key if you have it!)</li>
                         <li><strong>Rooms:</strong> Move to the edges of rooms to explore new areas. Use the map to track your progress</li>
-                        <li><strong>Teleport:</strong> Click the "⚡ Main Room" button to instantly return to the starting room</li>
+                        <li><strong>Teleport Button:</strong> Click the "⚡ Main Room" button to instantly return to the starting room, but <strong class="warning">you cannot use it while holding the key!</strong></li>
                     </ul>
                 </div>
 
@@ -2795,7 +2795,7 @@
                 <div class="cave-container">
                     <div class="cave-background">
                         <div id="level-display" class="level-display">Level: 1</div>
-                        <div id="timer-display" class="timer-display">80</div>
+                        <div id="timer-display" class="timer-display">60</div>
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
                         <button id="teleport-main-button" class="teleport-main-button">⚡ Main Room</button>
@@ -3185,7 +3185,8 @@
         // Room system with memory
         let currentRoom = { x: 0, y: 0 }; // Grid coordinates (center is 0,0)
         let roomMemory = {}; // Stores room states: { "x,y": { background, seed, visited } }
-        let transitioning = false; // Prevents multiple transitions at once
+        let transitioning = false;
+        let spawnProtected = false; // Flag to prevent teleport during spawn // Prevents multiple transitions at once
         const MAX_ROOMS = 3; // Maximum rooms in each direction from center
         
         // Session seed that changes each time the game is played
@@ -3201,7 +3202,7 @@
         let lastLevelUpTime = 0; // Track when level was last incremented to prevent rapid increments
         
         // Timer system
-        let timerSeconds = 80;
+        let timerSeconds = 60;
         let timerInterval = null;
         let timerStarted = false; // Track if timer has started
 
@@ -3244,7 +3245,7 @@
             // Reset timer state (don't start it yet - wait for first movement)
             timerStarted = false;
             stopTimer();
-            timerSeconds = 80;
+            timerSeconds = 60;
             updateTimerDisplay();
             
             currentDragon = dragon;
@@ -3628,9 +3629,9 @@
                 
                 // Update styling based on time remaining
                 cachedTimerDisplay.classList.remove('warning', 'critical');
-                if (timerSeconds <= 20) {
+                if (timerSeconds <= 15) {
                     cachedTimerDisplay.classList.add('critical');
-                } else if (timerSeconds <= 40) {
+                } else if (timerSeconds <= 30) {
                     cachedTimerDisplay.classList.add('warning');
                 }
             }
@@ -3643,8 +3644,8 @@
                 clearInterval(timerInterval);
             }
             
-            // Reset timer to 80 seconds
-            timerSeconds = 80;
+            // Reset timer to 60 seconds
+            timerSeconds = 60;
             updateTimerDisplay();
             
             // Start countdown
@@ -3652,7 +3653,7 @@
                 timerSeconds--;
                 updateTimerDisplay();
                 
-                // When timer reaches 0, reset to level 1
+                // When timer reaches 0, move back 5 rooms
                 if (timerSeconds <= 0) {
                     resetToLevelOne();
                 }
@@ -3670,22 +3671,11 @@
             }
         }
         
-        // Function to reset to level 1 when timer expires
+        // Function to move back 5 rooms when timer expires
         function resetToLevelOne() {
             // Stop the timer
             stopTimer();
             timerStarted = false; // Reset timer started flag
-            
-            // Reset level to 1
-            currentLevel = 1;
-            lastLevelUpTime = 0;
-            updateLevelDisplay();
-            
-            // Regenerate session seed to change all rooms
-            sessionSeed = Math.floor(Math.random() * 1000000000);
-            
-            // Clear room memory to force regeneration of all rooms
-            roomMemory = {};
             
             // Reset key collection
             keyCollected = false;
@@ -3697,33 +3687,127 @@
                 keyEl.remove();
             }
             
-            // Teleport to main room
-            currentRoom = { x: 0, y: 0 };
+            // Calculate new room position - move back 5 rooms toward main room (0,0)
+            let newRoom = { x: currentRoom.x, y: currentRoom.y };
+            
+            if (currentRoom.x === 0 && currentRoom.y === 0) {
+                // Already at main room, stay there
+                newRoom = { x: 0, y: 0 };
+            } else if (currentRoom.x === 0) {
+                // On Y axis - move back 5 rooms toward 0
+                if (currentRoom.y > 0) {
+                    newRoom.y = Math.max(0, currentRoom.y - 5);
+                } else {
+                    newRoom.y = Math.min(0, currentRoom.y + 5);
+                }
+            } else if (currentRoom.y === 0) {
+                // On X axis - move back 5 rooms toward 0
+                if (currentRoom.x > 0) {
+                    newRoom.x = Math.max(0, currentRoom.x - 5);
+                } else {
+                    newRoom.x = Math.min(0, currentRoom.x + 5);
+                }
+            } else {
+                // Shouldn't happen (rooms are only on axes), but fallback to main room
+                newRoom = { x: 0, y: 0 };
+            }
+            
+            // Ensure the new room is valid
+            if (!isValidRoom(newRoom)) {
+                newRoom = { x: 0, y: 0 };
+            }
+            
+            // Update current room
+            currentRoom = newRoom;
+            
+            // Load the new room
             loadRoom(currentRoom);
             updateMap();
             updateRoomDisplay();
             
-            // Reset dragon position to center of main room
+            // Position dragon in the new room
             const caveBackground = document.querySelector('.cave-background');
             if (caveBackground) {
                 const caveWidth = caveBackground.offsetWidth;
                 const caveHeight = caveBackground.offsetHeight;
-                const safePosition = findSafeSpawnPosition(50, 100, null, caveWidth, caveHeight);
-                dragonPosition.x = safePosition.x;
-                dragonPosition.y = safePosition.y;
+                
+                // If we're in main room, spawn in center, otherwise spawn at entry point
+                if (currentRoom.x === 0 && currentRoom.y === 0) {
+                    const safePosition = findSafeSpawnPosition(50, 100, null, caveWidth, caveHeight);
+                    dragonPosition.x = safePosition.x;
+                    dragonPosition.y = safePosition.y;
+                } else {
+                    // Spawn at entry point of the room
+                    const room = roomMemory[getRoomKey(currentRoom)];
+                    const clearPath = room ? room.clearPath : null;
+                    
+                    let spawnX = 50;
+                    let spawnY = 100;
+                    
+                    // Determine entry direction based on room position
+                    if (currentRoom.y > 0) {
+                        // Room is above main room - entered from bottom
+                        spawnY = 30;
+                        if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                            const firstSegment = clearPath.segments[0];
+                            if (firstSegment.type === 'vertical') {
+                                spawnX = firstSegment.x;
+                            }
+                        } else if (clearPath && clearPath.type === 'vertical') {
+                            spawnX = clearPath.x;
+                        }
+                    } else if (currentRoom.y < 0) {
+                        // Room is below main room - entered from top
+                        spawnY = caveHeight - 110;
+                        if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                            const firstSegment = clearPath.segments[0];
+                            if (firstSegment.type === 'vertical') {
+                                spawnX = firstSegment.x;
+                            }
+                        } else if (clearPath && clearPath.type === 'vertical') {
+                            spawnX = clearPath.x;
+                        }
+                    } else if (currentRoom.x > 0) {
+                        // Room is to the right - entered from left
+                        spawnX = 5;
+                        if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                            const firstSegment = clearPath.segments[0];
+                            if (firstSegment.type === 'horizontal') {
+                                spawnY = firstSegment.y;
+                            }
+                        } else if (clearPath && clearPath.type === 'horizontal') {
+                            spawnY = clearPath.y;
+                        }
+                    } else if (currentRoom.x < 0) {
+                        // Room is to the left - entered from right
+                        spawnX = 95;
+                        if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                            const firstSegment = clearPath.segments[0];
+                            if (firstSegment.type === 'horizontal') {
+                                spawnY = firstSegment.y;
+                            }
+                        } else if (clearPath && clearPath.type === 'horizontal') {
+                            spawnY = clearPath.y;
+                        }
+                    }
+                    
+                    const safePosition = findSafeSpawnPosition(spawnX, spawnY, null, caveWidth, caveHeight);
+                    dragonPosition.x = safePosition.x;
+                    dragonPosition.y = safePosition.y;
+                }
             } else {
                 dragonPosition = { x: 50, y: 100 };
             }
             updateDragonPosition();
             
             // Reset timer display but don't start it yet (wait for next movement)
-            timerSeconds = 80;
+            timerSeconds = 60;
             updateTimerDisplay();
             
-            // Show visual feedback that timer reset
+            // Show visual feedback that timer expired
             const timerDisplay = document.getElementById('timer-display');
             if (timerDisplay) {
-                timerDisplay.style.boxShadow = '0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8)';
+                timerDisplay.style.boxShadow = '0 0 30px rgba(255, 68, 68, 1), 0 0 60px rgba(255, 68, 68, 0.8)';
                 setTimeout(function() {
                     timerDisplay.style.boxShadow = '';
                 }, 1000);
@@ -3791,7 +3875,7 @@
                     // Reset timer on level up (but don't start until next movement)
                     stopTimer();
                     timerStarted = false;
-                    timerSeconds = 80;
+                    timerSeconds = 60;
                     updateTimerDisplay();
                     
                     // Regenerate session seed to change all rooms
@@ -4774,18 +4858,24 @@
                     dragonTop < obstacleBottom && dragonBottom > obstacleTop) {
                     // Special handling for lava - teleport to main room and reset key
                     if (obstacle.type === 'lava') {
-            // Reset key collection
-            keyCollected = false;
-            updateTeleportButtonState(); // Re-enable teleport button
-            
-            // Remove the key from display
-            const keyEl = document.getElementById('adventure-key');
-            if (keyEl) {
-                keyEl.remove();
-            }
-            
-            // Teleport to main room
-            teleportToMainRoom();
+                        // Don't teleport if we're in spawn protection period
+                        if (spawnProtected) {
+                            // Just return collision, don't teleport
+                            return true;
+                        }
+                        
+                        // Reset key collection
+                        keyCollected = false;
+                        updateTeleportButtonState(); // Re-enable teleport button
+                        
+                        // Remove the key from display
+                        const keyEl = document.getElementById('adventure-key');
+                        if (keyEl) {
+                            keyEl.remove();
+                        }
+                        
+                        // Teleport to main room
+                        teleportToMainRoom();
                         
                         // Return false to allow movement (teleport handles position)
                         return false;
@@ -4817,32 +4907,128 @@
             return false; // No collision
         }
 
+        // Helper function to check if position is safe from lava (at least 100px away)
+        function isSafeFromLava(posX, posY, caveWidth, caveHeight) {
+            const room = roomMemory[getRoomKey(currentRoom)];
+            if (!room || !room.obstacles) return true;
+            
+            const dragonWidth = 80;
+            const dragonHeight = 80;
+            const minDistance = 100; // Minimum distance from lava in pixels
+            
+            // Convert position to pixels
+            const dragonLeft = (posX / 100) * caveWidth - dragonWidth / 2;
+            const dragonRight = dragonLeft + dragonWidth;
+            const dragonTop = caveHeight - posY - dragonHeight;
+            const dragonBottom = dragonTop + dragonHeight;
+            const dragonCenterX = (dragonLeft + dragonRight) / 2;
+            const dragonCenterY = (dragonTop + dragonBottom) / 2;
+            
+            // Check distance to all lava obstacles
+            for (let i = 0; i < room.obstacles.length; i++) {
+                const obstacle = room.obstacles[i];
+                if (obstacle.type === 'lava') {
+                    const obstacleCenterX = (obstacle.x / 100) * caveWidth;
+                    const obstacleCenterY = caveHeight - obstacle.y;
+                    
+                    // Calculate distance between centers
+                    const dx = obstacleCenterX - dragonCenterX;
+                    const dy = obstacleCenterY - dragonCenterY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // Check if too close (consider obstacle size)
+                    const obstacleRadius = Math.max(obstacle.width, obstacle.height) / 2;
+                    const dragonRadius = Math.max(dragonWidth, dragonHeight) / 2;
+                    const requiredDistance = minDistance + obstacleRadius + dragonRadius;
+                    
+                    if (distance < requiredDistance) {
+                        return false; // Too close to lava
+                    }
+                }
+            }
+            
+            return true; // Safe from lava
+        }
+        
+        // Helper function to check collision without triggering teleports (for spawn)
+        function checkCollisionForSpawn(newX, newY) {
+            const room = roomMemory[getRoomKey(currentRoom)];
+            if (!room) return false;
+            
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) return false;
+            
+            const caveWidth = caveBackground.offsetWidth;
+            const caveHeight = caveBackground.offsetHeight;
+            const dragonWidth = 80;
+            const dragonHeight = 80;
+            
+            // Convert dragon position to pixels
+            const dragonLeft = (newX / 100) * caveWidth - dragonWidth / 2;
+            const dragonRight = dragonLeft + dragonWidth;
+            const dragonTop = caveHeight - newY - dragonHeight;
+            const dragonBottom = dragonTop + dragonHeight;
+            
+            // Quick bounds check
+            const dragonBoundsLeft = dragonLeft - 50;
+            const dragonBoundsRight = dragonRight + 50;
+            const dragonBoundsTop = dragonTop - 50;
+            const dragonBoundsBottom = dragonBottom + 50;
+            
+            // Check collision with obstacles (but don't trigger lava teleport)
+            for (let i = 0; i < room.obstacles.length; i++) {
+                const obstacle = room.obstacles[i];
+                
+                const obstacleLeft = (obstacle.x / 100) * caveWidth - obstacle.width / 2;
+                const obstacleRight = obstacleLeft + obstacle.width;
+                const obstacleTop = caveHeight - obstacle.y - obstacle.height;
+                const obstacleBottom = obstacleTop + obstacle.height;
+                
+                // Early exit if obstacle is far away
+                if (obstacleRight < dragonBoundsLeft || obstacleLeft > dragonBoundsRight ||
+                    obstacleBottom < dragonBoundsTop || obstacleTop > dragonBoundsBottom) {
+                    continue;
+                }
+                
+                // Full collision check
+                if (dragonLeft < obstacleRight && dragonRight > obstacleLeft &&
+                    dragonTop < obstacleBottom && dragonBottom > obstacleTop) {
+                    // For spawn, we just return true if there's a collision (don't teleport)
+                    return true;
+                }
+            }
+            
+            return false; // No collision
+        }
+        
         function findSafeSpawnPosition(initialX, initialY, direction, caveWidth, caveHeight) {
-            // Try the initial position first
-            if (!checkCollision(initialX, initialY)) {
+            // Check if initial position is safe (no collision AND at least 100px from lava)
+            if (!checkCollisionForSpawn(initialX, initialY) && isSafeFromLava(initialX, initialY, caveWidth, caveHeight)) {
                 return { x: initialX, y: initialY };
             }
             
-            // If initial position has collision, try nearby positions
+            // If initial position has collision or is too close to lava, try nearby positions
             const dragonWidth = 80;
             const dragonHeight = 80;
             const offsetX = (dragonWidth / caveWidth) * 100; // Convert to percentage
             const offsetY = dragonHeight; // In pixels
             
-            // Try positions in a spiral pattern around the initial position
-            const attempts = [
-                // Try slightly offset positions
-                { x: initialX + offsetX, y: initialY },
-                { x: initialX - offsetX, y: initialY },
-                { x: initialX, y: initialY + offsetY },
-                { x: initialX, y: initialY - offsetY },
-                // Try diagonal positions
-                { x: initialX + offsetX, y: initialY + offsetY },
-                { x: initialX - offsetX, y: initialY + offsetY },
-                { x: initialX + offsetX, y: initialY - offsetY },
-                { x: initialX - offsetX, y: initialY - offsetY },
-                // Try positions along the wall based on direction
-            ];
+            // Generate more positions in a wider spiral pattern
+            const attempts = [];
+            
+            // Try positions in expanding circles around initial position
+            for (let radius = 1; radius <= 5; radius++) {
+                const step = radius * 2;
+                for (let angle = 0; angle < 360; angle += 45) {
+                    const rad = (angle * Math.PI) / 180;
+                    const xOffset = Math.cos(rad) * step * offsetX;
+                    const yOffset = Math.sin(rad) * step * offsetY;
+                    attempts.push({
+                        x: Math.max(5, Math.min(95, initialX + xOffset)),
+                        y: Math.max(20, Math.min(caveHeight - 80, initialY + yOffset))
+                    });
+                }
+            }
             
             // Add direction-specific safe positions
             switch(direction) {
@@ -4850,27 +5036,37 @@
                     // Bottom wall - try positions along the bottom
                     attempts.push({ x: 50, y: 30 });
                     attempts.push({ x: 50, y: 50 });
+                    attempts.push({ x: 50, y: 70 });
                     attempts.push({ x: 40, y: 30 });
                     attempts.push({ x: 60, y: 30 });
+                    attempts.push({ x: 30, y: 30 });
+                    attempts.push({ x: 70, y: 30 });
                     break;
                 case 'down':
                     // Top wall - try positions along the top
                     attempts.push({ x: 50, y: caveHeight - 130 });
                     attempts.push({ x: 50, y: caveHeight - 150 });
+                    attempts.push({ x: 50, y: caveHeight - 170 });
                     attempts.push({ x: 40, y: caveHeight - 130 });
                     attempts.push({ x: 60, y: caveHeight - 130 });
+                    attempts.push({ x: 30, y: caveHeight - 130 });
+                    attempts.push({ x: 70, y: caveHeight - 130 });
                     break;
                 case 'left':
                     // Right wall - try positions along the right
                     attempts.push({ x: 85, y: 100 });
                     attempts.push({ x: 85, y: 150 });
                     attempts.push({ x: 85, y: 50 });
+                    attempts.push({ x: 85, y: 200 });
+                    attempts.push({ x: 85, y: 30 });
                     break;
                 case 'right':
                     // Left wall - try positions along the left
                     attempts.push({ x: 15, y: 100 });
                     attempts.push({ x: 15, y: 150 });
                     attempts.push({ x: 15, y: 50 });
+                    attempts.push({ x: 15, y: 200 });
+                    attempts.push({ x: 15, y: 30 });
                     break;
             }
             
@@ -4879,13 +5075,30 @@
                 const pos = attempts[i];
                 // Ensure position is within bounds
                 if (pos.x >= 5 && pos.x <= 95 && pos.y >= 20 && pos.y <= caveHeight - 80) {
-                    if (!checkCollision(pos.x, pos.y)) {
+                    // Check both collision and lava distance
+                    if (!checkCollisionForSpawn(pos.x, pos.y) && isSafeFromLava(pos.x, pos.y, caveWidth, caveHeight)) {
                         return pos;
                     }
                 }
             }
             
-            // If all attempts fail, return a safe default position (center, slightly offset)
+            // If all attempts fail, try center positions as last resort
+            const fallbackPositions = [
+                { x: 50, y: 150 },
+                { x: 50, y: 100 },
+                { x: 30, y: 150 },
+                { x: 70, y: 150 },
+                { x: 50, y: 200 }
+            ];
+            
+            for (let i = 0; i < fallbackPositions.length; i++) {
+                const pos = fallbackPositions[i];
+                if (!checkCollisionForSpawn(pos.x, pos.y) && isSafeFromLava(pos.x, pos.y, caveWidth, caveHeight)) {
+                    return pos;
+                }
+            }
+            
+            // Ultimate fallback - return center position even if not perfect
             return { x: 50, y: 150 };
         }
 
@@ -5135,11 +5348,14 @@
                 dragonPosition.y = safePosition.y;
             }
             
+            // Enable spawn protection to prevent immediate teleport
+            spawnProtected = true;
             updateDragonPosition();
             
-            // Reset transition flag after a short delay
+            // Reset transition flag and spawn protection after a short delay
             setTimeout(function() {
                 transitioning = false;
+                spawnProtected = false; // Allow collisions after spawn period
             }, 500);
         }
 
