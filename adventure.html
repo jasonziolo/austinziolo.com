@@ -3139,6 +3139,7 @@
                 });
             }
 
+
             // Update mobile detection on window resize
             window.addEventListener('resize', function() {
                 const wasMobile = isMobile;
@@ -3650,13 +3651,20 @@
             
             // Start countdown
             timerInterval = setInterval(function() {
+                // When timer is about to go from 2 to 1, move back 5 rooms instead
+                if (timerSeconds === 2) {
+                    // Stop the timer first
+                    stopTimer();
+                    // Set timer to 1 for display
+                    timerSeconds = 1;
+                    updateTimerDisplay();
+                    // Move back 5 rooms
+                    resetToLevelOne();
+                    return; // Exit early
+                }
+                
                 timerSeconds--;
                 updateTimerDisplay();
-                
-                // When timer reaches 0, move back 5 rooms
-                if (timerSeconds <= 0) {
-                    resetToLevelOne();
-                }
             }, 1000);
             
             // Debug: verify timer started at 60
@@ -3673,9 +3681,21 @@
         
         // Function to move back 5 rooms when timer expires
         function resetToLevelOne() {
+            console.log('resetToLevelOne called - current room:', currentRoom, 'current level:', currentLevel);
+            
             // Stop the timer
             stopTimer();
             timerStarted = false; // Reset timer started flag
+            
+            // Reset transitioning flag to allow room change
+            transitioning = false;
+            
+            // Decrease level by 5 (minimum level 1)
+            const oldLevel = currentLevel;
+            currentLevel = Math.max(1, currentLevel - 5);
+            lastLevelUpTime = 0;
+            updateLevelDisplay();
+            console.log('Level decreased from', oldLevel, 'to', currentLevel);
             
             // Reset key collection
             keyCollected = false;
@@ -3688,7 +3708,10 @@
             }
             
             // Calculate new room position - move back 5 rooms toward main room (0,0)
+            const oldRoom = { x: currentRoom.x, y: currentRoom.y };
             let newRoom = { x: currentRoom.x, y: currentRoom.y };
+            
+            console.log('Timer expired - current room:', oldRoom);
             
             if (currentRoom.x === 0 && currentRoom.y === 0) {
                 // Already at main room, stay there
@@ -3717,88 +3740,107 @@
                 newRoom = { x: 0, y: 0 };
             }
             
-            // Update current room
+            console.log('Moving back 5 rooms - from', oldRoom, 'to new room:', newRoom);
+            
+            // Update current room BEFORE loading
             currentRoom = newRoom;
             
-            // Load the new room
-            loadRoom(currentRoom);
-            updateMap();
-            updateRoomDisplay();
+            // Enable spawn protection to prevent immediate teleport
+            spawnProtected = true;
             
-            // Position dragon in the new room
-            const caveBackground = document.querySelector('.cave-background');
-            if (caveBackground) {
-                const caveWidth = caveBackground.offsetWidth;
-                const caveHeight = caveBackground.offsetHeight;
+            // Load the new room with a small delay to ensure state is updated
+            setTimeout(function() {
+                console.log('Loading room:', currentRoom);
+                loadRoom(currentRoom);
+                updateMap();
+                updateRoomDisplay();
                 
-                // If we're in main room, spawn in center, otherwise spawn at entry point
-                if (currentRoom.x === 0 && currentRoom.y === 0) {
-                    const safePosition = findSafeSpawnPosition(50, 100, null, caveWidth, caveHeight);
-                    dragonPosition.x = safePosition.x;
-                    dragonPosition.y = safePosition.y;
-                } else {
-                    // Spawn at entry point of the room
-                    const room = roomMemory[getRoomKey(currentRoom)];
-                    const clearPath = room ? room.clearPath : null;
-                    
-                    let spawnX = 50;
-                    let spawnY = 100;
-                    
-                    // Determine entry direction based on room position
-                    if (currentRoom.y > 0) {
-                        // Room is above main room - entered from bottom
-                        spawnY = 30;
-                        if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
-                            const firstSegment = clearPath.segments[0];
-                            if (firstSegment.type === 'vertical') {
-                                spawnX = firstSegment.x;
+                // Position dragon in the new room after a brief delay to ensure room is loaded
+                setTimeout(function() {
+                    const caveBackground = document.querySelector('.cave-background');
+                    if (caveBackground) {
+                        const caveWidth = caveBackground.offsetWidth;
+                        const caveHeight = caveBackground.offsetHeight;
+                        
+                        // If we're in main room, spawn in center, otherwise spawn at entry point
+                        if (currentRoom.x === 0 && currentRoom.y === 0) {
+                            const safePosition = findSafeSpawnPosition(50, 100, null, caveWidth, caveHeight);
+                            dragonPosition.x = safePosition.x;
+                            dragonPosition.y = safePosition.y;
+                        } else {
+                            // Spawn at entry point of the room
+                            const roomKey = getRoomKey(currentRoom);
+                            const room = roomMemory[roomKey];
+                            const clearPath = room ? room.clearPath : null;
+                            
+                            let spawnX = 50;
+                            let spawnY = 100;
+                            
+                            // Determine entry direction based on room position
+                            if (currentRoom.y > 0) {
+                                // Room is above main room - entered from bottom
+                                spawnY = 30;
+                                if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                                    const firstSegment = clearPath.segments[0];
+                                    if (firstSegment.type === 'vertical') {
+                                        spawnX = firstSegment.x;
+                                    }
+                                } else if (clearPath && clearPath.type === 'vertical') {
+                                    spawnX = clearPath.x;
+                                }
+                            } else if (currentRoom.y < 0) {
+                                // Room is below main room - entered from top
+                                spawnY = caveHeight - 110;
+                                if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                                    const firstSegment = clearPath.segments[0];
+                                    if (firstSegment.type === 'vertical') {
+                                        spawnX = firstSegment.x;
+                                    }
+                                } else if (clearPath && clearPath.type === 'vertical') {
+                                    spawnX = clearPath.x;
+                                }
+                            } else if (currentRoom.x > 0) {
+                                // Room is to the right - entered from left
+                                spawnX = 5;
+                                if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                                    const firstSegment = clearPath.segments[0];
+                                    if (firstSegment.type === 'horizontal') {
+                                        spawnY = firstSegment.y;
+                                    }
+                                } else if (clearPath && clearPath.type === 'horizontal') {
+                                    spawnY = clearPath.y;
+                                }
+                            } else if (currentRoom.x < 0) {
+                                // Room is to the left - entered from right
+                                spawnX = 95;
+                                if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                                    const firstSegment = clearPath.segments[0];
+                                    if (firstSegment.type === 'horizontal') {
+                                        spawnY = firstSegment.y;
+                                    }
+                                } else if (clearPath && clearPath.type === 'horizontal') {
+                                    spawnY = clearPath.y;
+                                }
                             }
-                        } else if (clearPath && clearPath.type === 'vertical') {
-                            spawnX = clearPath.x;
+                            
+                            const safePosition = findSafeSpawnPosition(spawnX, spawnY, null, caveWidth, caveHeight);
+                            dragonPosition.x = safePosition.x;
+                            dragonPosition.y = safePosition.y;
                         }
-                    } else if (currentRoom.y < 0) {
-                        // Room is below main room - entered from top
-                        spawnY = caveHeight - 110;
-                        if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
-                            const firstSegment = clearPath.segments[0];
-                            if (firstSegment.type === 'vertical') {
-                                spawnX = firstSegment.x;
-                            }
-                        } else if (clearPath && clearPath.type === 'vertical') {
-                            spawnX = clearPath.x;
-                        }
-                    } else if (currentRoom.x > 0) {
-                        // Room is to the right - entered from left
-                        spawnX = 5;
-                        if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
-                            const firstSegment = clearPath.segments[0];
-                            if (firstSegment.type === 'horizontal') {
-                                spawnY = firstSegment.y;
-                            }
-                        } else if (clearPath && clearPath.type === 'horizontal') {
-                            spawnY = clearPath.y;
-                        }
-                    } else if (currentRoom.x < 0) {
-                        // Room is to the left - entered from right
-                        spawnX = 95;
-                        if (clearPath && clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
-                            const firstSegment = clearPath.segments[0];
-                            if (firstSegment.type === 'horizontal') {
-                                spawnY = firstSegment.y;
-                            }
-                        } else if (clearPath && clearPath.type === 'horizontal') {
-                            spawnY = clearPath.y;
-                        }
+                        updateDragonPosition();
+                        console.log('Dragon positioned in new room:', currentRoom);
+                    } else {
+                        dragonPosition = { x: 50, y: 100 };
+                        updateDragonPosition();
                     }
                     
-                    const safePosition = findSafeSpawnPosition(spawnX, spawnY, null, caveWidth, caveHeight);
-                    dragonPosition.x = safePosition.x;
-                    dragonPosition.y = safePosition.y;
-                }
-            } else {
-                dragonPosition = { x: 50, y: 100 };
-            }
-            updateDragonPosition();
+                    // Disable spawn protection after positioning
+                    setTimeout(function() {
+                        spawnProtected = false;
+                        console.log('Spawn protection disabled');
+                    }, 500);
+                }, 50);
+            }, 10);
             
             // Reset timer display but don't start it yet (wait for next movement)
             timerSeconds = 60;
@@ -3812,6 +3854,9 @@
                     timerDisplay.style.boxShadow = '';
                 }, 1000);
             }
+            
+            // Debug log to verify room change
+            console.log('Timer expired - moved from room to:', currentRoom);
         }
         
         // Function to check if dragon + key + box collide (level up)
