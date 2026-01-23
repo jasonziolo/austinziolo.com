@@ -678,11 +678,49 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
+        /* Level 10 Button */
+        .level-10-button {
+            position: absolute;
+            top: 60px;
+            right: 15px;
+            background: linear-gradient(135deg, #8844AA 0%, #6644AA 100%);
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 3px solid #AA66CC;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(136, 68, 170, 0.6), 0 0 20px rgba(136, 68, 170, 0.4);
+            z-index: 200;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: Arial, sans-serif;
+        }
+
+        .level-10-button:hover {
+            background: linear-gradient(135deg, #AA66CC 0%, #8844AA 100%);
+            box-shadow: 0 6px 16px rgba(136, 68, 170, 0.8), 0 0 30px rgba(136, 68, 170, 0.6);
+            transform: scale(1.05);
+        }
+
+        .level-10-button:active {
+            transform: scale(0.95);
+        }
+
         @media screen and (max-width: 768px) {
             .teleport-main-button {
                 font-size: 12px;
                 padding: 8px 15px;
                 top: 10px;
+                right: 10px;
+            }
+            
+            .level-10-button {
+                font-size: 12px;
+                padding: 8px 15px;
+                top: 55px;
                 right: 10px;
             }
             
@@ -2834,6 +2872,7 @@
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
                         <button id="teleport-main-button" class="teleport-main-button">⚡ Main Room</button>
+                        <button id="level-10-button" class="level-10-button">Level 10</button>
                     </div>
                 </div>
 
@@ -3174,6 +3213,40 @@
                 });
             }
 
+            // Level 10 button
+            const level10Button = document.getElementById('level-10-button');
+            if (level10Button) {
+                level10Button.addEventListener('click', function() {
+                    // Get dragon ID from current state
+                    let dragonId = currentDragonId;
+                    
+                    // If not stored, try to get from URL parameters
+                    if (!dragonId) {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        dragonId = urlParams.get('dragon');
+                    }
+                    
+                    // If still not found, try to find it from currentDragon
+                    if (!dragonId && currentDragon) {
+                        // Find dragon ID by matching name
+                        for (const id in dragonData) {
+                            if (dragonData[id].name === currentDragon.name) {
+                                dragonId = id;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (dragonId) {
+                        // Redirect to adventure-level10.html with dragon ID and level 10
+                        window.location.href = `adventure-level10.html?dragon=${dragonId}&level=10`;
+                    } else {
+                        console.error('Could not find dragon ID for level 10 teleport');
+                        alert('Error: Could not determine dragon. Please restart the adventure.');
+                    }
+                });
+            }
+
 
             // Update mobile detection on window resize
             window.addEventListener('resize', function() {
@@ -3257,6 +3330,7 @@
 
         // Store current dragon for room display
         let currentDragon = null;
+        let currentDragonId = null; // Store dragon ID for navigation
 
         // Function to start the adventure
         function startAdventure(dragonId) {
@@ -3285,6 +3359,7 @@
             updateTimerDisplay();
             
             currentDragon = dragon;
+            currentDragonId = dragonId; // Store dragon ID
 
             // Hide selection area
             const selectionArea = document.getElementById('selection-area');
