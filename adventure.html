@@ -281,6 +281,76 @@
         .selected-dragon.chaos .element { color: #FF88DD; }
         .selected-dragon.chaos img { border-color: #FF44AA; }
 
+        /* Instructions Container */
+        .instructions-container {
+            background: linear-gradient(180deg, #1a1a2e 0%, #2a2a3e 100%);
+            border: 3px solid #5a5a7a;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 15px auto;
+            max-width: 800px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .instructions-container h3 {
+            color: #FFD700;
+            font-size: 20px;
+            margin: 0 0 15px 0;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .instructions-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .instructions-container li {
+            color: #E0E0E0;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .instructions-container li::before {
+            content: '•';
+            color: #FFD700;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+        }
+
+        .instructions-container li strong {
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .instructions-container li strong.warning {
+            color: #FF4444;
+        }
+
+        @media screen and (max-width: 768px) {
+            .instructions-container {
+                padding: 10px 15px;
+                margin: 10px auto;
+            }
+
+            .instructions-container h3 {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            .instructions-container li {
+                font-size: 12px;
+                margin-bottom: 8px;
+                padding-left: 20px;
+            }
+        }
+
         /* Selection Area Visibility */
         .selection-area {
             display: block;
@@ -2616,8 +2686,7 @@
                         <li><strong>Obstacles:</strong> Avoid rocks, crystals, and stalagmites - they block your path</li>
                         <li><strong class="warning">Lava:</strong> Touch red lava to instantly teleport back to the main room (you'll lose the key if you have it!)</li>
                         <li><strong>Rooms:</strong> Move to the edges of rooms to explore new areas. Use the map to track your progress</li>
-                        <li><strong>Teleport:</strong> Click the "⚡ Main Room" button to instantly return to the starting room,
-                             but you cant use it if you have the key</li>
+                        <li><strong>Teleport:</strong> Click the "⚡ Main Room" button to instantly return to the starting room, but you can't use it if you have the key</li>
                     </ul>
                 </div>
 
