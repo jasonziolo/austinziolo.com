@@ -765,6 +765,60 @@
             border: none !important;
         }
 
+        /* Boss Dialogue Styles */
+        .boss-dialogue {
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            background: linear-gradient(135deg, #1a1a2e 0%, #2a2a3e 100%) !important;
+            color: #FFD700 !important;
+            font-size: 24px !important;
+            font-weight: bold !important;
+            padding: 20px 40px !important;
+            border: 4px solid #FFD700 !important;
+            border-radius: 15px !important;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.4) !important;
+            z-index: 300 !important;
+            text-align: center !important;
+            min-width: 300px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 2px !important;
+            font-family: Arial, sans-serif !important;
+            animation: dialoguePulse 0.5s infinite !important;
+        }
+
+        @keyframes dialoguePulse {
+            0%, 100% { 
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.4);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(255, 215, 0, 0.6);
+            }
+        }
+
+        /* Particle Container */
+        .particle-container {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            pointer-events: none !important;
+            z-index: 150 !important;
+            overflow: hidden !important;
+        }
+
+        .particle {
+            position: absolute !important;
+            width: 8px !important;
+            height: 8px !important;
+            background: #FFD700 !important;
+            border-radius: 50% !important;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8) !important;
+            pointer-events: none !important;
+        }
+
         /* Override all dragon-specific classes to ensure uniform size and appearance */
         .pixel-dragon.breezeflight,
         .pixel-dragon.chaosflare,
@@ -2813,6 +2867,8 @@
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
                         <img id="boss-dragon" class="boss-dragon" src="" alt="" style="display: none !important; visibility: hidden !important; opacity: 0 !important; box-shadow: none !important;" />
+                        <div id="boss-dialogue" class="boss-dialogue" style="display: none;"></div>
+                        <div id="particle-container" class="particle-container"></div>
                     </div>
                 </div>
 
@@ -3189,6 +3245,7 @@
         // Store current dragon for room display
         let currentDragon = null;
         let bossDragonId = null; // Store randomly selected boss dragon ID
+        let bossDialoguePlayed = false; // Track if dialogue sequence has been played
 
         // Function to start the adventure
         function startAdventure(dragonId) {
@@ -4405,9 +4462,15 @@
             // Render boss dragon ONLY in room (1,0), hide in all other rooms including (0,0)
             if (roomCoord.x === 1 && roomCoord.y === 0) {
                 renderBossDragon();
+                // Play dialogue sequence when entering room (1,0) for the first time
+                if (!bossDialoguePlayed) {
+                    playBossDialogueSequence();
+                }
             } else {
                 // Explicitly hide boss dragon in room (0,0) and all other rooms
                 hideBossDragon();
+                // Hide dialogue when leaving room (1,0)
+                hideDialogue();
             }
             
             room.visited = true;
@@ -4577,6 +4640,171 @@
                 bossDragonEl.src = '';
                 bossDragonEl.removeAttribute('src');
             }
+        }
+
+        // Function to show dialogue
+        function showDialogue(text) {
+            const dialogueEl = document.getElementById('boss-dialogue');
+            if (!dialogueEl) return;
+            
+            dialogueEl.textContent = text;
+            dialogueEl.style.display = 'block';
+            dialogueEl.style.visibility = 'visible';
+            dialogueEl.style.opacity = '1';
+        }
+
+        // Function to hide dialogue
+        function hideDialogue() {
+            const dialogueEl = document.getElementById('boss-dialogue');
+            if (!dialogueEl) return;
+            
+            dialogueEl.style.display = 'none';
+            dialogueEl.style.visibility = 'hidden';
+            dialogueEl.style.opacity = '0';
+            dialogueEl.textContent = '';
+        }
+
+        // Function to create particle effects
+        function createParticleEffects(x, y) {
+            const particleContainer = document.getElementById('particle-container');
+            if (!particleContainer) return;
+            
+            const numParticles = 50;
+            const particles = [];
+            
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const angle = (Math.PI * 2 * i) / numParticles;
+                const speed = 2 + Math.random() * 3;
+                const distance = 50 + Math.random() * 100;
+                
+                particle.style.left = x + 'px';
+                particle.style.bottom = y + 'px';
+                
+                particleContainer.appendChild(particle);
+                
+                // Animate particle
+                let currentX = x;
+                let currentY = y;
+                let vx = Math.cos(angle) * speed;
+                let vy = Math.sin(angle) * speed;
+                let opacity = 1;
+                
+                const animate = () => {
+                    currentX += vx;
+                    currentY += vy;
+                    opacity -= 0.02;
+                    
+                    particle.style.left = currentX + 'px';
+                    particle.style.bottom = currentY + 'px';
+                    particle.style.opacity = opacity;
+                    
+                    if (opacity > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
+                    }
+                };
+                
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // Function to transform boss dragon
+        function transformBossDragon() {
+            const bossDragonEl = document.getElementById('boss-dragon');
+            if (!bossDragonEl) return;
+            
+            // Get current position for particle effects - center of boss dragon
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) return;
+            
+            const caveWidth = caveBackground.offsetWidth;
+            const caveHeight = caveBackground.offsetHeight;
+            
+            // Boss dragon is at 80% from left, centered vertically
+            const bossX = (caveWidth * 0.8);
+            const bossY = caveHeight / 2; // Center vertically
+            
+            // Create particle effects at boss dragon center
+            createParticleEffects(bossX, bossY);
+            
+            // Select a new random dragon (different from current)
+            const dragonIds = Object.keys(dragonData);
+            let newBossDragonId;
+            do {
+                const randomIndex = Math.floor(Math.random() * dragonIds.length);
+                newBossDragonId = dragonIds[randomIndex];
+            } while (newBossDragonId === bossDragonId && dragonIds.length > 1);
+            
+            bossDragonId = newBossDragonId;
+            
+            // Map dragon IDs to their icon images
+            const dragonIcons = {
+                'breezeflight': 'images/icons/breezeflight-icon.jpg',
+                'chaosflare': 'images/icons/chacosflare-icon.jpg',
+                'crystalwing': 'images/icons/crystalwing-icon.jpg',
+                'earthheart': 'images/icons/earthheart-icon.jpg',
+                'flamethorn': 'images/icons/flamethorn-icon.jpg',
+                'frostbite': 'images/icons/frostbite-icon.jpg',
+                'metalbeak': 'images/icons/metalbeak-icon.jpg',
+                'aquaris': 'images/icons/aquarius-icon.jpg',
+                'radiant': 'images/icons/aquarius-icon.jpg',
+                'stormwing': 'images/icons/aquarius-icon.jpg',
+                'vineclaw': 'images/icons/aquarius-icon.jpg',
+                'shadowmaw': 'images/icons/aquarius-icon.jpg'
+            };
+            
+            // Update boss dragon image
+            const iconPath = dragonIcons[bossDragonId] || 'images/icons/aquarius-icon.jpg';
+            bossDragonEl.src = iconPath;
+        }
+
+        // Function to play boss dialogue sequence
+        function playBossDialogueSequence() {
+            if (bossDialoguePlayed) return; // Only play once
+            bossDialoguePlayed = true;
+            
+            // Wait 5 seconds before starting the dialogue sequence
+            setTimeout(() => {
+                // Sequence: "I'VE BEEN EXPECTING YOU"
+                showDialogue("I'VE BEEN EXPECTING YOU");
+                setTimeout(() => {
+                    hideDialogue();
+                    
+                    // Sequence: "WELCOME TO MY CAVE"
+                    setTimeout(() => {
+                        showDialogue("WELCOME TO MY CAVE");
+                        setTimeout(() => {
+                            hideDialogue();
+                            
+                            // Sequence: "I AM THE SHAPESHIFTER"
+                            setTimeout(() => {
+                                showDialogue("I AM THE SHAPESHIFTER");
+                                setTimeout(() => {
+                                    hideDialogue();
+                                    
+                                    // Transform boss dragon with particle effects
+                                    setTimeout(() => {
+                                        transformBossDragon();
+                                        
+                                        // Final dialogue: "PREPARE TO DIE"
+                                        setTimeout(() => {
+                                            showDialogue("PREPARE TO DIE");
+                                            // Hide after 5 seconds
+                                            setTimeout(() => {
+                                                hideDialogue();
+                                            }, 5000);
+                                        }, 500);
+                                    }, 300);
+                                }, 5000);
+                            }, 300);
+                        }, 5000);
+                    }, 300);
+                }, 5000);
+            }, 5000);
         }
 
         function checkCollision(newX, newY) {
