@@ -731,6 +731,40 @@
             will-change: transform, left, bottom; /* GPU acceleration */
         }
 
+        /* Boss Dragon Styles */
+        .boss-dragon {
+            position: absolute !important;
+            bottom: 210px !important;
+            left: 80% !important;
+            transform: translateX(-50%) !important;
+            image-rendering: pixelated !important;
+            image-rendering: -moz-crisp-edges !important;
+            image-rendering: crisp-edges !important;
+            z-index: 100 !important;
+            width: 120px !important;
+            height: 120px !important;
+            object-fit: contain !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            border: none !important;
+            background: none !important;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8) !important;
+            display: block !important;
+        }
+
+        /* Hide boss dragon when not in room (1,0) - remove all visual effects */
+        .boss-dragon[style*="display: none"],
+        .boss-dragon[style*="display:none"],
+        .boss-dragon:not([src]),
+        .boss-dragon[src=""] {
+            box-shadow: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            filter: none !important;
+            outline: none !important;
+            border: none !important;
+        }
+
         /* Override all dragon-specific classes to ensure uniform size and appearance */
         .pixel-dragon.breezeflight,
         .pixel-dragon.chaosflare,
@@ -2778,6 +2812,7 @@
                         <div id="level-display" class="level-display">Level: 10</div>
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
+                        <img id="boss-dragon" class="boss-dragon" src="" alt="" style="display: none !important; visibility: hidden !important; opacity: 0 !important; box-shadow: none !important;" />
                     </div>
                 </div>
 
@@ -3153,6 +3188,7 @@
 
         // Store current dragon for room display
         let currentDragon = null;
+        let bossDragonId = null; // Store randomly selected boss dragon ID
 
         // Function to start the adventure
         function startAdventure(dragonId) {
@@ -3226,6 +3262,9 @@
                 }
                 loadRoom(currentRoom);
                 updateMap();
+                
+                // Ensure boss dragon is hidden on initial load (room 0,0)
+                hideBossDragon();
                 
                 // Reset position to center of cave (check for collision first)
                 let spawnX = 50;
@@ -3403,8 +3442,8 @@
                                 transitionToRoom('down');
                             }
                         }
-                        // Move left (joystick X is negative)
-                        if (joystickX < 0) {
+                        // Move left (joystick X is negative) - disabled in room (1,0)
+                        if (joystickX < 0 && !(currentRoom.x === 1 && currentRoom.y === 0)) {
                             if (dragonPosition.x > 3) {
                                 const newX = dragonPosition.x + (moveSpeed * normalizedSpeed * joystickX * 100) / cachedCaveWidth;
                                 if (!checkCollision(newX, dragonPosition.y)) {
@@ -3416,8 +3455,8 @@
                                 transitionToRoom('left');
                             }
                         }
-                        // Move right (joystick X is positive)
-                        if (joystickX > 0) {
+                        // Move right (joystick X is positive) - disabled in room (1,0)
+                        if (joystickX > 0 && !(currentRoom.x === 1 && currentRoom.y === 0)) {
                             if (dragonPosition.x < 97) {
                                 const newX = dragonPosition.x + (moveSpeed * normalizedSpeed * joystickX * 100) / cachedCaveWidth;
                                 if (!checkCollision(newX, dragonPosition.y)) {
@@ -3458,8 +3497,8 @@
                             transitionToRoom('down');
                         }
                     }
-                    // A - Move left (decrease x percentage)
-                    if (keysPressed.a) {
+                    // A - Move left (decrease x percentage) - disabled in room (1,0)
+                    if (keysPressed.a && !(currentRoom.x === 1 && currentRoom.y === 0)) {
                         if (dragonPosition.x > 3) {
                             const newX = dragonPosition.x - (moveSpeed * 100) / cachedCaveWidth;
                             if (!checkCollision(newX, dragonPosition.y)) {
@@ -3471,8 +3510,8 @@
                             transitionToRoom('left');
                         }
                     }
-                    // D - Move right (increase x percentage)
-                    if (keysPressed.d) {
+                    // D - Move right (increase x percentage) - disabled in room (1,0)
+                    if (keysPressed.d && !(currentRoom.x === 1 && currentRoom.y === 0)) {
                         if (dragonPosition.x < 97) {
                             const newX = dragonPosition.x + (moveSpeed * 100) / cachedCaveWidth;
                             if (!checkCollision(newX, dragonPosition.y)) {
@@ -3916,162 +3955,8 @@
             const bgIndex = Math.floor(rng() * backgrounds.length);
             const background = backgrounds[bgIndex];
             
-            // Generate a clear path through the room with turns (L-shaped path)
-            // Path goes from the wall closest to main room to the wall farthest from main room
-            // Path is 120px wide (enough for 80px dragon with buffer)
-            const caveWidthPx = 1200; // approximate width
-            const caveHeightPx = 500; // approximate height
-            const pathWidth = 120; // Path width in pixels (enough for dragon + buffer)
-            const pathWidthPercent = (pathWidth / caveWidthPx) * 100; // ~10%
-            
-            let clearPath = null;
-            
-            // Determine entry direction based on room position relative to main room (0,0)
-            // Rooms are on axes only (x=0 OR y=0), so we can determine the entry wall
-            if (roomCoord.y > 0) {
-                // Room is above main room - entered from bottom, path should go bottom to top (vertical with turn)
-                // L-shaped: go up partway, then turn left or right, then continue to top
-                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% up the room
-                const firstSegmentX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X for first segment
-                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn left (-1) or right (1)
-                const turnAmount = rng() * 30 + 20; // Turn 20-50% of width
-                const secondSegmentX = Math.max(pathWidthPercent / 2, Math.min(100 - pathWidthPercent / 2, firstSegmentX + turnDirection * turnAmount));
-                
-                clearPath = {
-                    type: 'lshape',
-                    segments: [
-                        {
-                            type: 'vertical',
-                            x: firstSegmentX, // X position in percentage
-                            width: pathWidthPercent,
-                            minY: 0,
-                            maxY: caveHeightPx * turnPoint // From bottom to turn point
-                        },
-                        {
-                            type: 'horizontal',
-                            y: caveHeightPx * turnPoint, // Y position at turn point
-                            width: pathWidth,
-                            minX: Math.min(firstSegmentX, secondSegmentX) - pathWidthPercent / 2,
-                            maxX: Math.max(firstSegmentX, secondSegmentX) + pathWidthPercent / 2 // Horizontal segment for turn
-                        },
-                        {
-                            type: 'vertical',
-                            x: secondSegmentX, // X position in percentage
-                            width: pathWidthPercent,
-                            minY: caveHeightPx * turnPoint,
-                            maxY: caveHeightPx // From turn point to top
-                        }
-                    ]
-                };
-            } else if (roomCoord.y < 0) {
-                // Room is below main room - entered from top, path should go top to bottom (vertical with turn)
-                // L-shaped: go down partway, then turn left or right, then continue to bottom
-                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% down the room
-                const firstSegmentX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X for first segment
-                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn left (-1) or right (1)
-                const turnAmount = rng() * 30 + 20; // Turn 20-50% of width
-                const secondSegmentX = Math.max(pathWidthPercent / 2, Math.min(100 - pathWidthPercent / 2, firstSegmentX + turnDirection * turnAmount));
-                
-                clearPath = {
-                    type: 'lshape',
-                    segments: [
-                        {
-                            type: 'vertical',
-                            x: firstSegmentX, // X position in percentage
-                            width: pathWidthPercent,
-                            minY: caveHeightPx * turnPoint,
-                            maxY: caveHeightPx // From top to turn point
-                        },
-                        {
-                            type: 'horizontal',
-                            y: caveHeightPx * turnPoint, // Y position at turn point
-                            width: pathWidth,
-                            minX: Math.min(firstSegmentX, secondSegmentX) - pathWidthPercent / 2,
-                            maxX: Math.max(firstSegmentX, secondSegmentX) + pathWidthPercent / 2 // Horizontal segment for turn
-                        },
-                        {
-                            type: 'vertical',
-                            x: secondSegmentX, // X position in percentage
-                            width: pathWidthPercent,
-                            minY: 0,
-                            maxY: caveHeightPx * turnPoint // From turn point to bottom
-                        }
-                    ]
-                };
-            } else if (roomCoord.x > 0) {
-                // Room is to the right of main room - entered from left, path should go left to right (horizontal with turn)
-                // L-shaped: go right partway, then turn up or down, then continue to right
-                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% across the room
-                const firstSegmentY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y for first segment
-                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn up (1) or down (-1)
-                const turnAmount = rng() * 150 + 100; // Turn 100-250px
-                const secondSegmentY = Math.max(pathWidth / 2, Math.min(caveHeightPx - pathWidth / 2, firstSegmentY + turnDirection * turnAmount));
-                
-                clearPath = {
-                    type: 'lshape',
-                    segments: [
-                        {
-                            type: 'horizontal',
-                            y: firstSegmentY, // Y position in pixels from bottom
-                            width: pathWidth,
-                            minX: 0,
-                            maxX: turnPoint * 100 // From left to turn point
-                        },
-                        {
-                            type: 'vertical',
-                            x: turnPoint * 100, // X position at turn point
-                            width: pathWidthPercent,
-                            minY: Math.min(firstSegmentY, secondSegmentY) - pathWidth / 2,
-                            maxY: Math.max(firstSegmentY, secondSegmentY) + pathWidth / 2 // Vertical segment for turn
-                        },
-                        {
-                            type: 'horizontal',
-                            y: secondSegmentY, // Y position in pixels from bottom
-                            width: pathWidth,
-                            minX: turnPoint * 100,
-                            maxX: 100 // From turn point to right
-                        }
-                    ]
-                };
-            } else if (roomCoord.x < 0) {
-                // Room is to the left of main room - entered from right, path should go right to left (horizontal with turn)
-                // L-shaped: go left partway, then turn up or down, then continue to left
-                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% across the room
-                const firstSegmentY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y for first segment
-                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn up (1) or down (-1)
-                const turnAmount = rng() * 150 + 100; // Turn 100-250px
-                const secondSegmentY = Math.max(pathWidth / 2, Math.min(caveHeightPx - pathWidth / 2, firstSegmentY + turnDirection * turnAmount));
-                
-                clearPath = {
-                    type: 'lshape',
-                    segments: [
-                        {
-                            type: 'horizontal',
-                            y: firstSegmentY, // Y position in pixels from bottom
-                            width: pathWidth,
-                            minX: turnPoint * 100,
-                            maxX: 100 // From right to turn point
-                        },
-                        {
-                            type: 'vertical',
-                            x: turnPoint * 100, // X position at turn point
-                            width: pathWidthPercent,
-                            minY: Math.min(firstSegmentY, secondSegmentY) - pathWidth / 2,
-                            maxY: Math.max(firstSegmentY, secondSegmentY) + pathWidth / 2 // Vertical segment for turn
-                        },
-                        {
-                            type: 'horizontal',
-                            y: secondSegmentY, // Y position in pixels from bottom
-                            width: pathWidth,
-                            minX: 0,
-                            maxX: turnPoint * 100 // From turn point to left
-                        }
-                    ]
-                };
-            } else {
-                // Main room (0,0) - no path needed (no obstacles)
-                clearPath = null;
-            }
+            // No path mechanic in level 10 - rooms are open
+            const clearPath = null;
             
             // Generate obstacles (Level 10 page: no obstacles in any room)
             const obstacles = [];
@@ -4203,27 +4088,21 @@
                 }
             }
             
-            // Generate a key on the clear path (only in one randomly selected room)
+            // Generate a key (Level 10 page: Key is always in room (2,0) at the center)
             let key = null;
-            if (clearPath && roomCoord.x !== 0 && roomCoord.y !== 0) {
-                // Level 10 page: Key is always in room (2,0) at the center
-                // Only generate key if this is room (2,0)
-                if (roomCoord.x === 2 && roomCoord.y === 0) {
-                    // Key spawns in the middle of the room
-                    const caveWidthPx = 1200;
-                    const caveHeightPx = 500;
-                    key = {
-                        x: 50, // 50% - center horizontally
-                        y: 250 // 250px from bottom - center vertically
-                    };
-                }
+            if (roomCoord.x === 2 && roomCoord.y === 0) {
+                // Key spawns in the middle of the room
+                key = {
+                    x: 50, // 50% - center horizontally
+                    y: 250 // 250px from bottom - center vertically
+                };
             }
             
             return {
                 seed: seed,
                 background: background,
                 obstacles: [], // Level 10 page: always empty obstacles array
-                clearPath: clearPath, // Store the clear path
+                clearPath: null, // No path mechanic in level 10
                 key: key, // Store the key position
                 visited: false
             };
@@ -4458,16 +4337,13 @@
                 
                 // Preserve the key if it exists, or regenerate if missing (only if this room should have the key)
                 // Note: We preserve the key even when obstacles are regenerated
-                if (!room.key && clearPath) {
-                    // Level 10 page: Key is always in room (2,0) at the center
-                    // Only generate key if this is room (2,0)
-                    if (roomCoord.x === 2 && roomCoord.y === 0) {
-                        // Key spawns in the middle of the room
-                        room.key = {
-                            x: 50, // 50% - center horizontally
-                            y: 250 // 250px from bottom - center vertically
-                        };
-                    }
+                // Level 10 page: Key is always in room (2,0) at the center
+                if (!room.key && roomCoord.x === 2 && roomCoord.y === 0) {
+                    // Key spawns in the middle of the room
+                    room.key = {
+                        x: 50, // 50% - center horizontally
+                        y: 250 // 250px from bottom - center vertically
+                    };
                 }
             }
             
@@ -4499,21 +4375,13 @@
             
             // Always render key if it exists (even if collected, it should follow the dragon)
             // Also ensure key is generated if it should exist but doesn't
-            const clearPath = room.clearPath;
-            if (!room.key && clearPath && (roomCoord.x !== 0 || roomCoord.y !== 0)) {
-                // Key should exist but doesn't - regenerate it
-                const seed = ((roomCoord.x * 1000 + roomCoord.y) * 12345) + sessionSeed;
-                const rng = seededRandom(seed);
-                
-                // Level 10 page: Key is always in room (2,0) at the center
-                // Only generate key if this is room (2,0)
-                if (roomCoord.x === 2 && roomCoord.y === 0) {
-                    // Key spawns in the middle of the room
-                    room.key = {
-                        x: 50, // 50% - center horizontally
-                        y: 250 // 250px from bottom - center vertically
-                    };
-                }
+            // Level 10 page: Key is always in room (2,0) at the center
+            if (!room.key && roomCoord.x === 2 && roomCoord.y === 0) {
+                // Key spawns in the middle of the room
+                room.key = {
+                    x: 50, // 50% - center horizontally
+                    y: 250 // 250px from bottom - center vertically
+                };
             }
             
             // Handle key rendering based on collection state
@@ -4532,6 +4400,14 @@
                         keyEl.remove();
                     }
                 }
+            }
+            
+            // Render boss dragon ONLY in room (1,0), hide in all other rooms including (0,0)
+            if (roomCoord.x === 1 && roomCoord.y === 0) {
+                renderBossDragon();
+            } else {
+                // Explicitly hide boss dragon in room (0,0) and all other rooms
+                hideBossDragon();
             }
             
             room.visited = true;
@@ -4629,6 +4505,77 @@
                 keyEl.style.zIndex = '60';
                 keyEl.setAttribute('data-key', 'true');
                 caveBackground.appendChild(keyEl);
+            }
+        }
+
+        // Function to render boss dragon in room (1,0)
+        function renderBossDragon() {
+            const bossDragonEl = document.getElementById('boss-dragon');
+            if (!bossDragonEl) return;
+            
+            // If boss dragon hasn't been selected yet, randomly select one
+            if (!bossDragonId) {
+                const dragonIds = Object.keys(dragonData);
+                const randomIndex = Math.floor(Math.random() * dragonIds.length);
+                bossDragonId = dragonIds[randomIndex];
+            }
+            
+            // Map dragon IDs to their icon images
+            const dragonIcons = {
+                'breezeflight': 'images/icons/breezeflight-icon.jpg',
+                'chaosflare': 'images/icons/chacosflare-icon.jpg',
+                'crystalwing': 'images/icons/crystalwing-icon.jpg',
+                'earthheart': 'images/icons/earthheart-icon.jpg',
+                'flamethorn': 'images/icons/flamethorn-icon.jpg',
+                'frostbite': 'images/icons/frostbite-icon.jpg',
+                'metalbeak': 'images/icons/metalbeak-icon.jpg',
+                'aquaris': 'images/icons/aquarius-icon.jpg',
+                'radiant': 'images/icons/aquarius-icon.jpg',
+                'stormwing': 'images/icons/aquarius-icon.jpg',
+                'vineclaw': 'images/icons/aquarius-icon.jpg',
+                'shadowmaw': 'images/icons/aquarius-icon.jpg'
+            };
+            
+            // Set the boss dragon image
+            const iconPath = dragonIcons[bossDragonId] || 'images/icons/aquarius-icon.jpg';
+            bossDragonEl.src = iconPath;
+            bossDragonEl.alt = 'Boss Dragon';
+            bossDragonEl.className = 'boss-dragon';
+            
+            // Force visibility with inline styles
+            const caveBackground = document.querySelector('.cave-background');
+            const caveHeight = caveBackground ? caveBackground.offsetHeight : 500;
+            const centerY = caveHeight / 2; // Center vertically (250px for 500px height)
+            
+            bossDragonEl.style.display = 'block';
+            bossDragonEl.style.visibility = 'visible';
+            bossDragonEl.style.opacity = '1';
+            bossDragonEl.style.position = 'absolute';
+            bossDragonEl.style.bottom = centerY + 'px'; // Center vertically
+            bossDragonEl.style.left = '80%';
+            bossDragonEl.style.transform = 'translateX(-50%)';
+            bossDragonEl.style.zIndex = '100';
+            bossDragonEl.style.width = '120px';
+            bossDragonEl.style.height = '120px';
+            bossDragonEl.style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.8)';
+            
+            console.log('Boss dragon rendered:', bossDragonId, iconPath, 'at', centerY + 'px from bottom');
+        }
+
+        // Function to hide boss dragon
+        function hideBossDragon() {
+            const bossDragonEl = document.getElementById('boss-dragon');
+            if (bossDragonEl) {
+                bossDragonEl.style.setProperty('display', 'none', 'important');
+                bossDragonEl.style.setProperty('visibility', 'hidden', 'important');
+                bossDragonEl.style.setProperty('opacity', '0', 'important');
+                bossDragonEl.style.setProperty('box-shadow', 'none', 'important');
+                bossDragonEl.style.setProperty('filter', 'none', 'important');
+                bossDragonEl.style.setProperty('outline', 'none', 'important');
+                bossDragonEl.style.setProperty('border', 'none', 'important');
+                bossDragonEl.alt = '';
+                bossDragonEl.src = '';
+                bossDragonEl.removeAttribute('src');
             }
         }
 
@@ -5080,89 +5027,41 @@
             updateMap();
             updateRoomDisplay();
             
-            // Position dragon on the clear path at the entry point
+            // Position dragon in the room (no path mechanic - open rooms)
             const caveBackground = document.querySelector('.cave-background');
             if (caveBackground) {
                 const caveWidth = caveBackground.offsetWidth;
                 const caveHeight = caveBackground.offsetHeight;
                 
-                // Get the room's clear path
-                const room = roomMemory[roomKey];
-                const clearPath = room ? room.clearPath : null;
-                
                 let spawnX, spawnY;
                 
-                if (clearPath) {
-                    // Spawn on the clear path at the entry end
-                    if (clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
-                        // L-shaped path: spawn on first segment at entry end
-                        const firstSegment = clearPath.segments[0];
-                        if (firstSegment.type === 'vertical') {
-                            // First segment is vertical: spawn at entry end based on direction
-                            spawnX = firstSegment.x; // Use the segment's X position (percentage)
-                            if (direction === 'up') {
-                                // Entered from bottom, spawn at bottom of path
-                                spawnY = 30; // Near bottom edge
-                            } else if (direction === 'down') {
-                                // Entered from top, spawn at top of path
-                                spawnY = caveHeight - 110; // Near top edge
-                            } else {
-                                // Default to bottom of segment
-                                spawnY = firstSegment.minY + 30;
-                            }
-                        } else if (firstSegment.type === 'horizontal') {
-                            // First segment is horizontal: spawn at entry end based on direction
-                            spawnY = firstSegment.y; // Use the segment's Y position (pixels from bottom)
-                            if (direction === 'right') {
-                                // Entered from left, spawn at left of path
-                                spawnX = 5; // Near left edge
-                            } else if (direction === 'left') {
-                                // Entered from right, spawn at right of path
-                                spawnX = 95; // Near right edge
-                            } else {
-                                // Default to left of segment
-                                spawnX = firstSegment.minX + 2;
-                            }
-                        } else {
-                            // Unknown segment type - use default
-                            spawnX = 50;
-                            spawnY = 100;
-                        }
-                    } else if (clearPath.type === 'vertical') {
-                        // Vertical path: spawn at entry end based on direction
-                        spawnX = clearPath.x; // Use the path's X position (percentage)
-                        if (direction === 'up') {
-                            // Entered from bottom, spawn at bottom of path
-                            spawnY = 30; // Near bottom edge
-                        } else if (direction === 'down') {
-                            // Entered from top, spawn at top of path
-                            spawnY = caveHeight - 110; // Near top edge
-                        } else {
-                            // Default to center of path
-                            spawnY = caveHeight / 2;
-                        }
-                    } else if (clearPath.type === 'horizontal') {
-                        // Horizontal path: spawn at entry end based on direction
-                        spawnY = clearPath.y; // Use the path's Y position (pixels from bottom)
-                        if (direction === 'right') {
-                            // Entered from left, spawn at left of path
-                            spawnX = 5; // Near left edge
-                        } else if (direction === 'left') {
-                            // Entered from right, spawn at right of path
-                            spawnX = 95; // Near right edge
-                        } else {
-                            // Default to center of path
-                            spawnX = 50;
-                        }
-                    } else {
-                        // Unknown path type - use default
-                        spawnX = 50;
-                        spawnY = 100;
-                    }
-                } else {
-                    // No clear path (main room) - use default spawn
+                // Default spawn position based on entry direction
+                if (direction === 'up') {
+                    // Entered from bottom
                     spawnX = 50;
-                    spawnY = 100;
+                    spawnY = 30;
+                } else if (direction === 'down') {
+                    // Entered from top
+                    spawnX = 50;
+                    spawnY = caveHeight - 110;
+                } else if (direction === 'right') {
+                    // Entered from left
+                    spawnX = 5;
+                    spawnY = caveHeight / 2;
+                } else if (direction === 'left') {
+                    // Entered from right
+                    spawnX = 95;
+                    spawnY = caveHeight / 2;
+                } else {
+                    // Default to center
+                    spawnX = 50;
+                    spawnY = caveHeight / 2;
+                }
+                
+                // Special handling for room (1,0) - center but slightly to the left
+                if (currentRoom.x === 1 && currentRoom.y === 0) {
+                    spawnX = 20; // More to the left (20% instead of 50%)
+                    spawnY = caveHeight / 2; // Center vertically
                 }
                 
                 // Check for collision and find a safe spawn position

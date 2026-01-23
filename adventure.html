@@ -3571,7 +3571,7 @@
                             cachedCaveHeight = cachedCaveBackground.offsetHeight;
                         } else {
                             animationFrameId = requestAnimationFrame(movementLoop);
-                            return;
+                    return;
                         }
                     }
                     lastDimensionCheck = now;
@@ -3752,7 +3752,7 @@
             
             // Check for level up (throttle to every 10 frames to reduce overhead)
             if (Math.floor(Date.now() / 16) % 10 === 0) {
-                checkLevelUp();
+            checkLevelUp();
             }
         }
         
@@ -4489,7 +4489,7 @@
                             const safeSegmentLength = Math.max(0, safeMaxX - safeMinX);
                             if (safeSegmentLength > 0) {
                                 keyX = safeMinX + rng() * safeSegmentLength;
-                                keyY = segment.y; // Use the segment's Y position
+                            keyY = segment.y; // Use the segment's Y position
                             }
                         } else if (segment.type === 'vertical') {
                             // Random position along vertical segment, but avoid edges
@@ -5198,7 +5198,7 @@
             
             return false; // No collision
         }
-        
+
         function findSafeSpawnPosition(initialX, initialY, direction, caveWidth, caveHeight) {
             // Check if initial position is safe (no collision AND at least 100px from lava)
             if (!checkCollisionForSpawn(initialX, initialY) && isSafeFromLava(initialX, initialY, caveWidth, caveHeight)) {
