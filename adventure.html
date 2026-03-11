@@ -3502,6 +3502,9 @@
                 
                 // Store teleport setting (you can use this later to adjust game mechanics)
                 localStorage.setItem('allowTeleportWithKey', allow ? 'yes' : 'no');
+                
+                // Update teleport button state immediately if game is active
+                updateTeleportButtonState();
             }
             
             if (teleportYes) {
@@ -4544,12 +4547,18 @@
         function updateTeleportButtonState() {
             const teleportButton = document.getElementById('teleport-main-button');
             if (teleportButton) {
-                if (keyCollected) {
+                // Check if teleporting with key is allowed
+                const allowTeleportWithKey = localStorage.getItem('allowTeleportWithKey') || 'no';
+                const canTeleportWithKey = allowTeleportWithKey === 'yes';
+                
+                if (keyCollected && !canTeleportWithKey) {
+                    // Disable teleport if player has key and setting is "no"
                     teleportButton.disabled = true;
                     teleportButton.style.opacity = '0.5';
                     teleportButton.style.cursor = 'not-allowed';
                     teleportButton.title = 'Cannot teleport while holding the key!';
                 } else {
+                    // Enable teleport if no key or setting allows teleporting with key
                     teleportButton.disabled = false;
                     teleportButton.style.opacity = '1';
                     teleportButton.style.cursor = 'pointer';
@@ -5726,8 +5735,12 @@
                 return; // Already in main room
             }
 
-            // Prevent teleport if player has the key
-            if (keyCollected) {
+            // Check if teleporting with key is allowed
+            const allowTeleportWithKey = localStorage.getItem('allowTeleportWithKey') || 'no';
+            const canTeleportWithKey = allowTeleportWithKey === 'yes';
+
+            // Prevent teleport if player has the key and setting is "no"
+            if (keyCollected && !canTeleportWithKey) {
                 // Show visual feedback that teleport is blocked
                 const teleportButton = document.getElementById('teleport-main-button');
                 if (teleportButton) {
