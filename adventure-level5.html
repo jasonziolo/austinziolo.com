@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 10 Cave - Austin's Dragon Lair</title>
+    <title>Level 5 Cave - Austin's Dragon Lair</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
         body {
@@ -817,6 +817,44 @@
             border-radius: 50% !important;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.8) !important;
             pointer-events: none !important;
+        }
+
+        /* Safe Path Indicator with Golden Glow */
+        .safe-path-indicator {
+            position: absolute !important;
+            width: 130px !important;
+            height: 130px !important;
+            left: 20% !important;
+            top: 0 !important; /* Will be set dynamically via JavaScript */
+            transform: translateX(-50%) !important; /* Only translate X, Y is set via top */
+            border: 3px solid #FFD700 !important;
+            border-radius: 10px !important;
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.8),
+                0 0 40px rgba(255, 215, 0, 0.6),
+                0 0 60px rgba(255, 215, 0, 0.4),
+                inset 0 0 20px rgba(255, 215, 0, 0.3) !important;
+            background: rgba(255, 215, 0, 0.1) !important;
+            z-index: 50 !important;
+            pointer-events: none !important;
+            animation: safePathPulse 2s ease-in-out infinite !important;
+        }
+
+        @keyframes safePathPulse {
+            0%, 100% {
+                box-shadow: 
+                    0 0 20px rgba(255, 215, 0, 0.8),
+                    0 0 40px rgba(255, 215, 0, 0.6),
+                    0 0 60px rgba(255, 215, 0, 0.4),
+                    inset 0 0 20px rgba(255, 215, 0, 0.3);
+            }
+            50% {
+                box-shadow: 
+                    0 0 30px rgba(255, 215, 0, 1),
+                    0 0 60px rgba(255, 215, 0, 0.8),
+                    0 0 90px rgba(255, 215, 0, 0.6),
+                    inset 0 0 30px rgba(255, 215, 0, 0.5);
+            }
         }
 
         /* Override all dragon-specific classes to ensure uniform size and appearance */
@@ -2857,18 +2895,19 @@
             <!-- Adventure Game View -->
             <div id="adventure-view" class="adventure-view">
                 <div class="adventure-header">
-                    <h1>LEVEL 10 CAVE</h1>
+                    <h1>LEVEL 5 CAVE</h1>
                     <p id="adventure-dragon-name" style="color: #E0E0E0; font-size: 18px; margin: 10px 0;"></p>
                 </div>
 
                 <div class="cave-container">
                     <div class="cave-background">
-                        <div id="level-display" class="level-display">Level: 10</div>
+                        <div id="level-display" class="level-display">Level: 5</div>
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
                         <img id="boss-dragon" class="boss-dragon" src="" alt="" style="display: none !important; visibility: hidden !important; opacity: 0 !important; box-shadow: none !important;" />
                         <div id="boss-dialogue" class="boss-dialogue" style="display: none;"></div>
                         <div id="particle-container" class="particle-container"></div>
+                        <div id="safe-path-indicator" class="safe-path-indicator" style="display: none;"></div>
                     </div>
                 </div>
 
@@ -3221,7 +3260,7 @@
         let keyCollected = false;
         
         // Level system
-        let currentLevel = 10; // Level 10 page starts at level 10
+        let currentLevel = 5; // Level 5 page starts at level 5
         let lastLevelUpTime = 0; // Track when level was last incremented to prevent rapid increments
         
         // Timer system
@@ -3246,6 +3285,9 @@
         let currentDragon = null;
         let bossDragonId = null; // Store randomly selected boss dragon ID
         let bossDialoguePlayed = false; // Track if dialogue sequence has been played
+        let bossDialogueComplete = false; // Track if dialogue sequence is completely finished
+        let movingLava = []; // Array to store moving lava obstacles in room (1,0)
+        let safeZonePosition = null; // Store random safe zone position {x: percentage, y: pixels from bottom}
 
         // Function to start the adventure
         function startAdventure(dragonId) {
@@ -3260,13 +3302,13 @@
             currentRoom = { x: 0, y: 0 };
             transitioning = false;
             
-            // Set level to 10 (this is the level 10 page)
-            currentLevel = 10;
+            // Set level to 5 (this is the level 5 page)
+            currentLevel = 5;
             keyCollected = false;
             lastLevelUpTime = 0;
             updateLevelDisplay();
             
-            // Timer disabled on level 10 page
+            // Timer disabled on level 5 page
             timerStarted = false;
             stopTimer();
             timerSeconds = 60;
@@ -3454,7 +3496,7 @@
                 if (!timerStarted) {
                     const hasMovementInput = (joystickState.active && isMobile && (Math.abs(joystickState.x) > 0.1 || Math.abs(joystickState.y) > 0.1)) ||
                                            (keysPressed.w || keysPressed.a || keysPressed.s || keysPressed.d);
-                    // Timer disabled on level 10 page
+                    // Timer disabled on level 5 page
                     // if (hasMovementInput) {
                     //     startTimer();
                     //     timerStarted = true;
@@ -3585,6 +3627,9 @@
                 if (moved) {
                     updateDragonPosition();
                 }
+                
+                // Update moving lava positions
+                updateMovingLava();
                 
                 // Continue animation loop
                 animationFrameId = requestAnimationFrame(movementLoop);
@@ -3944,10 +3989,10 @@
                 // Prevent rapid level increments (only once per second)
                 const now = Date.now();
                 if (now - lastLevelUpTime > 1000) {
-                    // Level up! Redirect back to adventure-cave.html at level 11
+                    // Level up! Redirect back to adventure.html at level 6
                     if (currentDragonId) {
-                        // Redirect back to cave page with dragon ID and level 11
-                        window.location.href = 'adventure-cave.html?dragon=' + encodeURIComponent(currentDragonId) + '&level=11';
+                        // Redirect back to adventure page with dragon ID and level 6
+                        window.location.href = 'adventure.html?dragon=' + encodeURIComponent(currentDragonId) + '&level=6';
                         return;
                     }
                 }
@@ -3984,7 +4029,7 @@
         
         // Function to update teleport button state based on key collection
         function updateTeleportButtonState() {
-            // Teleport button removed on level 10 page - function kept for compatibility
+            // Teleport button removed on level 5 page - function kept for compatibility
             // No-op function
         }
 
@@ -4012,12 +4057,12 @@
             const bgIndex = Math.floor(rng() * backgrounds.length);
             const background = backgrounds[bgIndex];
             
-            // No path mechanic in level 10 - rooms are open
+            // No path mechanic in level 5 - rooms are open
             const clearPath = null;
             
-            // Generate obstacles (Level 10 page: no obstacles in any room)
+            // Generate obstacles (Level 5 page: no obstacles in any room)
             const obstacles = [];
-            const numObstacles = 0; // No obstacles on level 10 page
+            const numObstacles = 0; // No obstacles on level 5 page
             const obstacleTypes = ['rock', 'crystal', 'stalagmite', 'lava'];
             let lavaCount = 0; // Track number of lava obstacles
             const maxLava = 10; // Maximum lava obstacles per room
@@ -4145,7 +4190,7 @@
                 }
             }
             
-            // Generate a key (Level 10 page: Key is always in room (2,0) at the center)
+            // Generate a key (Level 5 page: Key is always in room (2,0) at the center)
             let key = null;
             if (roomCoord.x === 2 && roomCoord.y === 0) {
                 // Key spawns in the middle of the room
@@ -4158,8 +4203,8 @@
             return {
                 seed: seed,
                 background: background,
-                obstacles: [], // Level 10 page: always empty obstacles array
-                clearPath: null, // No path mechanic in level 10
+                obstacles: [], // Level 5 page: always empty obstacles array
+                clearPath: null, // No path mechanic in level 5
                 key: key, // Store the key position
                 visited: false
             };
@@ -4264,12 +4309,12 @@
             
             const room = roomMemory[roomKey];
             
-            // Level 10 page: Always clear obstacles
+            // Level 5 page: Always clear obstacles
             room.obstacles = [];
             roomMemory[roomKey].obstacles = [];
             
             // Ensure room has obstacles if it's not the main room, and regenerate if paths are blocked
-            // Level 10 page: Skip obstacle generation
+            // Level 5 page: Skip obstacle generation
             if (false && (roomCoord.x !== 0 || roomCoord.y !== 0) && 
                 (!room.obstacles || room.obstacles.length < 10 || !room.clearPath || pathsBlocked(room.obstacles || [], room.clearPath))) {
                 // Regenerate obstacles - first ensure we have a clear path
@@ -4284,7 +4329,7 @@
                 const seed = ((roomCoord.x * 1000 + roomCoord.y) * 12345) + sessionSeed;
                 const rng = seededRandom(seed);
                 const obstacles = [];
-                const numObstacles = 0; // Level 10 page: no obstacles
+                const numObstacles = 0; // Level 5 page: no obstacles
                 const obstacleTypes = ['rock', 'crystal', 'stalagmite', 'lava'];
                 let lavaCount = 0; // Track number of lava obstacles
                 const maxLava = 10; // Maximum lava obstacles per room
@@ -4394,7 +4439,7 @@
                 
                 // Preserve the key if it exists, or regenerate if missing (only if this room should have the key)
                 // Note: We preserve the key even when obstacles are regenerated
-                // Level 10 page: Key is always in room (2,0) at the center
+                // Level 5 page: Key is always in room (2,0) at the center
                 if (!room.key && roomCoord.x === 2 && roomCoord.y === 0) {
                     // Key spawns in the middle of the room
                     room.key = {
@@ -4419,7 +4464,7 @@
                 caveBackground.style.backgroundColor = room.background.base;
             }
             
-            // Render obstacles for this room (Level 10 page: always empty)
+            // Render obstacles for this room (Level 5 page: always empty)
             renderObstacles([]);
             
             // Render box ONLY in main room, hide it in other rooms
@@ -4432,7 +4477,7 @@
             
             // Always render key if it exists (even if collected, it should follow the dragon)
             // Also ensure key is generated if it should exist but doesn't
-            // Level 10 page: Key is always in room (2,0) at the center
+            // Level 5 page: Key is always in room (2,0) at the center
             if (!room.key && roomCoord.x === 2 && roomCoord.y === 0) {
                 // Key spawns in the middle of the room
                 room.key = {
@@ -4462,15 +4507,27 @@
             // Render boss dragon ONLY in room (1,0), hide in all other rooms including (0,0)
             if (roomCoord.x === 1 && roomCoord.y === 0) {
                 renderBossDragon();
+                // Reset safe zone position when entering room (1,0) to generate new random position
+                safeZonePosition = null;
                 // Play dialogue sequence when entering room (1,0) for the first time
                 if (!bossDialoguePlayed) {
                     playBossDialogueSequence();
                 }
+                // If dialogue is complete, ensure lava is active
+                if (bossDialogueComplete) {
+                    startMovingLava();
+                }
+                // Update safe path indicator
+                updateSafePathIndicator();
             } else {
                 // Explicitly hide boss dragon in room (0,0) and all other rooms
                 hideBossDragon();
                 // Hide dialogue when leaving room (1,0)
                 hideDialogue();
+                // Clear moving lava when leaving room (1,0)
+                clearMovingLava();
+                // Hide safe path indicator
+                updateSafePathIndicator();
             }
             
             room.visited = true;
@@ -4762,6 +4819,357 @@
             bossDragonEl.src = iconPath;
         }
 
+        // Function to generate random safe zone position
+        function generateRandomSafeZone() {
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) {
+                console.log('generateRandomSafeZone: cave background not found, retrying...');
+                // Retry after a short delay if cave background isn't ready
+                setTimeout(() => {
+                    generateRandomSafeZone();
+                }, 100);
+                return;
+            }
+            
+            const caveWidth = caveBackground.offsetWidth;
+            const caveHeight = caveBackground.offsetHeight;
+            
+            // If dimensions are 0, retry
+            if (caveWidth === 0 || caveHeight === 0) {
+                console.log('generateRandomSafeZone: cave dimensions are 0, retrying...', { caveWidth, caveHeight });
+                setTimeout(() => {
+                    generateRandomSafeZone();
+                }, 100);
+                return;
+            }
+            
+            const safePathSize = 130;
+            
+            console.log('generateRandomSafeZone: cave dimensions', { caveWidth, caveHeight });
+            
+            // Generate random position within bounds (leaving margin for safe path size)
+            // X: between 10% and 90% (leaving room for 130px path)
+            // Y: between 10% and 90% of height (leaving room for 130px path)
+            const minXPercent = 10;
+            const maxXPercent = 90;
+            const minYFromBottom = safePathSize / 2 + 20; // Leave margin from bottom
+            const maxYFromBottom = caveHeight - safePathSize / 2 - 20; // Leave margin from top
+            
+            // Ensure valid range
+            if (maxYFromBottom <= minYFromBottom) {
+                // Fallback to center if range is invalid
+                safeZonePosition = {
+                    x: 50,
+                    y: caveHeight / 2
+                };
+            } else {
+                const randomXPercent = minXPercent + Math.random() * (maxXPercent - minXPercent);
+                const randomYFromBottom = minYFromBottom + Math.random() * (maxYFromBottom - minYFromBottom);
+                
+                safeZonePosition = {
+                    x: randomXPercent,
+                    y: randomYFromBottom
+                };
+            }
+            
+            console.log('generateRandomSafeZone: generated position', safeZonePosition);
+        }
+        
+        // Function to show/hide safe path indicator
+        function updateSafePathIndicator() {
+            const safePathEl = document.getElementById('safe-path-indicator');
+            if (!safePathEl) return;
+            
+            // Only show in room (1,0) after dialogue is complete
+            if (currentRoom.x === 1 && currentRoom.y === 0 && bossDialogueComplete) {
+                // Generate random safe zone if not already set
+                if (!safeZonePosition) {
+                    generateRandomSafeZone();
+                }
+                
+                const caveBackground = document.querySelector('.cave-background');
+                if (caveBackground && safeZonePosition) {
+                    const caveHeight = caveBackground.offsetHeight;
+                    // Safe zone Y is stored as pixels from bottom
+                    // Convert to top positioning: top = caveHeight - safeZonePosition.y - 65 (half of 130px)
+                    const safePathTop = caveHeight - safeZonePosition.y - 65;
+                    
+                    safePathEl.style.left = safeZonePosition.x + '%';
+                    safePathEl.style.top = safePathTop + 'px';
+                    safePathEl.style.transform = 'translateX(-50%)'; // Only translate X, Y is set via top
+                    safePathEl.style.display = 'block';
+                    safePathEl.style.visibility = 'visible';
+                    safePathEl.style.opacity = '1';
+                } else {
+                    // Even if position isn't ready, show the element (it will update when position is set)
+                    safePathEl.style.display = 'block';
+                    safePathEl.style.visibility = 'visible';
+                    safePathEl.style.opacity = '1';
+                }
+            } else {
+                safePathEl.style.display = 'none';
+                safePathEl.style.visibility = 'hidden';
+                safePathEl.style.opacity = '0';
+            }
+        }
+        
+        // Function to start moving lava in room (1,0)
+        function startMovingLava() {
+            console.log('startMovingLava called', { currentRoom, bossDialogueComplete });
+            
+            // Only start lava in room (1,0) after dialogue is complete
+            if (currentRoom.x !== 1 || currentRoom.y !== 0 || !bossDialogueComplete) {
+                console.log('startMovingLava: conditions not met', { 
+                    x: currentRoom.x, 
+                    y: currentRoom.y, 
+                    bossDialogueComplete 
+                });
+                return;
+            }
+            
+            console.log('startMovingLava: starting lava spawn');
+            
+            // Clear any existing lava first (but preserve safe zone position)
+            movingLava = [];
+            const clearRoomKey = getRoomKey(currentRoom);
+            const clearRoom = roomMemory[clearRoomKey];
+            if (clearRoom && clearRoom.obstacles) {
+                clearRoom.obstacles = clearRoom.obstacles.filter(obs => obs.type !== 'lava');
+                renderObstacles(clearRoom.obstacles);
+            }
+            
+            // Generate random safe zone if not already set
+            if (!safeZonePosition) {
+                console.log('startMovingLava: generating random safe zone');
+                generateRandomSafeZone();
+                console.log('startMovingLava: safe zone generated', safeZonePosition);
+            }
+            
+            // Show safe path indicator
+            updateSafePathIndicator();
+            
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) return;
+            
+            const caveWidth = caveBackground.offsetWidth;
+            const caveHeight = caveBackground.offsetHeight;
+            
+            // Create multiple lava obstacles that will move towards the player
+            // Ensure there's always a 130px x 130px safe path
+            const numLava = 8; // Number of lava obstacles
+            const lavaSize = 40; // Size of each lava obstacle
+            const safePathSize = 130; // Minimum safe path size
+            
+            // Calculate safe zone using random position
+            if (!safeZonePosition) {
+                generateRandomSafeZone();
+            }
+            const safeZoneCenterX = (safeZonePosition.x / 100) * caveWidth; // Convert percentage to pixels
+            const safeZoneCenterY = caveHeight - safeZonePosition.y; // Convert from bottom to top coordinates
+            const safeZoneLeft = safeZoneCenterX - safePathSize / 2;
+            const safeZoneRight = safeZoneCenterX + safePathSize / 2;
+            const safeZoneTop = safeZoneCenterY + safePathSize / 2;
+            const safeZoneBottom = safeZoneCenterY - safePathSize / 2;
+            
+            // Get room state
+            const roomKey = getRoomKey(currentRoom);
+            if (!roomMemory[roomKey]) {
+                roomMemory[roomKey] = generateRoomState(currentRoom);
+            }
+            const room = roomMemory[roomKey];
+            
+            // Initialize obstacles array if needed
+            if (!room.obstacles) {
+                room.obstacles = [];
+            }
+            
+            // Create lava obstacles all grouped together in the middle, avoiding the safe zone
+            const centerX = caveWidth / 2; // Center of room horizontally
+            const centerY = caveHeight / 2; // Center of room vertically
+            
+            // Position all lava in a tight group in the middle
+            // Arrange them in a grid pattern around the center, avoiding safe zone
+            const gridSize = Math.ceil(Math.sqrt(numLava)); // Grid dimensions
+            const spacing = lavaSize + 5; // Spacing between lava obstacles
+            
+            let lavaIndex = 0;
+            for (let row = 0; row < gridSize && lavaIndex < numLava; row++) {
+                for (let col = 0; col < gridSize && lavaIndex < numLava; col++) {
+                    // Calculate position in grid
+                    const offsetX = (col - (gridSize - 1) / 2) * spacing;
+                    const offsetY = (row - (gridSize - 1) / 2) * spacing;
+                    
+                    let lavaX = centerX + offsetX;
+                    let lavaY = centerY + offsetY;
+                    
+                    // Ensure lava doesn't spawn in safe zone
+                    // If it would be in safe zone, move it away
+                    if (lavaX > safeZoneLeft - lavaSize && lavaX < safeZoneRight + lavaSize &&
+                        lavaY > safeZoneBottom - lavaSize && lavaY < safeZoneTop + lavaSize) {
+                        // Move to the right of safe zone
+                        lavaX = safeZoneRight + lavaSize + 10;
+                    }
+                    
+                    // Ensure lava is within bounds
+                    lavaX = Math.max(lavaSize, Math.min(caveWidth - lavaSize, lavaX));
+                    lavaY = Math.max(lavaSize, Math.min(caveHeight - lavaSize, lavaY));
+                    
+                    // Convert to percentage and pixel coordinates
+                    const lavaXPercent = (lavaX / caveWidth) * 100;
+                    const lavaYPixels = caveHeight - lavaY;
+                    
+                    const lavaObstacle = {
+                        type: 'lava',
+                        x: lavaXPercent,
+                        y: lavaYPixels,
+                        width: lavaSize,
+                        height: lavaSize,
+                        pixelX: lavaX,
+                        pixelY: lavaY,
+                        speed: 0.5 + Math.random() * 0.5 // Random speed between 0.5 and 1.0
+                    };
+                    
+                    room.obstacles.push(lavaObstacle);
+                    movingLava.push(lavaObstacle);
+                    lavaIndex++;
+                }
+            }
+            
+            // Render the lava obstacles
+            console.log('startMovingLava: rendering obstacles', room.obstacles.length, 'obstacles');
+            renderObstacles(room.obstacles);
+            console.log('startMovingLava: completed, movingLava.length =', movingLava.length);
+        }
+        
+        // Function to clear moving lava
+        function clearMovingLava() {
+            movingLava = [];
+            
+            // Remove lava from room obstacles
+            if (currentRoom.x === 1 && currentRoom.y === 0) {
+                const roomKey = getRoomKey(currentRoom);
+                const room = roomMemory[roomKey];
+                if (room && room.obstacles) {
+                    room.obstacles = room.obstacles.filter(obs => obs.type !== 'lava');
+                    renderObstacles(room.obstacles);
+                }
+            }
+            
+            // Reset safe zone position when leaving room
+            safeZonePosition = null;
+            
+            // Hide safe path indicator
+            updateSafePathIndicator();
+        }
+        
+        // Function to update moving lava positions (called in movement loop)
+        function updateMovingLava() {
+            // Only update lava in room (1,0) after dialogue is complete
+            if (currentRoom.x !== 1 || currentRoom.y !== 0 || !bossDialogueComplete || movingLava.length === 0) {
+                return;
+            }
+            
+            const caveBackground = document.querySelector('.cave-background');
+            if (!caveBackground) return;
+            
+            const caveWidth = caveBackground.offsetWidth;
+            const caveHeight = caveBackground.offsetHeight;
+            
+            // Get player position in pixels
+            const playerX = (dragonPosition.x / 100) * caveWidth;
+            const playerY = caveHeight - dragonPosition.y;
+            
+            // Calculate safe zone using random position
+            if (!safeZonePosition) {
+                generateRandomSafeZone();
+            }
+            const safePathSize = 130;
+            const safeZoneCenterX = (safeZonePosition.x / 100) * caveWidth; // Convert percentage to pixels
+            const safeZoneCenterY = caveHeight - safeZonePosition.y; // Convert from bottom to top coordinates
+            const safeZoneLeft = safeZoneCenterX - safePathSize / 2;
+            const safeZoneRight = safeZoneCenterX + safePathSize / 2;
+            const safeZoneTop = safeZoneCenterY + safePathSize / 2;
+            const safeZoneBottom = safeZoneCenterY - safePathSize / 2;
+            
+            // Update each lava obstacle to move towards player
+            // Use a reverse loop to safely remove items while iterating
+            for (let i = movingLava.length - 1; i >= 0; i--) {
+                const lava = movingLava[i];
+                
+                // Calculate direction to player
+                const dx = playerX - lava.pixelX;
+                const dy = playerY - lava.pixelY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // Check if lava is touching the safe zone - if so, delete it
+                const lavaRadius = lava.width / 2;
+                const lavaLeft = lava.pixelX - lavaRadius;
+                const lavaRight = lava.pixelX + lavaRadius;
+                const lavaTop = lava.pixelY + lavaRadius;
+                const lavaBottom = lava.pixelY - lavaRadius;
+                
+                // Check collision with safe zone
+                if (lavaRight > safeZoneLeft && lavaLeft < safeZoneRight &&
+                    lavaTop > safeZoneBottom && lavaBottom < safeZoneTop) {
+                    // Lava is touching safe zone - delete it
+                    const roomKey = getRoomKey(currentRoom);
+                    const room = roomMemory[roomKey];
+                    if (room && room.obstacles) {
+                        const obstacleIndex = room.obstacles.findIndex(obs => 
+                            obs.type === 'lava' && obs === lava
+                        );
+                        if (obstacleIndex !== -1) {
+                            room.obstacles.splice(obstacleIndex, 1);
+                        }
+                    }
+                    movingLava.splice(i, 1);
+                    continue; // Skip to next lava
+                }
+                
+                // Normalize direction and apply speed
+                if (distance > 0) {
+                    const moveX = (dx / distance) * lava.speed;
+                    const moveY = (dy / distance) * lava.speed;
+                    
+                    // Calculate new position
+                    let newX = lava.pixelX + moveX;
+                    let newY = lava.pixelY + moveY;
+                    
+                    // Keep lava within bounds
+                    newX = Math.max(lava.width / 2, Math.min(caveWidth - lava.width / 2, newX));
+                    newY = Math.max(lava.height / 2, Math.min(caveHeight - lava.height / 2, newY));
+                    
+                    // Update pixel position
+                    lava.pixelX = newX;
+                    lava.pixelY = newY;
+                    
+                    // Convert back to percentage and pixel coordinates
+                    lava.x = (lava.pixelX / caveWidth) * 100;
+                    lava.y = caveHeight - lava.pixelY;
+                    
+                    // Update obstacle in room memory
+                    const roomKey = getRoomKey(currentRoom);
+                    const room = roomMemory[roomKey];
+                    if (room && room.obstacles) {
+                        const obstacleIndex = room.obstacles.findIndex(obs => 
+                            obs.type === 'lava' && obs === lava
+                        );
+                        if (obstacleIndex !== -1) {
+                            room.obstacles[obstacleIndex].x = lava.x;
+                            room.obstacles[obstacleIndex].y = lava.y;
+                        }
+                    }
+                }
+            }
+            
+            // Re-render obstacles with updated positions
+            const roomKey = getRoomKey(currentRoom);
+            const room = roomMemory[roomKey];
+            if (room && room.obstacles) {
+                renderObstacles(room.obstacles);
+            }
+        }
+        
         // Function to play boss dialogue sequence
         function playBossDialogueSequence() {
             if (bossDialoguePlayed) return; // Only play once
@@ -4793,9 +5201,11 @@
                                         // Final dialogue: "PREPARE TO DIE"
                                         setTimeout(() => {
                                             showDialogue("PREPARE TO DIE");
-                                            // Hide after 5 seconds
+                                            // Hide after 5 seconds and start lava
                                             setTimeout(() => {
                                                 hideDialogue();
+                                                bossDialogueComplete = true;
+                                                startMovingLava();
                                             }, 5000);
                                         }, 500);
                                     }, 300);
@@ -4889,12 +5299,28 @@
                 // Full collision check only for nearby obstacles
                 if (dragonLeft < obstacleRight && dragonRight > obstacleLeft &&
                     dragonTop < obstacleBottom && dragonBottom > obstacleTop) {
-                    // Special handling for lava - teleport to main room and reset key
+                    // Special handling for lava - delete lava and teleport to main room
                     if (obstacle.type === 'lava') {
-                        // Don't teleport if we're in spawn protection period
-                        if (spawnProtected) {
-                            // Just return collision, don't teleport
-                            return true;
+                        // Remove this specific lava obstacle
+                        const roomKey = getRoomKey(currentRoom);
+                        const room = roomMemory[roomKey];
+                        if (room && room.obstacles) {
+                            // Find and remove this lava obstacle
+                            const lavaIndex = room.obstacles.indexOf(obstacle);
+                            if (lavaIndex !== -1) {
+                                room.obstacles.splice(lavaIndex, 1);
+                            }
+                        }
+                        
+                        // Remove from movingLava array
+                        const movingLavaIndex = movingLava.indexOf(obstacle);
+                        if (movingLavaIndex !== -1) {
+                            movingLava.splice(movingLavaIndex, 1);
+                        }
+                        
+                        // Re-render obstacles without the deleted lava
+                        if (room && room.obstacles) {
+                            renderObstacles(room.obstacles);
                         }
                         
                         // Reset key collection
@@ -4907,8 +5333,28 @@
                             keyEl.remove();
                         }
                         
-                        // Teleport to main room
-                        teleportToMainRoom();
+                        // Clear all moving lava
+                        clearMovingLava();
+                        
+                        // Teleport to main room (bypass key check for lava collision)
+                        if (currentRoom.x !== 0 || currentRoom.y !== 0) {
+                            // Prevent transition during teleport
+                            if (transitioning) {
+                                transitioning = false;
+                            }
+                            
+                            // Set current room to main room
+                            currentRoom = { x: 0, y: 0 };
+                            
+                            // Load main room
+                            loadRoom(currentRoom);
+                            
+                            // Reset spawn position
+                            const caveBackground = document.querySelector('.cave-background');
+                            const caveHeight = caveBackground ? caveBackground.offsetHeight : 500;
+                            dragonPosition = { x: 50, y: caveHeight / 2 };
+                            updateDragonPosition();
+                        }
                         
                         // Return false to allow movement (teleport handles position)
                         return false;
@@ -5170,7 +5616,7 @@
         }
 
         function isValidRoom(roomCoord) {
-            // Level 10 page: Only allow main room (0,0), room (1,0), and room (2,0)
+            // Level 5 page: Only allow main room (0,0), room (1,0), and room (2,0)
             return (roomCoord.x === 0 && roomCoord.y === 0) || (roomCoord.x === 1 && roomCoord.y === 0) || (roomCoord.x === 2 && roomCoord.y === 0);
         }
 
@@ -5195,12 +5641,12 @@
                     return false;
             }
             
-            // Check if the new room is valid (only (0,0) and (1,0) allowed on level 10 page)
+            // Check if the new room is valid (only (0,0) and (1,0) allowed on level 5 page)
             if (!isValidRoom(newRoom)) {
                 return false;
             }
             
-            // Level 10 page: Only allow movement to (0,0), (1,0), and (2,0)
+            // Level 5 page: Only allow movement to (0,0), (1,0), and (2,0)
             // No bounds check needed since isValidRoom already restricts it
             return true;
         }
@@ -5332,7 +5778,7 @@
             // Clear existing map
             mapGrid.innerHTML = '';
 
-            // Level 10 page: Only show main room (0,0), room (1,0), and room (2,0)
+            // Level 5 page: Only show main room (0,0), room (1,0), and room (2,0)
             // Create a simple 3-room grid
             const allowedRooms = [
                 { x: 0, y: 0 },

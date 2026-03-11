@@ -2872,7 +2872,7 @@
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
                         <button id="teleport-main-button" class="teleport-main-button">⚡ Main Room</button>
-                        <button id="level-10-button" class="level-10-button">Level 10</button>
+                        <button id="level-10-button" class="level-10-button">Level 5</button>
                     </div>
                 </div>
 
@@ -3238,10 +3238,10 @@
                     }
                     
                     if (dragonId) {
-                        // Redirect to adventure-level10.html with dragon ID and level 10
-                        window.location.href = `adventure-level10.html?dragon=${dragonId}&level=10`;
+                        // Redirect to adventure-level5.html with dragon ID and level 5
+                        window.location.href = `adventure-level5.html?dragon=${dragonId}&level=5`;
                     } else {
-                        console.error('Could not find dragon ID for level 10 teleport');
+                        console.error('Could not find dragon ID for level 5 teleport');
                         alert('Error: Could not determine dragon. Please restart the adventure.');
                     }
                 });
@@ -3314,6 +3314,11 @@
         let timerSeconds = 60;
         let timerInterval = null;
         let timerStarted = false; // Track if timer has started
+        
+        // Function to get timer duration based on level
+        function getTimerDuration() {
+            return (currentLevel <= 2) ? 80 : 60;
+        }
 
         // Joystick state
         let joystickState = {
@@ -3355,7 +3360,7 @@
             // Reset timer state (don't start it yet - wait for first movement)
             timerStarted = false;
             stopTimer();
-            timerSeconds = 60;
+            timerSeconds = getTimerDuration();
             updateTimerDisplay();
             
             currentDragon = dragon;
@@ -3798,8 +3803,8 @@
                 clearInterval(timerInterval);
             }
             
-            // Reset timer to 60 seconds
-            timerSeconds = 60;
+            // Reset timer based on current level (80 seconds for levels 1-2, 60 for others)
+            timerSeconds = getTimerDuration();
             updateTimerDisplay();
             
             // Start countdown
@@ -3996,7 +4001,7 @@
             }, 10);
             
             // Reset timer display but don't start it yet (wait for next movement)
-            timerSeconds = 60;
+            timerSeconds = getTimerDuration();
             updateTimerDisplay();
             
             // Show visual feedback that timer expired
@@ -4070,10 +4075,41 @@
                     lastLevelUpTime = now;
                     updateLevelDisplay();
                     
+                    // Check if we've reached level 5 - teleport to level 5 page
+                    if (currentLevel === 5) {
+                        // Get dragon ID from current state
+                        let dragonId = currentDragonId;
+                        
+                        // If not stored, try to get from URL parameters
+                        if (!dragonId) {
+                            const urlParams = new URLSearchParams(window.location.search);
+                            dragonId = urlParams.get('dragon');
+                        }
+                        
+                        // If still not found, try to find it from currentDragon
+                        if (!dragonId && currentDragon) {
+                            // Find dragon ID by matching name
+                            for (const id in dragonData) {
+                                if (dragonData[id].name === currentDragon.name) {
+                                    dragonId = id;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        if (dragonId) {
+                            // Redirect to adventure-level5.html with dragon ID and level 5
+                            window.location.href = `adventure-level5.html?dragon=${dragonId}&level=5`;
+                            return;
+                        } else {
+                            console.error('Could not find dragon ID for level 5 teleport');
+                        }
+                    }
+                    
                     // Reset timer on level up (but don't start until next movement)
                     stopTimer();
                     timerStarted = false;
-                    timerSeconds = 60;
+                    timerSeconds = getTimerDuration();
                     updateTimerDisplay();
                     
                     // Regenerate session seed to change all rooms
