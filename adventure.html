@@ -346,10 +346,199 @@
         /* Selection Area Visibility */
         .selection-area {
             display: block;
+            position: relative;
         }
 
         .selection-area.hidden {
             display: none;
+        }
+
+        /* Game Difficulty Button */
+        .difficulty-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFAA00 100%);
+            color: #000000;
+            border: 2px solid #FFCC44;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 4px 8px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 215, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-button:hover {
+            background: linear-gradient(135deg, #FFAA00 0%, #FFD700 100%);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 6px 12px rgba(0, 0, 0, 0.5),
+                0 0 25px rgba(255, 215, 0, 0.7);
+            transform: scale(1.05);
+        }
+
+        .difficulty-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Settings Box */
+        .settings-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 3px solid #FFD700;
+            border-radius: 12px;
+            padding: 30px;
+            z-index: 1000;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(255, 215, 0, 0.4);
+            min-width: 400px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .settings-box.active {
+            display: block;
+        }
+
+        .settings-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 15px;
+        }
+
+        .settings-box-header h2 {
+            color: #FFD700;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .settings-close-button {
+            background: transparent;
+            border: 2px solid #FFD700;
+            color: #FFD700;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .settings-close-button:hover {
+            background: #FFD700;
+            color: #000000;
+            transform: rotate(90deg);
+        }
+
+        .settings-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+
+        .settings-overlay.active {
+            display: block;
+        }
+
+        .settings-content {
+            color: #FFFFFF;
+        }
+
+        .settings-section {
+            margin-bottom: 25px;
+        }
+
+        .settings-section h3 {
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .difficulty-option-button {
+            flex: 1;
+            min-width: 100px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            color: #FFFFFF;
+            border: 2px solid #666666;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.5),
+                0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .difficulty-option-button:hover {
+            background: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
+            border-color: #FFD700;
+            transform: translateY(-2px);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.5),
+                0 6px 12px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .difficulty-option-button:active {
+            transform: translateY(0);
+        }
+
+        .difficulty-option-button.active {
+            background: linear-gradient(135deg, #FFD700 0%, #FFAA00 100%);
+            color: #000000;
+            border-color: #FFCC44;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 4px 8px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .difficulty-option-button.active:hover {
+            background: linear-gradient(135deg, #FFAA00 0%, #FFD700 100%);
+        }
+
+        .difficulty-info {
+            margin-top: 15px;
+            text-align: center;
+            color: #FFD700;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
         }
 
         /* Adventure Game View Styles */
@@ -2690,6 +2879,33 @@
                 margin: 1px 0;
             }
 
+            .difficulty-button {
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            .settings-box {
+                min-width: 90%;
+                max-width: 95%;
+                padding: 20px;
+            }
+
+            .settings-box-header h2 {
+                font-size: 20px;
+            }
+
+            .difficulty-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .difficulty-option-button {
+                width: 100%;
+                min-width: auto;
+            }
+
             .story-arena {
                 flex-direction: column;
                 gap: 4px;
@@ -2807,6 +3023,7 @@
         <div class="story-container">
             <!-- Selection Area -->
             <div id="selection-area" class="selection-area">
+                <button id="difficulty-button" class="difficulty-button">GAME DIFFICULTY</button>
                 <div class="story-header">
                     <h1>ADVENTURE MODE</h1>
                     <p>Choose your dragon to begin the adventure!</p>
@@ -2855,6 +3072,26 @@
 
                 <div class="back-link-container">
                     <a href="index.html" class="back-link">← Back to Dragon Lair</a>
+                </div>
+            </div>
+
+            <!-- Settings Box -->
+            <div id="settings-overlay" class="settings-overlay"></div>
+            <div id="settings-box" class="settings-box">
+                <div class="settings-box-header">
+                    <h2>Game Settings</h2>
+                    <button id="settings-close-button" class="settings-close-button">×</button>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3>Difficulty Settings</h3>
+                        <div class="difficulty-buttons">
+                            <button id="difficulty-easy" class="difficulty-option-button">Easy</button>
+                            <button id="difficulty-normal" class="difficulty-option-button active">Normal</button>
+                            <button id="difficulty-hard" class="difficulty-option-button">Hard</button>
+                        </div>
+                        <div id="difficulty-info" class="difficulty-info">Timer is 60 seconds</div>
+                    </div>
                 </div>
             </div>
 
@@ -3146,6 +3383,98 @@
         document.addEventListener('DOMContentLoaded', function() {
             const dragonSelect = document.getElementById('dragon-select');
             const startButton = document.getElementById('story-start-button');
+            
+            // Settings box functionality
+            const difficultyButton = document.getElementById('difficulty-button');
+            const settingsBox = document.getElementById('settings-box');
+            const settingsOverlay = document.getElementById('settings-overlay');
+            const settingsCloseButton = document.getElementById('settings-close-button');
+            
+            // Open settings box
+            if (difficultyButton) {
+                difficultyButton.addEventListener('click', function() {
+                    settingsBox.classList.add('active');
+                    settingsOverlay.classList.add('active');
+                });
+            }
+            
+            // Close settings box
+            function closeSettings() {
+                settingsBox.classList.remove('active');
+                settingsOverlay.classList.remove('active');
+            }
+            
+            if (settingsCloseButton) {
+                settingsCloseButton.addEventListener('click', closeSettings);
+            }
+            
+            if (settingsOverlay) {
+                settingsOverlay.addEventListener('click', closeSettings);
+            }
+            
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && settingsBox.classList.contains('active')) {
+                    closeSettings();
+                }
+            });
+            
+            // Difficulty button handlers
+            const difficultyEasy = document.getElementById('difficulty-easy');
+            const difficultyNormal = document.getElementById('difficulty-normal');
+            const difficultyHard = document.getElementById('difficulty-hard');
+            
+            function setDifficulty(difficulty) {
+                const difficultyInfo = document.getElementById('difficulty-info');
+                
+                // Remove active class from all buttons
+                difficultyEasy.classList.remove('active');
+                difficultyNormal.classList.remove('active');
+                difficultyHard.classList.remove('active');
+                
+                // Add active class to selected button and update info text
+                if (difficulty === 'easy') {
+                    difficultyEasy.classList.add('active');
+                    if (difficultyInfo) {
+                        difficultyInfo.textContent = 'Timer is 80 seconds';
+                    }
+                } else if (difficulty === 'normal') {
+                    difficultyNormal.classList.add('active');
+                    if (difficultyInfo) {
+                        difficultyInfo.textContent = 'Timer is 60 seconds';
+                    }
+                } else if (difficulty === 'hard') {
+                    difficultyHard.classList.add('active');
+                    if (difficultyInfo) {
+                        difficultyInfo.textContent = 'Timer is 40 seconds';
+                    }
+                }
+                
+                // Store difficulty setting (you can use this later to adjust game mechanics)
+                localStorage.setItem('gameDifficulty', difficulty);
+            }
+            
+            if (difficultyEasy) {
+                difficultyEasy.addEventListener('click', function() {
+                    setDifficulty('easy');
+                });
+            }
+            
+            if (difficultyNormal) {
+                difficultyNormal.addEventListener('click', function() {
+                    setDifficulty('normal');
+                });
+            }
+            
+            if (difficultyHard) {
+                difficultyHard.addEventListener('click', function() {
+                    setDifficulty('hard');
+                });
+            }
+            
+            // Load saved difficulty on page load
+            const savedDifficulty = localStorage.getItem('gameDifficulty') || 'normal';
+            setDifficulty(savedDifficulty);
 
             // Dragon selection
             dragonSelect.addEventListener('change', function() {
@@ -3315,9 +3644,20 @@
         let timerInterval = null;
         let timerStarted = false; // Track if timer has started
         
-        // Function to get timer duration based on level
+        // Function to get timer duration based on difficulty setting
         function getTimerDuration() {
-            return (currentLevel <= 2) ? 80 : 60;
+            // Get difficulty from localStorage, default to 'normal' if not set
+            const difficulty = localStorage.getItem('gameDifficulty') || 'normal';
+            
+            // Return timer duration based on difficulty
+            if (difficulty === 'easy') {
+                return 80;
+            } else if (difficulty === 'hard') {
+                return 40;
+            } else {
+                // Default to normal (60 seconds)
+                return 60;
+            }
         }
 
         // Joystick state
