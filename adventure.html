@@ -3092,6 +3092,14 @@
                         </div>
                         <div id="difficulty-info" class="difficulty-info">Timer is 60 seconds</div>
                     </div>
+
+                    <div class="settings-section">
+                        <h3>Teleporting with the key</h3>
+                        <div class="difficulty-buttons">
+                            <button id="teleport-yes" class="difficulty-option-button">Yes</button>
+                            <button id="teleport-no" class="difficulty-option-button active">No</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -3475,6 +3483,42 @@
             // Load saved difficulty on page load
             const savedDifficulty = localStorage.getItem('gameDifficulty') || 'normal';
             setDifficulty(savedDifficulty);
+            
+            // Teleport with key button handlers
+            const teleportYes = document.getElementById('teleport-yes');
+            const teleportNo = document.getElementById('teleport-no');
+            
+            function setTeleportWithKey(allow) {
+                // Remove active class from all buttons
+                teleportYes.classList.remove('active');
+                teleportNo.classList.remove('active');
+                
+                // Add active class to selected button
+                if (allow) {
+                    teleportYes.classList.add('active');
+                } else {
+                    teleportNo.classList.add('active');
+                }
+                
+                // Store teleport setting (you can use this later to adjust game mechanics)
+                localStorage.setItem('allowTeleportWithKey', allow ? 'yes' : 'no');
+            }
+            
+            if (teleportYes) {
+                teleportYes.addEventListener('click', function() {
+                    setTeleportWithKey(true);
+                });
+            }
+            
+            if (teleportNo) {
+                teleportNo.addEventListener('click', function() {
+                    setTeleportWithKey(false);
+                });
+            }
+            
+            // Load saved teleport setting on page load (default to 'no')
+            const savedTeleportSetting = localStorage.getItem('allowTeleportWithKey') || 'no';
+            setTeleportWithKey(savedTeleportSetting === 'yes');
 
             // Dragon selection
             dragonSelect.addEventListener('change', function() {
