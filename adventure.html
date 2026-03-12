@@ -529,6 +529,65 @@
             background: linear-gradient(135deg, #FFAA00 0%, #FFD700 100%);
         }
 
+        .custom-timer-input-container {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-timer-input {
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            color: #FFFFFF;
+            border: 2px solid #666666;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            width: 150px;
+            transition: all 0.3s ease;
+        }
+
+        .custom-timer-input:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .custom-timer-input::placeholder {
+            color: #888888;
+        }
+
+        .custom-timer-apply-button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFAA00 100%);
+            color: #000000;
+            border: 2px solid #FFCC44;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .custom-timer-apply-button:hover {
+            background: linear-gradient(135deg, #FFAA00 0%, #FFD700 100%);
+            transform: scale(1.05);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 6px 12px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .custom-timer-apply-button:active {
+            transform: scale(0.95);
+        }
+
         .difficulty-info {
             margin-top: 15px;
             text-align: center;
@@ -3089,6 +3148,11 @@
                             <button id="difficulty-easy" class="difficulty-option-button">Easy</button>
                             <button id="difficulty-normal" class="difficulty-option-button active">Normal</button>
                             <button id="difficulty-hard" class="difficulty-option-button">Hard</button>
+                            <button id="difficulty-custom" class="difficulty-option-button">Custom</button>
+                        </div>
+                        <div id="custom-timer-input-container" class="custom-timer-input-container" style="display: none;">
+                            <input type="number" id="custom-timer-input" class="custom-timer-input" min="1" max="99" placeholder="Enter 1-99" />
+                            <button id="custom-timer-apply" class="custom-timer-apply-button">Apply</button>
                         </div>
                         <div id="difficulty-info" class="difficulty-info">Timer is 60 seconds</div>
                     </div>
@@ -3100,6 +3164,7 @@
                             <button id="teleport-no" class="difficulty-option-button active">No</button>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -3431,6 +3496,10 @@
             const difficultyEasy = document.getElementById('difficulty-easy');
             const difficultyNormal = document.getElementById('difficulty-normal');
             const difficultyHard = document.getElementById('difficulty-hard');
+            const difficultyCustom = document.getElementById('difficulty-custom');
+            const customTimerInputContainer = document.getElementById('custom-timer-input-container');
+            const customTimerInput = document.getElementById('custom-timer-input');
+            const customTimerApply = document.getElementById('custom-timer-apply');
             
             function setDifficulty(difficulty) {
                 const difficultyInfo = document.getElementById('difficulty-info');
@@ -3439,6 +3508,12 @@
                 difficultyEasy.classList.remove('active');
                 difficultyNormal.classList.remove('active');
                 difficultyHard.classList.remove('active');
+                difficultyCustom.classList.remove('active');
+                
+                // Hide custom input container unless custom is selected
+                if (customTimerInputContainer) {
+                    customTimerInputContainer.style.display = 'none';
+                }
                 
                 // Add active class to selected button and update info text
                 if (difficulty === 'easy') {
@@ -3456,10 +3531,64 @@
                     if (difficultyInfo) {
                         difficultyInfo.textContent = 'Timer is 40 seconds';
                     }
+                } else if (difficulty === 'custom') {
+                    difficultyCustom.classList.add('active');
+                    if (customTimerInputContainer) {
+                        customTimerInputContainer.style.display = 'flex';
+                    }
+                    // Load saved custom value if exists
+                    const savedCustomValue = localStorage.getItem('customTimerValue');
+                    if (customTimerInput && savedCustomValue) {
+                        customTimerInput.value = savedCustomValue;
+                        if (difficultyInfo) {
+                            difficultyInfo.textContent = 'Timer is ' + savedCustomValue + ' seconds';
+                        }
+                    } else {
+                        if (difficultyInfo) {
+                            difficultyInfo.textContent = 'Enter custom timer (1-99)';
+                        }
+                    }
                 }
                 
                 // Store difficulty setting (you can use this later to adjust game mechanics)
                 localStorage.setItem('gameDifficulty', difficulty);
+            }
+            
+            // Handle custom timer apply button
+            if (customTimerApply && customTimerInput) {
+                customTimerApply.addEventListener('click', function() {
+                    const value = parseInt(customTimerInput.value);
+                    const difficultyInfo = document.getElementById('difficulty-info');
+                    
+                    // Validate input (1-99)
+                    if (isNaN(value) || value < 1 || value > 99) {
+                        alert('Please enter a number between 1 and 99');
+                        customTimerInput.focus();
+                        return;
+                    }
+                    
+                    // Save custom value
+                    localStorage.setItem('customTimerValue', value.toString());
+                    localStorage.setItem('gameDifficulty', 'custom');
+                    
+                    // Update info text
+                    if (difficultyInfo) {
+                        difficultyInfo.textContent = 'Timer is ' + value + ' seconds';
+                    }
+                    
+                    // Show success feedback
+                    customTimerInput.style.borderColor = '#00FF00';
+                    setTimeout(function() {
+                        customTimerInput.style.borderColor = '#666666';
+                    }, 500);
+                });
+                
+                // Allow Enter key to apply
+                customTimerInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        customTimerApply.click();
+                    }
+                });
             }
             
             if (difficultyEasy) {
@@ -3477,6 +3606,12 @@
             if (difficultyHard) {
                 difficultyHard.addEventListener('click', function() {
                     setDifficulty('hard');
+                });
+            }
+            
+            if (difficultyCustom) {
+                difficultyCustom.addEventListener('click', function() {
+                    setDifficulty('custom');
                 });
             }
             
@@ -3522,7 +3657,7 @@
             // Load saved teleport setting on page load (default to 'no')
             const savedTeleportSetting = localStorage.getItem('allowTeleportWithKey') || 'no';
             setTeleportWithKey(savedTeleportSetting === 'yes');
-
+            
             // Dragon selection
             dragonSelect.addEventListener('change', function() {
                 const selected = this.value;
@@ -3701,6 +3836,13 @@
                 return 80;
             } else if (difficulty === 'hard') {
                 return 40;
+            } else if (difficulty === 'custom') {
+                // Get custom timer value, default to 60 if not set or invalid
+                const customValue = parseInt(localStorage.getItem('customTimerValue'));
+                if (customValue && customValue >= 1 && customValue <= 99) {
+                    return customValue;
+                }
+                return 60; // Fallback to 60 if custom value is invalid
             } else {
                 // Default to normal (60 seconds)
                 return 60;
