@@ -39,8 +39,9 @@
     #start-screen::before {
       content: "⛏️";
       position: absolute;
+      z-index: 0;
       font-size: clamp(8rem, 35vw, 18rem);
-      opacity: 0.12;
+      opacity: 0.14;
       transform: rotate(-18deg) translate(-8%, -12%);
       pointer-events: none;
       user-select: none;
@@ -49,8 +50,9 @@
     #start-screen::after {
       content: "⛏️";
       position: absolute;
+      z-index: 0;
       font-size: clamp(5rem, 22vw, 11rem);
-      opacity: 0.08;
+      opacity: 0.1;
       right: -5%;
       bottom: 10%;
       transform: rotate(22deg);
@@ -100,6 +102,42 @@
       transform: translateY(0);
     }
 
+    .start-actions {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      justify-content: center;
+      align-items: center;
+      margin: 0 0 0.25rem;
+    }
+
+    #btn-home {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      padding: 0.65rem 1.35rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.12s ease;
+    }
+
+    #btn-home:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
+    }
+
+    #btn-home:active {
+      transform: translateY(0);
+    }
+
     #game-screen {
       min-height: 100vh;
       min-height: 100dvh;
@@ -111,6 +149,7 @@
       padding: 0.5rem 0.5rem 0.35rem;
       gap: 0.5rem;
       background: #221a14;
+      overflow: hidden;
     }
 
     #game-screen[hidden] {
@@ -164,6 +203,54 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
+    .backpack-toggle {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+      font-size: 1.05rem;
+      line-height: 1;
+      padding: 0.45rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(201, 162, 39, 0.35);
+      background: rgba(201, 162, 39, 0.12);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .backpack-toggle:hover {
+      background: rgba(201, 162, 39, 0.22);
+    }
+
+    .backpack-toggle:active {
+      transform: scale(0.97);
+    }
+
+    .backpack-toggle .backpack-emoji {
+      font-size: 1.45rem;
+      line-height: 1;
+    }
+
+    .start-inventory {
+      position: relative;
+      z-index: 1;
+      margin: 0.65rem 0 0;
+      text-align: center;
+    }
+
+    .start-inventory-guest {
+      position: relative;
+      z-index: 1;
+      font-size: 0.78rem;
+      opacity: 0.7;
+      margin-top: 0.35rem;
+      max-width: 22rem;
+      line-height: 1.4;
+    }
+
     #grid-wrap {
       position: relative;
       --gap: 3px;
@@ -193,6 +280,11 @@
       transition: border-color 0.2s ease, background 0.2s ease;
     }
 
+    #grid.yard-area {
+      background: linear-gradient(180deg, #2a4a28 0%, #1e351c 100%);
+      border-color: rgba(120, 200, 100, 0.55);
+    }
+
     #grid.lower-area {
       background: #342818;
       border-color: rgba(140, 200, 255, 0.35);
@@ -208,6 +300,34 @@
       justify-content: center;
       font-size: calc(var(--cell) * 0.45);
       transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    /* Yard: sky (top rows) — not walkable */
+    .cell.yard-sky {
+      background: linear-gradient(180deg, #5aa8ff 0%, #7ec0ff 45%, #5898e8 100%);
+      border: 1px solid rgba(100, 150, 220, 0.4);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Yard: grass strip (bottom row) — walkable */
+    .cell.surface {
+      background: linear-gradient(180deg, #a8e060 0%, #72b838 42%, #4a9024 88%, #356a1a 100%);
+      border: 1px solid rgba(70, 130, 50, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cell.surface::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        88deg,
+        rgba(0, 50, 0, 0.07) 0 2px,
+        transparent 2px 11px
+      );
+      pointer-events: none;
     }
 
     .cell.dug:not(.has-bone) {
@@ -245,13 +365,14 @@
 
     .hint {
       font-size: 0.8rem;
-      opacity: 0.65;
+      opacity: 0.88;
       text-align: center;
       max-width: 28rem;
       line-height: 1.45;
       flex-shrink: 0;
       margin: 0 auto;
       padding: 0 0.25rem;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
     }
 
     .start-account {
@@ -286,20 +407,154 @@
       white-space: nowrap;
     }
 
+    #backpack-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(3px);
+    }
+
+    #backpack-overlay[hidden] {
+      display: none !important;
+    }
+
+    #backpack-dialog {
+      width: min(26rem, 100%);
+      max-height: min(32rem, 88dvh);
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(165deg, #2a2218 0%, #1a1410 100%);
+      border: 1px solid rgba(201, 162, 39, 0.4);
+      border-radius: 14px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .backpack-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
+    }
+
+    .backpack-header h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    #btn-backpack-close {
+      flex-shrink: 0;
+      width: 2.25rem;
+      height: 2.25rem;
+      padding: 0;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    #btn-backpack-close:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    #backpack-grid-wrap {
+      padding: 0.85rem 1rem 1rem;
+      min-height: 0;
+      flex: 1;
+      overflow: auto;
+    }
+
+    #backpack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(2.35rem, 1fr));
+      gap: 0.45rem;
+    }
+
+    .backpack-stack {
+      position: relative;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.45rem;
+      background: rgba(107, 76, 50, 0.45);
+      border: 1px solid rgba(201, 162, 39, 0.25);
+      border-radius: 8px;
+    }
+
+    .backpack-stack-qty {
+      position: absolute;
+      right: 0.12rem;
+      bottom: 0.12rem;
+      min-width: 1.1rem;
+      padding: 0.1rem 0.28rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      line-height: 1.1;
+      text-align: center;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.78);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    #backpack-empty {
+      margin: 0;
+      text-align: center;
+      font-size: 0.92rem;
+      opacity: 0.75;
+      line-height: 1.5;
+      padding: 1rem 0.5rem;
+    }
+
+    #backpack-empty[hidden] {
+      display: none !important;
+    }
+
+    #backpack-grid:empty {
+      display: none;
+    }
+
   </style>
 </head>
 <body>
   <div id="start-screen">
     <h1>Bone Studio</h1>
-    <p>Dig for hidden fossils with your cat. Arrow keys to move — Space or Enter to dig.</p>
-    <button type="button" id="btn-start">Start Game</button>
+    <p>Start on the grass strip in the yard (sky above is not walkable), then head down to dig for fossils. Arrow keys to move — Space or Enter to dig in soil.</p>
+    <div class="start-actions">
+      <button type="button" id="btn-start">Start Game</button>
+      <a href="../index.html" id="btn-home">Home</a>
+    </div>
+    <div class="start-inventory" id="start-inventory">
+      <button type="button" class="backpack-toggle" id="btn-backpack-start" aria-haspopup="dialog" aria-controls="backpack-dialog" aria-expanded="false" title="Open backpack">
+        <span class="backpack-emoji" aria-hidden="true">🎒</span>
+      </button>
+    </div>
     <p class="start-account">Playing as <strong id="start-user-name">Guest</strong>. <a href="../index.html">Account</a> on the home page.</p>
+    <p class="start-inventory-guest" id="start-bone-hint" hidden>As guest, bones you find are saved on this device only. Sign in on the home page to keep a vault on your account.</p>
   </div>
 
   <div id="game-screen" hidden>
     <div id="hud">
       <span id="user-label" title="">Player: Guest</span>
-      <span id="depth-label" aria-live="polite">Shallow dig</span>
+      <button type="button" class="backpack-toggle" id="btn-backpack-hud" aria-haspopup="dialog" aria-controls="backpack-dialog" aria-expanded="false" title="Open backpack">
+        <span class="backpack-emoji" aria-hidden="true">🎒</span>
+      </button>
+      <span id="depth-label" aria-live="polite">Yard</span>
       <button type="button" id="btn-menu">Main menu</button>
     </div>
     <div id="grid-stage">
@@ -308,14 +563,28 @@
         <div id="cat" aria-hidden="true">🐱</div>
       </div>
     </div>
-    <p class="hint">Uncover every bone on both layers to win. Press Down past the bottom row to drop deeper; Up from the top row to climb back.</p>
+    <p class="hint">In the <strong>Yard</strong>, only the <strong>bottom row of grass</strong> is walkable — the blue sky blocks you. Press Down from the grass to enter the dig site, then again for the deeper layer. Up from the top row of a dig returns to the layer above. Uncover every fossil in both soil layers to win.</p>
+  </div>
+
+  <div id="backpack-overlay" hidden>
+    <div id="backpack-dialog" role="dialog" aria-modal="true" aria-labelledby="backpack-title" tabindex="-1">
+      <div class="backpack-header">
+        <h2 id="backpack-title">Your backpack</h2>
+        <button type="button" id="btn-backpack-close" aria-label="Close backpack">×</button>
+      </div>
+      <div id="backpack-grid-wrap">
+        <div id="backpack-grid" aria-label="Items in your backpack"></div>
+        <p id="backpack-empty" hidden>Nothing here yet. Dig up tiles that hide a fossil to fill your backpack.</p>
+      </div>
+    </div>
   </div>
 
   <script src="../account.js"></script>
   <script>
     const COLS = 10;
     const ROWS = 5;
-    const NUM_AREAS = 2;
+    /** Yard (surface) + shallow dig + deeper dig — same grid size, change with Up/Down at edges. */
+    const NUM_AREAS = 3;
 
     let areas = [];
     let areaIndex = 0;
@@ -330,6 +599,42 @@
     const depthLabelEl = document.getElementById("depth-label");
     const startUserNameEl = document.getElementById("start-user-name");
     const userLabelEl = document.getElementById("user-label");
+    const startBoneHintEl = document.getElementById("start-bone-hint");
+    const backpackOverlay = document.getElementById("backpack-overlay");
+    const backpackGridEl = document.getElementById("backpack-grid");
+    const backpackEmptyEl = document.getElementById("backpack-empty");
+    const btnBackpackStart = document.getElementById("btn-backpack-start");
+    const btnBackpackHud = document.getElementById("btn-backpack-hud");
+    const btnBackpackClose = document.getElementById("btn-backpack-close");
+
+    const ITEM_ICONS = {
+      fossil: "🦴",
+    };
+
+    function totalItemCount() {
+      if (typeof SiteAuth !== "undefined" && SiteAuth.getBones) {
+        return SiteAuth.getBones();
+      }
+      return 0;
+    }
+
+    function getInventoryStacks() {
+      if (typeof SiteAuth !== "undefined" && SiteAuth.getInventoryStacks) {
+        return SiteAuth.getInventoryStacks();
+      }
+      const n = totalItemCount();
+      return n > 0 ? [{ id: "fossil", qty: n }] : [];
+    }
+
+    function refreshInventoryLabels() {
+      if (startBoneHintEl) {
+        const loggedIn =
+          typeof SiteAuth !== "undefined" &&
+          SiteAuth.getCurrentUser &&
+          SiteAuth.getCurrentUser();
+        startBoneHintEl.hidden = !!loggedIn;
+      }
+    }
 
     function refreshAccountLabels() {
       const u =
@@ -342,6 +647,66 @@
         userLabelEl.textContent = "Player: " + label;
         userLabelEl.title = label;
       }
+      refreshInventoryLabels();
+    }
+
+    function setBackpackExpanded(open) {
+      const v = open ? "true" : "false";
+      if (btnBackpackStart) btnBackpackStart.setAttribute("aria-expanded", v);
+      if (btnBackpackHud) btnBackpackHud.setAttribute("aria-expanded", v);
+    }
+
+    function renderBackpackGrid() {
+      if (!backpackGridEl || !backpackEmptyEl) return;
+      backpackGridEl.innerHTML = "";
+      const stacks = getInventoryStacks();
+      if (stacks.length === 0) {
+        backpackEmptyEl.hidden = false;
+        return;
+      }
+      backpackEmptyEl.hidden = true;
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < stacks.length; i++) {
+        const { id, qty } = stacks[i];
+        const icon = ITEM_ICONS[id] || "📦";
+        const wrap = document.createElement("div");
+        wrap.className = "backpack-stack";
+        wrap.title =
+          id === "fossil"
+            ? qty === 1
+              ? "Fossil"
+              : qty + " fossils"
+            : id + " × " + qty;
+        const emoji = document.createElement("span");
+        emoji.className = "backpack-stack-icon";
+        emoji.setAttribute("aria-hidden", "true");
+        emoji.textContent = icon;
+        wrap.appendChild(emoji);
+        if (qty >= 2) {
+          const badge = document.createElement("span");
+          badge.className = "backpack-stack-qty";
+          badge.textContent = String(qty);
+          wrap.appendChild(badge);
+        }
+        frag.appendChild(wrap);
+      }
+      backpackGridEl.appendChild(frag);
+    }
+
+    function openBackpack() {
+      if (!backpackOverlay) return;
+      renderBackpackGrid();
+      backpackOverlay.hidden = false;
+      setBackpackExpanded(true);
+      document.body.style.overflow = "hidden";
+      if (btnBackpackClose) btnBackpackClose.focus();
+    }
+
+    function closeBackpack() {
+      if (!backpackOverlay) return;
+      backpackOverlay.hidden = true;
+      setBackpackExpanded(false);
+      document.body.style.overflow = "";
     }
 
     function showStartScreen() {
@@ -363,9 +728,26 @@
       for (let r = 0; r < ROWS; r++) {
         const row = [];
         for (let c = 0; c < COLS; c++) {
-          row.push({ hasBone: false, isDug: false });
+          row.push({ hasBone: false, isDug: false, isSurface: false, isSky: false });
         }
         g.push(row);
+      }
+      return g;
+    }
+
+    function createYardGrid() {
+      const g = createEmptyGrid();
+      const grassRow = ROWS - 1;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (r === grassRow) {
+            g[r][c].isSurface = true;
+            g[r][c].isSky = false;
+          } else {
+            g[r][c].isSurface = false;
+            g[r][c].isSky = true;
+          }
+        }
       }
       return g;
     }
@@ -385,6 +767,7 @@
     function canPlaceSegment(cells, g) {
       for (const [c, r] of cells) {
         if (!inBounds(c, r)) return false;
+        if (g[r][c].isSurface || g[r][c].isSky) return false;
         if (g[r][c].hasBone) return false;
       }
       return true;
@@ -431,15 +814,15 @@
       }
 
       if (occupied() === 0) {
-        g[1][3].hasBone = true;
-        g[1][4].hasBone = true;
-        g[2][5].hasBone = true;
+        g[2][3].hasBone = true;
+        g[2][4].hasBone = true;
+        g[3][5].hasBone = true;
       }
     }
 
     function countUndugBones() {
       let n = 0;
-      for (let a = 0; a < areas.length; a++) {
+      for (let a = 1; a < areas.length; a++) {
         const g = areas[a];
         for (let r = 0; r < ROWS; r++) {
           for (let c = 0; c < COLS; c++) {
@@ -452,8 +835,8 @@
     }
 
     function updateDepthLabel() {
-      depthLabelEl.textContent =
-        areaIndex === 0 ? "Shallow dig" : "Deeper dig";
+      const labels = ["Yard", "Shallow dig", "Deeper dig"];
+      depthLabelEl.textContent = labels[areaIndex] || "";
     }
 
     function positionCat() {
@@ -468,7 +851,8 @@
 
     function renderGrid() {
       const grid = currentGrid();
-      gridEl.classList.toggle("lower-area", areaIndex > 0);
+      gridEl.classList.toggle("yard-area", areaIndex === 0);
+      gridEl.classList.toggle("lower-area", areaIndex === 2);
       gridEl.innerHTML = "";
       for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
@@ -477,7 +861,11 @@
           div.className = "cell";
           div.dataset.col = String(c);
           div.dataset.row = String(r);
-          if (cell.isDug) {
+          if (cell.isSky) {
+            div.classList.add("yard-sky");
+          } else if (cell.isSurface) {
+            div.classList.add("surface");
+          } else if (cell.isDug) {
             div.classList.add("dug");
             if (cell.hasBone) {
               div.classList.add("has-bone");
@@ -511,6 +899,8 @@
       }
 
       if (!inBounds(nc, nr)) return;
+      const dest = areas[areaIndex][nr][nc];
+      if (dest.isSky) return;
       playerCol = nc;
       playerRow = nr;
       positionCat();
@@ -520,9 +910,14 @@
       if (!gameActive) return;
       const grid = currentGrid();
       const cell = grid[playerRow][playerCol];
+      if (cell.isSky || cell.isSurface) return;
       if (cell.isDug) return;
 
       cell.isDug = true;
+      if (cell.hasBone && typeof SiteAuth !== "undefined" && SiteAuth.addBones) {
+        SiteAuth.addBones(1);
+        refreshInventoryLabels();
+      }
       renderGrid();
       const tile = gridEl.querySelector(
         `.cell[data-col="${playerCol}"][data-row="${playerRow}"]`
@@ -538,7 +933,7 @@
       if (countUndugBones() !== 0) return;
       gameActive = false;
       const msg =
-        "Congratulations! You uncovered every bone.\n\nReturn to the start screen?";
+        "Congratulations! You uncovered every fossil in both dig layers.\n\nReturn to the start screen?";
       const ok = window.confirm(msg);
       if (ok) {
         resetToMenu();
@@ -556,20 +951,29 @@
 
     function initGame() {
       areas = [];
-      for (let i = 0; i < NUM_AREAS; i++) {
+      areas.push(createYardGrid());
+      for (let i = 1; i < NUM_AREAS; i++) {
         const g = createEmptyGrid();
         generateBonesForGrid(g);
         areas.push(g);
       }
       areaIndex = 0;
       playerCol = 0;
-      playerRow = 0;
+      playerRow = ROWS - 1;
       gameActive = true;
       updateDepthLabel();
       renderGrid();
     }
 
     function onKeyDown(e) {
+      if (backpackOverlay && !backpackOverlay.hidden) {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          closeBackpack();
+        }
+        return;
+      }
+
       if (gameScreen.hidden || !gameActive) return;
 
       const k = e.key;
@@ -600,13 +1004,54 @@
       if (!gameScreen.hidden) resetToMenu();
     });
 
+    if (btnBackpackStart) {
+      btnBackpackStart.addEventListener("click", () => openBackpack());
+    }
+    if (btnBackpackHud) {
+      btnBackpackHud.addEventListener("click", () => openBackpack());
+    }
+    if (btnBackpackClose) {
+      btnBackpackClose.addEventListener("click", () => closeBackpack());
+    }
+    if (backpackOverlay) {
+      backpackOverlay.addEventListener("click", (e) => {
+        if (e.target === backpackOverlay) closeBackpack();
+      });
+    }
+
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("resize", () => {
       if (!gameScreen.hidden) positionCat();
     });
 
-    window.addEventListener("storage", (e) => {
+    function onExternalStorage(e) {
+      if (!e.key) {
+        refreshAccountLabels();
+        return;
+      }
       if (e.key === "austinziolo_session_v1") refreshAccountLabels();
+      const keys =
+        typeof SiteAuth !== "undefined" && SiteAuth.storageKeys
+          ? SiteAuth.storageKeys
+          : null;
+      if (
+        e.key === "austinziolo_accounts_v1" ||
+        e.key === "austinziolo_guest_bones_v1" ||
+        e.key === "austinziolo_guest_inv_v1" ||
+        (keys &&
+          (e.key === keys.accounts ||
+            e.key === keys.guestBones ||
+            e.key === keys.guestInv))
+      ) {
+        refreshInventoryLabels();
+        if (backpackOverlay && !backpackOverlay.hidden) renderBackpackGrid();
+      }
+    }
+
+    window.addEventListener("storage", onExternalStorage);
+    window.addEventListener("austinziolo-bones-changed", () => {
+      refreshInventoryLabels();
+      if (backpackOverlay && !backpackOverlay.hidden) renderBackpackGrid();
     });
 
     refreshAccountLabels();
