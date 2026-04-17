@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battle Royale - Austin's Dragon Lair</title>
+    <title>Single Player - Austin's Dragon Lair</title>
+    <!-- Updated: 2025-01-10 with bot functionality -->
     <link rel="stylesheet" href="css/styles.css">
     <style>
         body {
@@ -555,6 +556,23 @@
         .power-dropdown option {
             background-color: #1a1a1a;
             color: #FFFFFF;
+        }
+
+        .bot-power-text {
+            width: 100%;
+            padding: 8px;
+            font-size: 12px;
+            background-color: #2a2a2a;
+            color: #FFFFFF;
+            border: 2px solid #0080FF;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            text-align: center;
+            font-weight: bold;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .battle-actions {
@@ -1317,22 +1335,23 @@
     </style>
 </head>
 <body>
+    <a href="../index.html" class="main-page-corner-link">Go to main page</a>
     <!-- Main Content Section -->
     <main>
         <div class="battle-container">
             <!-- Selection Area -->
             <div id="selection-area" class="selection-area">
                 <div class="battle-header">
-                    <h1>BATTLE ROYALE</h1>
-                    <p>Choose two dragons to battle!</p>
+                    <h1>SINGLE PLAYER</h1>
+                    <p>Choose your dragon to battle against a bot!</p>
                 </div>
 
                 <div class="battle-arena">
-                    <!-- Left Side -->
+                    <!-- Player Dragon Selection -->
                     <div class="battle-side">
-                        <h2>Dragon 1</h2>
+                        <h2>Your Dragon</h2>
                         <select id="dragon1-select" class="dragon-selector">
-                            <option value="">-- Choose Dragon 1 --</option>
+                            <option value="">-- Choose Your Dragon --</option>
                             <option value="breezeflight">Breezeflight the Windwhisper</option>
                             <option value="chaosflare">Chaosflare the Stormbringer</option>
                             <option value="crystalwing">Crystalwing the Prismkeeper</option>
@@ -1348,32 +1367,10 @@
                         </select>
                         <div id="dragon1-display"></div>
                     </div>
-
-                    <!-- Right Side -->
-                    <div class="battle-side">
-                        <h2>Dragon 2</h2>
-                        <select id="dragon2-select" class="dragon-selector">
-                            <option value="">-- Choose Dragon 2 --</option>
-                            <option value="breezeflight">Breezeflight the Windwhisper</option>
-                            <option value="chaosflare">Chaosflare the Stormbringer</option>
-                            <option value="crystalwing">Crystalwing the Prismkeeper</option>
-                            <option value="earthheart">Earthheart the Stonekeeper</option>
-                            <option value="flamethorn">Flamethorn the Firebringer</option>
-                            <option value="frostbite">Frostbite the Iceweaver</option>
-                            <option value="radiant">Radiant the Sunbeam</option>
-                            <option value="stormwing">Stormwing the Skybreaker</option>
-                            <option value="metalbeak">Metalbeak the Forgeguard</option>
-                            <option value="vineclaw">Vineclaw the Lifegiver</option>
-                            <option value="shadowmaw">Shadowmaw the Nightstalker</option>
-                            <option value="aquaris">Aquaris the Depthcaller</option>
-                        </select>
-                        <div id="dragon2-display"></div>
-                    </div>
                 </div>
 
                 <div class="battle-button-container">
-                    <button id="battle-button" class="battle-button" disabled>Start the Battle!</button>
-                    <a href="singleplayer.html" class="single-player-button">Single Player</a>
+                    <button id="battle-button" class="battle-button" disabled>Start Single Player</button>
                 </div>
 
                 <div class="back-link-container">
@@ -1439,10 +1436,8 @@
                         <h2 id="battle-dragon2-name" class="battle-dragon-name"></h2>
                         <p id="battle-dragon2-element" class="battle-dragon-element"></p>
                         <div class="battle-powers-section">
-                            <h3>Powers</h3>
-                            <select id="battle-dragon2-powers" class="power-dropdown">
-                                <option value="">-- Select a Power --</option>
-                            </select>
+                            <h3>Power (Bot)</h3>
+                            <div id="battle-dragon2-powers" class="bot-power-text">-- Bot will select power --</div>
                         </div>
                     </div>
                 </div>
@@ -1489,7 +1484,8 @@
                     { name: "Gentle Levitation", description: "Breezeflight can create powerful upward air currents that allow him to lift objects, creatures, or even other dragons without causing harm, using the gentlest of breezes." },
                     { name: "Pollination Wind", description: "By controlling precise air currents, he can spread seeds and pollen across vast distances, helping Vineclaw's gardens flourish throughout the entire lair." },
                     { name: "Refreshing Breeze (Healing)", description: "Breezeflight can channel pure, revitalizing air currents that flow through his body, healing wounds and restoring his strength with the gentle touch of the wind.", isHealing: true },
-                    { name: "Air Barrier (Shield)", description: "Breezeflight can create a protective barrier of compressed air currents that deflects attacks and shields him from incoming damage.", isShield: true }
+                    { name: "Air Barrier (Shield)", description: "Breezeflight can create a protective barrier of compressed air currents that deflects attacks and shields him from incoming damage.", isShield: true },
+                    { name: "Hurricane Revival (Instant Heal)", description: "Breezeflight can summon a massive hurricane of pure life-giving air that instantly restores all of his health in a single, powerful gust that completely heals all wounds.", isInstantHeal: true }
                 ]
             },
             chaosflare: {
@@ -1503,7 +1499,8 @@
                     { name: "Pattern Randomization", description: "Chaosflare can create beautiful, unpredictable patterns of light, energy, and color that defy logic and mesmerize those who watch them." },
                     { name: "Unpredictable Teleportation", description: "Through chaotic space manipulation, he can instantly appear anywhere in the lair, though the destination is often slightly different from where he intended." },
                     { name: "Chaotic Regeneration (Healing)", description: "Chaosflare can channel the unpredictable nature of chaos itself to twist reality around his wounds, causing them to heal in wild and unexpected ways that restore his vitality.", isHealing: true },
-                    { name: "Chaos Barrier (Shield)", description: "Chaosflare can create a swirling barrier of chaotic energy that warps and deflects incoming attacks, making him unpredictable and hard to hit.", isShield: true }
+                    { name: "Chaos Barrier (Shield)", description: "Chaosflare can create a swirling barrier of chaotic energy that warps and deflects incoming attacks, making him unpredictable and hard to hit.", isShield: true },
+                    { name: "Reality Rewrite (Instant Heal)", description: "Chaosflare can completely rewrite reality itself, instantly erasing all wounds and damage from existence, restoring himself to perfect health in an instant.", isInstantHeal: true }
                 ]
             },
             crystalwing: {
@@ -1517,7 +1514,8 @@
                     { name: "Vision Projection", description: "By touching one of her memory crystals, Crystalwing can project stored memories as visible images, allowing others to see past events." },
                     { name: "Prismatic Shield", description: "She can create crystal barriers that refract attacks, splitting incoming energy or projectiles into harmless fragments." },
                     { name: "Crystalline Restoration (Healing)", description: "Crystalwing can form healing crystals that grow from her wounds, sealing them with pure crystal that restores her vitality and makes her scales shine even brighter.", isHealing: true },
-                    { name: "Crystal Barrier (Shield)", description: "Crystalwing can grow a protective crystal barrier around herself that refracts and reflects incoming attacks, shielding her with brilliant prismatic defenses.", isShield: true }
+                    { name: "Crystal Barrier (Shield)", description: "Crystalwing can grow a protective crystal barrier around herself that refracts and reflects incoming attacks, shielding her with brilliant prismatic defenses.", isShield: true },
+                    { name: "Perfect Prism Renewal (Instant Heal)", description: "Crystalwing can create a perfect, flawless crystal that instantly refracts pure healing energy through every part of her body, completely restoring her health in a brilliant flash of light.", isInstantHeal: true }
                 ]
             },
             earthheart: {
@@ -1531,7 +1529,8 @@
                     { name: "Earthen Shield", description: "He can raise walls of stone from the ground to protect himself and others, creating instant fortifications when needed." },
                     { name: "Mineral Sensing", description: "Earthheart can sense valuable minerals and ores deep underground, helping Metalbeak locate the finest materials for forging." },
                     { name: "Earthen Regeneration (Healing)", description: "Earthheart can draw strength from the very earth beneath him, causing his stone-like scales to repair themselves and his wounds to seal with rich, healing soil and minerals.", isHealing: true },
-                    { name: "Stone Barrier (Shield)", description: "Earthheart can raise an impenetrable wall of solid stone around himself, creating a protective barrier that absorbs and blocks incoming damage.", isShield: true }
+                    { name: "Stone Barrier (Shield)", description: "Earthheart can raise an impenetrable wall of solid stone around himself, creating a protective barrier that absorbs and blocks incoming damage.", isShield: true },
+                    { name: "Bedrock Restoration (Instant Heal)", description: "Earthheart can merge completely with the ancient bedrock itself, drawing infinite strength from the deepest earth to instantly restore all of his health to perfect condition.", isInstantHeal: true }
                 ]
             },
             flamethorn: {
@@ -1545,7 +1544,8 @@
                     { name: "Forge Fire", description: "He can produce specialized flames perfect for Metalbeak's forge work, creating fires that burn at precise temperatures for metalworking." },
                     { name: "Fire Shield", description: "Flamethorn can surround himself or others with protective walls of flame that burn enemies while keeping allies safe from the heat." },
                     { name: "Fiery Restoration (Healing)", description: "Flamethorn can channel his eternal flames inward, using their purifying heat to cauterize wounds and reignite his inner fire, restoring his strength and vitality.", isHealing: true },
-                    { name: "Blazing Barrier (Shield)", description: "Flamethorn can create a protective wall of eternal flames that burns away incoming attacks, shielding him with unquenchable fire that destroys anything that touches it.", isShield: true }
+                    { name: "Blazing Barrier (Shield)", description: "Flamethorn can create a protective wall of eternal flames that burns away incoming attacks, shielding him with unquenchable fire that destroys anything that touches it.", isShield: true },
+                    { name: "Phoenix Rebirth (Instant Heal)", description: "Flamethorn can channel the legendary power of the phoenix, completely immolating himself in eternal flames that instantly burn away all wounds and restore him to perfect health.", isInstantHeal: true }
                 ]
             },
             frostbite: {
@@ -1559,7 +1559,8 @@
                     { name: "Crystalline Shield", description: "She can create walls of ice that are harder than diamond, providing protection that reflects and refracts attacks." },
                     { name: "Flash Freeze", description: "Frostbite can instantly freeze water, objects, or even small areas of space, preserving them in perfect condition for eternity." },
                     { name: "Icy Rejuvenation (Healing)", description: "Frostbite can freeze her wounds solid, preventing further damage while her pure ice scales slowly regenerate and restore her health with the power of eternal winter.", isHealing: true },
-                    { name: "Glacial Barrier (Shield)", description: "Frostbite can create an unbreakable wall of permafrost ice around herself, forming a protective barrier of eternal cold that freezes and shatters incoming attacks.", isShield: true }
+                    { name: "Glacial Barrier (Shield)", description: "Frostbite can create an unbreakable wall of permafrost ice around herself, forming a protective barrier of eternal cold that freezes and shatters incoming attacks.", isShield: true },
+                    { name: "Absolute Zero Recovery (Instant Heal)", description: "Frostbite can freeze time itself around her wounds, instantly preserving them in perfect ice that melts away to reveal completely healed, unblemished scales and full health.", isInstantHeal: true }
                 ]
             },
             radiant: {
@@ -1573,7 +1574,8 @@
                     { name: "Solar Growth", description: "She can focus her light to accelerate plant growth, helping Vineclaw's gardens flourish with enhanced photosynthesis." },
                     { name: "Light Healing", description: "Radiant's warm, golden light has gentle healing properties that can soothe wounds and restore energy to those who bask in her radiance." },
                     { name: "Solar Restoration (Healing)", description: "Radiant can channel pure sunlight into her body, filling every wound with warm, healing radiance that restores her health and makes her golden scales shine with renewed brilliance.", isHealing: true },
-                    { name: "Radiant Barrier (Shield)", description: "Radiant can create a barrier of solid golden light that surrounds her, forming a protective shield of pure radiance that blinds and deflects incoming attacks.", isShield: true }
+                    { name: "Radiant Barrier (Shield)", description: "Radiant can create a barrier of solid golden light that surrounds her, forming a protective shield of pure radiance that blinds and deflects incoming attacks.", isShield: true },
+                    { name: "Divine Light Revival (Instant Heal)", description: "Radiant can channel the full power of the sun itself, becoming a beacon of pure divine light that instantly fills every wound with absolute radiance, completely restoring her health in a blinding flash.", isInstantHeal: true }
                 ]
             },
             stormwing: {
@@ -1587,7 +1589,8 @@
                     { name: "Electric Conductivity", description: "His scales can store and channel electricity, allowing him to power devices or create electrical weapons on demand." },
                     { name: "Storm Summoning", description: "Stormwing can create localized storms around himself, generating powerful winds, lightning, and thunder that protect and defend." },
                     { name: "Electric Restoration (Healing)", description: "Stormwing can channel lightning through his own body, using the electrical energy to stimulate his cells and regenerate damaged tissue, restoring his health with the power of the storm.", isHealing: true },
-                    { name: "Lightning Barrier (Shield)", description: "Stormwing can create a crackling barrier of electrical energy around himself, forming a protective shield of lightning that zaps and redirects incoming attacks.", isShield: true }
+                    { name: "Lightning Barrier (Shield)", description: "Stormwing can create a crackling barrier of electrical energy around himself, forming a protective shield of lightning that zaps and redirects incoming attacks.", isShield: true },
+                    { name: "Thunderous Surge (Instant Heal)", description: "Stormwing can call down the full force of a massive thunderstorm, channeling overwhelming lightning through his entire body that instantly regenerates all damaged tissue and restores him to perfect health.", isInstantHeal: true }
                 ]
             },
             metalbeak: {
@@ -1601,7 +1604,8 @@
                     { name: "Alloy Creation", description: "Metalbeak can combine different metals using his body heat, creating new alloys with unique properties never seen before." },
                     { name: "Metal Sensing", description: "He can detect and locate metal ores and deposits deep underground, working with Earthheart to mine the finest materials for forging." },
                     { name: "Metallic Repair (Healing)", description: "Metalbeak can heat his scales to forge-like temperatures, using his mastery over metal to repair damaged scales and seal wounds with molten steel that cools into perfect healing armor.", isHealing: true },
-                    { name: "Steel Barrier (Shield)", description: "Metalbeak can forge an unbreakable shield of pure steel around himself, creating a protective barrier of solid metal that blocks and absorbs incoming damage.", isShield: true }
+                    { name: "Steel Barrier (Shield)", description: "Metalbeak can forge an unbreakable shield of pure steel around himself, creating a protective barrier of solid metal that blocks and absorbs incoming damage.", isShield: true },
+                    { name: "Perfect Forge Rebirth (Instant Heal)", description: "Metalbeak can forge himself anew in the perfect forge of his own body heat, instantly reforging every damaged scale and wound with flawless molten steel that cools into perfect health.", isInstantHeal: true }
                 ]
             },
             vineclaw: {
@@ -1615,7 +1619,8 @@
                     { name: "Healing Pollen", description: "Vineclaw can release pollen from her flowers that has gentle healing properties, restoring energy and soothing wounds." },
                     { name: "Seed Spreading", description: "She can create and scatter seeds that grow into any plant she imagines, populating barren areas with lush vegetation in moments." },
                     { name: "Life Force Regeneration (Healing)", description: "Vineclaw can channel the very essence of life itself, causing healing vines and flowers to sprout from her wounds, drawing upon nature's infinite vitality to restore her health.", isHealing: true },
-                    { name: "Thorny Barrier (Shield)", description: "Vineclaw can instantly grow a protective barrier of thick, thorny vines and brambles around herself, creating a natural shield that blocks and entangles incoming attacks.", isShield: true }
+                    { name: "Thorny Barrier (Shield)", description: "Vineclaw can instantly grow a protective barrier of thick, thorny vines and brambles around herself, creating a natural shield that blocks and entangles incoming attacks.", isShield: true },
+                    { name: "Nature's Ultimate Gift (Instant Heal)", description: "Vineclaw can channel the infinite life force of nature itself, causing a massive bloom of life-giving flowers and vines to instantly sprout from every wound, completely restoring her health in a single burst of pure vitality.", isInstantHeal: true }
                 ]
             },
             shadowmaw: {
@@ -1629,7 +1634,8 @@
                     { name: "Light Absorption", description: "His scales absorb light around him, creating pockets of darkness that make nearby areas dimmer and more shadowy." },
                     { name: "Shadow Form", description: "Shadowmaw can transform parts of his body into pure shadow, allowing him to pass through small spaces or become intangible." },
                     { name: "Shadow Regeneration (Healing)", description: "Shadowmaw can merge his wounds with the darkness itself, causing them to become intangible shadows that slowly fade away as he draws strength from the endless void to restore his health.", isHealing: true },
-                    { name: "Shadow Barrier (Shield)", description: "Shadowmaw can create a barrier of absolute darkness around himself, forming an impenetrable shadow shield that makes incoming attacks pass harmlessly through the void.", isShield: true }
+                    { name: "Shadow Barrier (Shield)", description: "Shadowmaw can create a barrier of absolute darkness around himself, forming an impenetrable shadow shield that makes incoming attacks pass harmlessly through the void.", isShield: true },
+                    { name: "Void Rebirth (Instant Heal)", description: "Shadowmaw can completely merge with the endless void itself, becoming pure shadow that instantly erases all wounds from existence and emerges from the darkness fully restored to perfect health.", isInstantHeal: true }
                 ]
             },
             aquaris: {
@@ -1643,7 +1649,8 @@
                     { name: "Water Breathing", description: "She can create bubbles of breathable water, allowing other dragons to breathe underwater or survive in flooded areas." },
                     { name: "Current Control", description: "Aquaris can manipulate water currents with precision, creating flowing streams for transportation or powerful jets for defense." },
                     { name: "Aquatic Restoration (Healing)", description: "Aquaris can channel pure, life-giving water through her body, causing her wounds to wash clean and heal as if bathed in the most pristine healing springs of the deepest ocean.", isHealing: true },
-                    { name: "Aquatic Barrier (Shield)", description: "Aquaris can create a protective barrier of swirling water around herself, forming a shield of flowing currents that redirects and absorbs incoming attacks with fluid grace.", isShield: true }
+                    { name: "Aquatic Barrier (Shield)", description: "Aquaris can create a protective barrier of swirling water around herself, forming a shield of flowing currents that redirects and absorbs incoming attacks with fluid grace.", isShield: true },
+                    { name: "Ocean's Complete Restoration (Instant Heal)", description: "Aquaris can channel the infinite healing power of the deepest ocean itself, summoning a massive wave of pure life-giving water that instantly washes away all wounds and restores her to perfect health.", isInstantHeal: true }
                 ]
             }
         };
@@ -1696,40 +1703,13 @@
             return elementMap[element.toLowerCase()] || '';
         }
 
-        // Function to update dropdowns to prevent duplicate selection
-        function updateDropdowns() {
+        // Function to enable/disable battle button
+        function updateBattleButton() {
             const dragon1Select = document.getElementById('dragon1-select');
-            const dragon2Select = document.getElementById('dragon2-select');
             const selected1 = dragon1Select.value;
-            const selected2 = dragon2Select.value;
-
-            // Reset all options availability
-            for (let i = 0; i < dragon1Select.options.length; i++) {
-                dragon1Select.options[i].disabled = false;
-            }
-            for (let i = 0; i < dragon2Select.options.length; i++) {
-                dragon2Select.options[i].disabled = false;
-            }
-
-            // Disable selected dragon in opposite dropdown
-            if (selected1 && selected1 !== '') {
-                for (let i = 0; i < dragon2Select.options.length; i++) {
-                    if (dragon2Select.options[i].value === selected1) {
-                        dragon2Select.options[i].disabled = true;
-                    }
-                }
-            }
-            if (selected2 && selected2 !== '') {
-                for (let i = 0; i < dragon1Select.options.length; i++) {
-                    if (dragon1Select.options[i].value === selected2) {
-                        dragon1Select.options[i].disabled = true;
-                    }
-                }
-            }
-
-            // Enable/disable battle button
             const battleButton = document.getElementById('battle-button');
-            if (selected1 && selected1 !== '' && selected2 && selected2 !== '' && selected1 !== selected2) {
+            
+            if (selected1 && selected1 !== '') {
                 battleButton.disabled = false;
             } else {
                 battleButton.disabled = true;
@@ -1739,49 +1719,23 @@
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             const dragon1Select = document.getElementById('dragon1-select');
-            const dragon2Select = document.getElementById('dragon2-select');
             const battleButton = document.getElementById('battle-button');
 
-            // Dragon 1 selection
+            // Dragon selection (player's dragon only)
             dragon1Select.addEventListener('change', function() {
                 const selected = this.value;
-                const otherSelected = dragon2Select.value;
-                
-                // If selecting the same dragon as the other side, clear the other side
-                if (selected && selected === otherSelected) {
-                    dragon2Select.value = '';
-                    document.getElementById('dragon2-display').innerHTML = '';
-                }
                 
                 if (selected) {
                     displayDragon(selected, 1);
                 } else {
                     document.getElementById('dragon1-display').innerHTML = '';
                 }
-                updateDropdowns();
-            });
-
-            // Dragon 2 selection
-            dragon2Select.addEventListener('change', function() {
-                const selected = this.value;
-                const otherSelected = dragon1Select.value;
-                
-                // If selecting the same dragon as the other side, clear the other side
-                if (selected && selected === otherSelected) {
-                    dragon1Select.value = '';
-                    document.getElementById('dragon1-display').innerHTML = '';
-                }
-                
-                if (selected) {
-                    displayDragon(selected, 2);
-                } else {
-                    document.getElementById('dragon2-display').innerHTML = '';
-                }
-                updateDropdowns();
+                updateBattleButton();
             });
 
             // Battle button
             battleButton.addEventListener('click', function() {
+                console.log('Start Single Player button clicked!');
                 startBattle();
             });
 
@@ -1842,11 +1796,16 @@
         // Function to start the battle
         function startBattle() {
             const dragon1Id = document.getElementById('dragon1-select').value;
-            const dragon2Id = document.getElementById('dragon2-select').value;
 
-            if (!dragon1Id || !dragon2Id || dragon1Id === dragon2Id) {
+            if (!dragon1Id) {
                 return;
             }
+
+            // Randomly select a bot dragon (different from player's dragon)
+            const allDragonIds = Object.keys(dragonData);
+            const availableDragons = allDragonIds.filter(id => id !== dragon1Id);
+            const randomIndex = Math.floor(Math.random() * availableDragons.length);
+            const dragon2Id = availableDragons[randomIndex];
 
             const dragon1 = dragonData[dragon1Id];
             const dragon2 = dragonData[dragon2Id];
@@ -1867,6 +1826,8 @@
                 dragon2Shield: 0,
                 dragon1ShieldUses: 0,
                 dragon2ShieldUses: 0,
+                dragon1InstantHealUsed: false,
+                dragon2InstantHealUsed: false,
                 dragon1Power: null,
                 dragon2Power: null
             };
@@ -1908,6 +1869,10 @@
 
             // Set up power selection listeners
             setupPowerSelectionListeners();
+            
+            // Bot automatically selects a power when battle starts
+            botSelectPower();
+            checkFightButtonState();
         }
 
         // Function to display dragon in battle view
@@ -1928,26 +1893,40 @@
             // Update element
             document.getElementById('battle-dragon' + sideNumber + '-element').textContent = 'Element: ' + dragon.element;
             
-            // Populate powers dropdown
-            const powersDropdown = document.getElementById('battle-dragon' + sideNumber + '-powers');
-            powersDropdown.innerHTML = '<option value="">-- Select a Power --</option>';
+            // Populate powers dropdown for player (dragon1) or show text for bot (dragon2)
+            const powersElement = document.getElementById('battle-dragon' + sideNumber + '-powers');
             
-            dragon.powers.forEach(function(power, index) {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = power.name;
-                
-                // Disable shield powers if they've been used 3 times
-                if (power.isShield === true) {
-                    const shieldUses = sideNumber === 1 ? battleState.dragon1ShieldUses : battleState.dragon2ShieldUses;
-                    if (shieldUses >= 3) {
-                        option.disabled = true;
-                        option.textContent = power.name + ' (Used 3/3)';
+            if (sideNumber === 1) {
+                // Player's dragon - use dropdown
+                powersElement.innerHTML = '<option value="">-- Select a Power --</option>';
+                dragon.powers.forEach(function(power, index) {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = power.name;
+                    
+                    // Disable shield powers if they've been used 3 times
+                    if (power.isShield === true) {
+                        const shieldUses = battleState.dragon1ShieldUses;
+                        if (shieldUses >= 3) {
+                            option.disabled = true;
+                            option.textContent = power.name + ' (Used 3/3)';
+                        }
                     }
-                }
-                
-                powersDropdown.appendChild(option);
-            });
+                    
+                    // Disable instant heal powers if they've been used
+                    if (power.isInstantHeal === true) {
+                        if (battleState.dragon1InstantHealUsed) {
+                            option.disabled = true;
+                            option.textContent = power.name + ' (Used 1/1)';
+                        }
+                    }
+                    
+                    powersElement.appendChild(option);
+                });
+            } else {
+                // Bot's dragon - show as text (will be updated when bot selects power)
+                powersElement.textContent = '-- Bot will select power --';
+            }
         }
 
         // Function to update health bar
@@ -2025,10 +2004,149 @@
             }
         }
 
+        // Function to make bot select a smart power
+        function botSelectPower() {
+            if (!battleState.dragon2) {
+                return;
+            }
+            
+            // Get available powers (exclude shield powers that have been used 3 times, and instant heal if used)
+            const availablePowers = [];
+            const healingPowers = [];
+            const instantHealPowers = [];
+            const shieldPowers = [];
+            const damagePowers = [];
+            
+            battleState.dragon2.powers.forEach(function(power, index) {
+                if (power.isShield === true && battleState.dragon2ShieldUses >= 3) {
+                    // Skip shield powers that have been used 3 times
+                    return;
+                }
+                
+                if (power.isInstantHeal === true && battleState.dragon2InstantHealUsed) {
+                    // Skip instant heal powers that have been used
+                    return;
+                }
+                
+                availablePowers.push({ power: power, index: index });
+                
+                // Categorize powers
+                if (power.isInstantHeal === true) {
+                    instantHealPowers.push({ power: power, index: index });
+                } else if (power.isHealing === true) {
+                    healingPowers.push({ power: power, index: index });
+                } else if (power.isShield === true) {
+                    shieldPowers.push({ power: power, index: index });
+                } else {
+                    damagePowers.push({ power: power, index: index });
+                }
+            });
+            
+            if (availablePowers.length === 0) {
+                // No available powers, select first power anyway
+                battleState.dragon2Power = battleState.dragon2.powers[0];
+                document.getElementById('battle-dragon2-powers').textContent = battleState.dragon2.powers[0].name;
+                return;
+            }
+            
+            let selected = null;
+            const botHP = battleState.dragon2HP;
+            const botShield = battleState.dragon2Shield;
+            const playerHP = battleState.dragon1HP;
+            const maxHP = 10;
+            
+            // Smart bot strategy based on HP and shield status:
+            // 1. Critical HP (2 or less): ALWAYS heal if available (survival priority)
+            // 2. Low HP (3-4) with no shield: Use shield first for protection, then heal if shield exists
+            // 3. Low HP (3-4) with shield: Heal to recover
+            // 4. Medium HP (5-7): Use damage, but build shield if no shield exists
+            // 5. High HP (8+): Use damage attacks
+            
+            if (botHP <= 2) {
+                // Critical HP - ALWAYS use instant heal if available (survival is top priority), otherwise regular heal
+                if (instantHealPowers.length > 0) {
+                    // Use instant heal for critical HP
+                    const randomIndex = Math.floor(Math.random() * instantHealPowers.length);
+                    selected = instantHealPowers[randomIndex];
+                } else if (healingPowers.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * healingPowers.length);
+                    selected = healingPowers[randomIndex];
+                } else if (shieldPowers.length > 0 && botShield === 0) {
+                    // No healing available, use shield for protection
+                    const randomIndex = Math.floor(Math.random() * shieldPowers.length);
+                    selected = shieldPowers[randomIndex];
+                } else if (damagePowers.length > 0) {
+                    // Last resort: damage
+                    const randomIndex = Math.floor(Math.random() * damagePowers.length);
+                    selected = damagePowers[randomIndex];
+                }
+            } else if (botHP <= 4) {
+                // Low HP - prioritize instant heal, protection, or regular healing
+                if (instantHealPowers.length > 0 && botHP <= 3) {
+                    // Use instant heal if HP is very low (3 or less)
+                    const randomIndex = Math.floor(Math.random() * instantHealPowers.length);
+                    selected = instantHealPowers[randomIndex];
+                } else if (botShield === 0 && shieldPowers.length > 0) {
+                    // No shield - build protection first
+                    const randomIndex = Math.floor(Math.random() * shieldPowers.length);
+                    selected = shieldPowers[randomIndex];
+                } else if (healingPowers.length > 0) {
+                    // Has shield or no shield available - heal to recover HP
+                    const randomIndex = Math.floor(Math.random() * healingPowers.length);
+                    selected = healingPowers[randomIndex];
+                } else if (damagePowers.length > 0) {
+                    // No healing available - use damage
+                    const randomIndex = Math.floor(Math.random() * damagePowers.length);
+                    selected = damagePowers[randomIndex];
+                }
+            } else if (botHP <= 7) {
+                // Medium HP - balance offense and defense
+                if (botShield === 0 && shieldPowers.length > 0) {
+                    // No shield - build some protection (50% chance to be strategic)
+                    if (Math.random() < 0.5) {
+                        const randomIndex = Math.floor(Math.random() * shieldPowers.length);
+                        selected = shieldPowers[randomIndex];
+                    } else {
+                        // Otherwise use damage
+                        const randomIndex = Math.floor(Math.random() * damagePowers.length);
+                        selected = damagePowers[randomIndex];
+                    }
+                } else {
+                    // Has shield or no shield power - use damage
+                    const randomIndex = Math.floor(Math.random() * damagePowers.length);
+                    selected = damagePowers[randomIndex];
+                }
+            } else {
+                // High HP (8+) - focus on offense
+                if (damagePowers.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * damagePowers.length);
+                    selected = damagePowers[randomIndex];
+                } else if (shieldPowers.length > 0 && botShield === 0) {
+                    // Only shield available and no shield - use it
+                    const randomIndex = Math.floor(Math.random() * shieldPowers.length);
+                    selected = shieldPowers[randomIndex];
+                } else if (healingPowers.length > 0) {
+                    // Only healing available - use it (won't hurt)
+                    const randomIndex = Math.floor(Math.random() * healingPowers.length);
+                    selected = healingPowers[randomIndex];
+                }
+            }
+            
+            // Fallback: if no selection was made, randomly select from all available
+            if (!selected) {
+                const randomIndex = Math.floor(Math.random() * availablePowers.length);
+                selected = availablePowers[randomIndex];
+            }
+            
+            battleState.dragon2Power = selected.power;
+            
+            // Update bot's power display
+            document.getElementById('battle-dragon2-powers').textContent = selected.power.name;
+        }
+
         // Set up power selection listeners
         function setupPowerSelectionListeners() {
             const power1Select = document.getElementById('battle-dragon1-powers');
-            const power2Select = document.getElementById('battle-dragon2-powers');
             const fightButton = document.getElementById('fight-button');
 
             power1Select.addEventListener('change', function() {
@@ -2041,30 +2159,20 @@
                         this.value = '';
                         battleState.dragon1Power = null;
                         alert('Shield power has been used 3 times and cannot be used again!');
+                    } else if (selectedPower.isInstantHeal === true && battleState.dragon1InstantHealUsed) {
+                        // Reset to empty if trying to select an instant heal power that's been used
+                        this.value = '';
+                        battleState.dragon1Power = null;
+                        alert('Instant Heal power has been used and cannot be used again!');
                     } else {
                         battleState.dragon1Power = selectedPower;
+                        // Bot automatically selects a power when player selects theirs
+                        botSelectPower();
                     }
                 } else {
                     battleState.dragon1Power = null;
-                }
-                checkFightButtonState();
-            });
-
-            power2Select.addEventListener('change', function() {
-                const powerIndex = parseInt(this.value);
-                if (powerIndex >= 0 && battleState.dragon2) {
-                    const selectedPower = battleState.dragon2.powers[powerIndex];
-                    // Check if this is a shield power that has been used 3 times
-                    if (selectedPower.isShield === true && battleState.dragon2ShieldUses >= 3) {
-                        // Reset to empty if trying to select a shield power that's been used 3 times
-                        this.value = '';
-                        battleState.dragon2Power = null;
-                        alert('Shield power has been used 3 times and cannot be used again!');
-                    } else {
-                        battleState.dragon2Power = selectedPower;
-                    }
-                } else {
                     battleState.dragon2Power = null;
+                    document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
                 }
                 checkFightButtonState();
             });
@@ -2092,11 +2200,13 @@
             // Disable fight button during battle
             document.getElementById('fight-button').disabled = true;
 
-            // Check if powers are healing or shield powers
+            // Check if powers are healing, shield, or instant heal powers
             const isHealing1 = battleState.dragon1Power && battleState.dragon1Power.isHealing === true;
             const isHealing2 = battleState.dragon2Power && battleState.dragon2Power.isHealing === true;
             let isShield1 = battleState.dragon1Power && battleState.dragon1Power.isShield === true;
             let isShield2 = battleState.dragon2Power && battleState.dragon2Power.isShield === true;
+            const isInstantHeal1 = battleState.dragon1Power && battleState.dragon1Power.isInstantHeal === true;
+            const isInstantHeal2 = battleState.dragon2Power && battleState.dragon2Power.isInstantHeal === true;
             
             // Prevent using shield power if it's been used 3 times
             if (isShield1 && battleState.dragon1ShieldUses >= 3) {
@@ -2110,16 +2220,35 @@
             
             if (isShield2 && battleState.dragon2ShieldUses >= 3) {
                 battleLog.innerHTML += '<p style="color: #FF4444; font-weight: bold;">' + battleState.dragon2.name + ' cannot use shield power - it has been used 3 times already!</p>';
-                document.getElementById('battle-dragon2-powers').value = '';
                 battleState.dragon2Power = null;
+                document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
+                checkFightButtonState();
+                document.getElementById('fight-button').disabled = false;
+                return;
+            }
+            
+            // Prevent using instant heal power if it's been used
+            if (isInstantHeal1 && battleState.dragon1InstantHealUsed) {
+                battleLog.innerHTML += '<p style="color: #FF4444; font-weight: bold;">' + battleState.dragon1.name + ' cannot use Instant Heal power - it has been used already!</p>';
+                document.getElementById('battle-dragon1-powers').value = '';
+                battleState.dragon1Power = null;
+                checkFightButtonState();
+                document.getElementById('fight-button').disabled = false;
+                return;
+            }
+            
+            if (isInstantHeal2 && battleState.dragon2InstantHealUsed) {
+                battleLog.innerHTML += '<p style="color: #FF4444; font-weight: bold;">' + battleState.dragon2.name + ' cannot use Instant Heal power - it has been used already!</p>';
+                battleState.dragon2Power = null;
+                document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
                 checkFightButtonState();
                 document.getElementById('fight-button').disabled = false;
                 return;
             }
 
-            // Get power values (1-3 random) for each dragon
-            const power1 = Math.floor(Math.random() * 3) + 1;
-            const power2 = Math.floor(Math.random() * 3) + 1;
+            // Get power values (1-5 random) for each dragon
+            const power1 = Math.floor(Math.random() * 5) + 1;
+            const power2 = Math.floor(Math.random() * 5) + 1;
 
             // Both dragons use their powers
             let logMessage = '<p class="attack-message">' + battleState.dragon1.name + ' uses ' + battleState.dragon1Power.name + '!</p>';
@@ -2141,7 +2270,55 @@
                     // Dragon 1 wins
                     const difference = power1 - power2;
                     
-                    if (isHealing1) {
+                    if (isInstantHeal1) {
+                        // Dragon 1 is using instant heal - fully restore HP
+                        battleState.dragon1InstantHealUsed = true;
+                        const oldHP1 = battleState.dragon1HP;
+                        const newHP1 = maxHP; // Instant heal restores to full HP
+                        updateHealthBar(1, newHP1);
+                        
+                        // Disable instant heal power in dropdown
+                        const powerDropdown1 = document.getElementById('battle-dragon1-powers');
+                        const currentPowerIndex = battleState.dragon1.powers.indexOf(battleState.dragon1Power);
+                        for (let i = 0; i < powerDropdown1.options.length; i++) {
+                            const optionValue = powerDropdown1.options[i].value;
+                            if (optionValue && parseInt(optionValue) === currentPowerIndex) {
+                                powerDropdown1.options[i].disabled = true;
+                                powerDropdown1.options[i].textContent = battleState.dragon1Power.name + ' (Used 1/1)';
+                                break;
+                            }
+                        }
+                        
+                        logMessage += '<p class="result-message">' + battleState.dragon1.name + ' wins this round! (' + power1 + ' vs ' + power2 + ')</p>';
+                        logMessage += '<p style="color: #44FF44; font-weight: bold; font-size: 14px;">' + battleState.dragon1.name + ' uses Instant Heal and fully restores to ' + newHP1 + ' HP! (' + oldHP1 + ' -> ' + newHP1 + ' HP)</p>';
+                        logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + newHP1 + ' HP | ' + battleState.dragon2.name + ' - ' + battleState.dragon2HP + ' HP</p>';
+                        if (battleState.dragon1Shield > 0 || battleState.dragon2Shield > 0) {
+                            let shieldInfo = '';
+                            if (battleState.dragon1Shield > 0) {
+                                shieldInfo += battleState.dragon1.name + ' (Shield: ' + battleState.dragon1Shield + ')';
+                            }
+                            if (battleState.dragon2Shield > 0) {
+                                if (shieldInfo) shieldInfo += ' | ';
+                                shieldInfo += battleState.dragon2.name + ' (Shield: ' + battleState.dragon2Shield + ')';
+                            }
+                            if (shieldInfo) {
+                                logMessage += '<p style="color: #8888FF;">' + shieldInfo + '</p>';
+                            }
+                        }
+                        
+                        // Update attack summary with result
+                        const attackSummary = document.getElementById('attack-summary');
+                        if (attackSummary) {
+                            attackSummary.innerHTML = '<p style="color: #44FF44; font-weight: bold;">' + battleState.dragon1.name + ' fully healed</p>';
+                        }
+                        
+                        // Clear selection after instant heal is used
+                        if (powerDropdown1.value && parseInt(powerDropdown1.value) === currentPowerIndex) {
+                            powerDropdown1.value = '';
+                            battleState.dragon1Power = null;
+                            checkFightButtonState();
+                        }
+                    } else if (isHealing1) {
                         // Dragon 1 is using healing - heal themselves
                         const oldHP1 = battleState.dragon1HP;
                         const newHP1 = Math.min(oldHP1 + difference, maxHP);
@@ -2273,7 +2450,41 @@
                     // Dragon 2 wins
                     const difference = power2 - power1;
                     
-                    if (isHealing2) {
+                    if (isInstantHeal2) {
+                        // Dragon 2 (bot) is using instant heal - fully restore HP
+                        battleState.dragon2InstantHealUsed = true;
+                        const oldHP2 = battleState.dragon2HP;
+                        const newHP2 = maxHP; // Instant heal restores to full HP
+                        updateHealthBar(2, newHP2);
+                        
+                        logMessage += '<p class="result-message">' + battleState.dragon2.name + ' wins this round! (' + power2 + ' vs ' + power1 + ')</p>';
+                        logMessage += '<p style="color: #44FF44; font-weight: bold; font-size: 14px;">' + battleState.dragon2.name + ' uses Instant Heal and fully restores to ' + newHP2 + ' HP! (' + oldHP2 + ' -> ' + newHP2 + ' HP)</p>';
+                        logMessage += '<p>Current HP: ' + battleState.dragon1.name + ' - ' + battleState.dragon1HP + ' HP | ' + battleState.dragon2.name + ' - ' + newHP2 + ' HP</p>';
+                        if (battleState.dragon1Shield > 0 || battleState.dragon2Shield > 0) {
+                            let shieldInfo = '';
+                            if (battleState.dragon1Shield > 0) {
+                                shieldInfo += battleState.dragon1.name + ' (Shield: ' + battleState.dragon1Shield + ')';
+                            }
+                            if (battleState.dragon2Shield > 0) {
+                                if (shieldInfo) shieldInfo += ' | ';
+                                shieldInfo += battleState.dragon2.name + ' (Shield: ' + battleState.dragon2Shield + ')';
+                            }
+                            if (shieldInfo) {
+                                logMessage += '<p style="color: #8888FF;">' + shieldInfo + '</p>';
+                            }
+                        }
+                        
+                        // Update attack summary with result
+                        const attackSummary = document.getElementById('attack-summary');
+                        if (attackSummary) {
+                            attackSummary.innerHTML = '<p style="color: #44FF44; font-weight: bold;">' + battleState.dragon2.name + ' fully healed</p>';
+                        }
+                        
+                        // Clear bot's power selection after instant heal is used
+                        battleState.dragon2Power = null;
+                        document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
+                        checkFightButtonState();
+                    } else if (isHealing2) {
                         // Dragon 2 is using healing - heal themselves
                         const oldHP2 = battleState.dragon2HP;
                         const newHP2 = Math.min(oldHP2 + difference, maxHP);
@@ -2317,24 +2528,12 @@
                         updateShieldDisplay(2, battleState.dragon2Shield);
                         updateShieldUseDisplay(2, battleState.dragon2ShieldUses);
                         
-                        // Update dropdown to disable shield power if limit reached
+                        // Clear bot's power selection if shield uses are exhausted
                         if (battleState.dragon2ShieldUses >= 3) {
-                            const powerDropdown2 = document.getElementById('battle-dragon2-powers');
-                            const currentPowerIndex = battleState.dragon2.powers.indexOf(battleState.dragon2Power);
-                            for (let i = 0; i < powerDropdown2.options.length; i++) {
-                                const optionValue = powerDropdown2.options[i].value;
-                                if (optionValue && parseInt(optionValue) === currentPowerIndex) {
-                                    powerDropdown2.options[i].disabled = true;
-                                    powerDropdown2.options[i].textContent = battleState.dragon2Power.name + ' (Used 3/3)';
-                                    break;
-                                }
-                            }
-                            // Clear selection if this shield power was currently selected
-                            if (powerDropdown2.value && parseInt(powerDropdown2.value) === currentPowerIndex) {
-                                powerDropdown2.value = '';
-                                battleState.dragon2Power = null;
-                                checkFightButtonState();
-                            }
+                            // Bot's power is displayed as text, not a dropdown
+                            battleState.dragon2Power = null;
+                            document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
+                            checkFightButtonState();
                         }
                         
                         logMessage += '<p class="result-message">' + battleState.dragon2.name + ' wins this round! (' + power2 + ' vs ' + power1 + ')</p>';
@@ -2449,6 +2648,8 @@
 
                 // Reset for next round - but keep the dropdowns selected
                 setTimeout(function() {
+                    // Bot automatically selects a new power for the next round
+                    botSelectPower();
                     // Re-enable fight button if powers are still selected
                     checkFightButtonState();
                     battleLog.innerHTML += '<p style="color: #88CCFF; font-weight: bold; margin-top: 10px;">Select new powers for the next round (or use the same ones)!</p>';
@@ -2515,7 +2716,7 @@
                         battleState.dragon1Power = null;
                         battleState.dragon2Power = null;
                         document.getElementById('battle-dragon1-powers').value = '';
-                        document.getElementById('battle-dragon2-powers').value = '';
+                        document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
                         checkFightButtonState();
                         battleLog.innerHTML += '<p style="color: #88CCFF; margin-top: 20px; font-weight: bold;">Select new powers for the next round!</p>';
                     }, 1500);
@@ -2543,7 +2744,7 @@
                         battleState.dragon1Power = null;
                         battleState.dragon2Power = null;
                         document.getElementById('battle-dragon1-powers').value = '';
-                        document.getElementById('battle-dragon2-powers').value = '';
+                        document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
                         checkFightButtonState();
                         battleLog.innerHTML += '<p style="color: #88CCFF; margin-top: 20px; font-weight: bold;">Select new powers for the next round!</p>';
                     }, 1500);
@@ -2560,7 +2761,7 @@
                     battleState.dragon1Power = null;
                     battleState.dragon2Power = null;
                     document.getElementById('battle-dragon1-powers').value = '';
-                    document.getElementById('battle-dragon2-powers').value = '';
+                    document.getElementById('battle-dragon2-powers').textContent = '-- Bot will select power --';
                     checkFightButtonState();
                     battleLog.innerHTML += '<p style="color: #88CCFF; margin-top: 20px; font-weight: bold;">Select new powers for the next round!</p>';
                 }, 1500);
@@ -2610,9 +2811,7 @@
             
             // Reset selections
             document.getElementById('dragon1-select').value = '';
-            document.getElementById('dragon2-select').value = '';
             document.getElementById('dragon1-display').innerHTML = '';
-            document.getElementById('dragon2-display').innerHTML = '';
             
             // Reset battle state
             battleState = {
@@ -2626,12 +2825,14 @@
                 dragon2Shield: 0,
                 dragon1ShieldUses: 0,
                 dragon2ShieldUses: 0,
+                dragon1InstantHealUsed: false,
+                dragon2InstantHealUsed: false,
                 dragon1Power: null,
                 dragon2Power: null
             };
             
-            // Update dropdowns
-            updateDropdowns();
+            // Update battle button
+            updateBattleButton();
         }
     </script>
 </body>

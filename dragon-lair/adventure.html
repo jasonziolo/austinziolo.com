@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 5 Cave - Austin's Dragon Lair</title>
+    <title>Adventure Mode - Austin's Dragon Lair</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
         body {
@@ -346,16 +346,293 @@
         /* Selection Area Visibility */
         .selection-area {
             display: block;
+            position: relative;
         }
 
         .selection-area.hidden {
             display: none;
         }
 
+        /* Game Difficulty Button */
+        .difficulty-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFAA00 100%);
+            color: #000000;
+            border: 2px solid #FFCC44;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 4px 8px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 215, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-button:hover {
+            background: linear-gradient(135deg, #FFAA00 0%, #FFD700 100%);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 6px 12px rgba(0, 0, 0, 0.5),
+                0 0 25px rgba(255, 215, 0, 0.7);
+            transform: scale(1.05);
+        }
+
+        .difficulty-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Settings Box */
+        .settings-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 3px solid #FFD700;
+            border-radius: 12px;
+            padding: 30px;
+            z-index: 1000;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(255, 215, 0, 0.4);
+            min-width: 400px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .settings-box.active {
+            display: block;
+        }
+
+        .settings-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 15px;
+        }
+
+        .settings-box-header h2 {
+            color: #FFD700;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .settings-close-button {
+            background: transparent;
+            border: 2px solid #FFD700;
+            color: #FFD700;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .settings-close-button:hover {
+            background: #FFD700;
+            color: #000000;
+            transform: rotate(90deg);
+        }
+
+        .settings-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+
+        .settings-overlay.active {
+            display: block;
+        }
+
+        .settings-content {
+            color: #FFFFFF;
+        }
+
+        .settings-section {
+            margin-bottom: 25px;
+        }
+
+        .settings-section h3 {
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .difficulty-option-button {
+            flex: 1;
+            min-width: 100px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            color: #FFFFFF;
+            border: 2px solid #666666;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.5),
+                0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .difficulty-option-button:hover {
+            background: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
+            border-color: #FFD700;
+            transform: translateY(-2px);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.5),
+                0 6px 12px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .difficulty-option-button:active {
+            transform: translateY(0);
+        }
+
+        .difficulty-option-button.active {
+            background: linear-gradient(135deg, #FFD700 0%, #FFAA00 100%);
+            color: #000000;
+            border-color: #FFCC44;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 4px 8px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .difficulty-option-button.active:hover {
+            background: linear-gradient(135deg, #FFAA00 0%, #FFD700 100%);
+        }
+
+        .custom-timer-input-container {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-timer-input {
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            color: #FFFFFF;
+            border: 2px solid #666666;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            width: 150px;
+            transition: all 0.3s ease;
+        }
+
+        .custom-timer-input:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .custom-timer-input::placeholder {
+            color: #888888;
+        }
+
+        .custom-timer-apply-button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFAA00 100%);
+            color: #000000;
+            border: 2px solid #FFCC44;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .custom-timer-apply-button:hover {
+            background: linear-gradient(135deg, #FFAA00 0%, #FFD700 100%);
+            transform: scale(1.05);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 6px 12px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .custom-timer-apply-button:active {
+            transform: scale(0.95);
+        }
+
+        .difficulty-info {
+            margin-top: 15px;
+            text-align: center;
+            color: #FFD700;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
         /* Adventure Game View Styles */
         .adventure-view {
+            display: none;
+        }
+
+        .adventure-view.active {
             display: block !important;
             visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* Force timer to always be visible when adventure view exists */
+        #timer-display {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: absolute !important;
+            top: 15px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 200 !important;
+        }
+        
+        .adventure-view #timer-display {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .adventure-view.active #timer-display {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
         .cave-container {
@@ -555,24 +832,34 @@
         
         /* Timer Display */
         .timer-display {
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #FF4444 0%, #AA0000 100%);
-            color: #FFFFFF;
-            font-size: 24px;
-            font-weight: bold;
-            padding: 10px 25px;
-            border: 3px solid #FF6666;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(255, 68, 68, 0.6), 0 0 20px rgba(255, 68, 68, 0.4);
-            z-index: 200;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-family: Arial, sans-serif;
-            min-width: 80px;
-            text-align: center;
+            position: absolute !important;
+            top: 15px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            background: linear-gradient(135deg, #FF4444 0%, #AA0000 100%) !important;
+            color: #FFFFFF !important;
+            font-size: 24px !important;
+            font-weight: bold !important;
+            padding: 10px 25px !important;
+            border: 3px solid #FF6666 !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 12px rgba(255, 68, 68, 0.6), 0 0 20px rgba(255, 68, 68, 0.4) !important;
+            z-index: 200 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 2px !important;
+            font-family: Arial, sans-serif !important;
+            min-width: 80px !important;
+            text-align: center !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* Ensure timer is visible when adventure view is active */
+        .adventure-view.active .timer-display {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         
         .timer-display.warning {
@@ -639,17 +926,76 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
-        /* Level 9 Button */
-        .level-9-button {
+        .adventure-save-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 10px 0 0;
+        }
+
+        .save-progress-button {
+            background: linear-gradient(135deg, #2a6a3a 0%, #1a4a2a 100%);
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 8px 16px;
+            border: 2px solid #44AA66;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 3px 10px rgba(0, 100, 50, 0.45);
+            font-family: Arial, sans-serif;
+        }
+
+        .save-progress-button:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        .save-progress-button.secondary {
+            background: linear-gradient(135deg, #3a4a6a 0%, #2a3a5a 100%);
+            border-color: #6688AA;
+        }
+
+        .story-continue-button {
+            background: linear-gradient(135deg, #2a6a4a 0%, #1a4a3a 100%) !important;
+            border-color: #44CC88 !important;
+        }
+
+        .save-account-hint {
+            margin: 8px auto 0;
+            max-width: 36rem;
+            font-size: 13px;
+            line-height: 1.45;
+            color: #c8c8d8;
+            text-align: center;
+        }
+
+        .save-account-hint a {
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .save-account-hint a:hover {
+            text-decoration: underline;
+        }
+
+        .selection-save-hint {
+            margin-top: 12px;
+        }
+
+        /* Level 10 Button */
+        .level-10-button {
             position: absolute;
-            top: 65px;
+            top: 60px;
             right: 15px;
-            background: linear-gradient(135deg, #8844AA 0%, #BB66FF 100%);
+            background: linear-gradient(135deg, #8844AA 0%, #6644AA 100%);
             color: #FFFFFF;
             font-size: 14px;
             font-weight: bold;
             padding: 10px 20px;
-            border: 3px solid #AA88DD;
+            border: 3px solid #AA66CC;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
@@ -660,13 +1006,13 @@
             font-family: Arial, sans-serif;
         }
 
-        .level-9-button:hover {
-            background: linear-gradient(135deg, #AA66DD 0%, #CC88FF 100%);
+        .level-10-button:hover {
+            background: linear-gradient(135deg, #AA66CC 0%, #8844AA 100%);
             box-shadow: 0 6px 16px rgba(136, 68, 170, 0.8), 0 0 30px rgba(136, 68, 170, 0.6);
             transform: scale(1.05);
         }
 
-        .level-9-button:active {
+        .level-10-button:active {
             transform: scale(0.95);
         }
 
@@ -677,11 +1023,11 @@
                 top: 10px;
                 right: 10px;
             }
-
-            .level-9-button {
+            
+            .level-10-button {
                 font-size: 12px;
                 padding: 8px 15px;
-                top: 60px;
+                top: 55px;
                 right: 10px;
             }
             
@@ -729,132 +1075,6 @@
             margin: 0 !important;
             overflow: hidden !important;
             will-change: transform, left, bottom; /* GPU acceleration */
-        }
-
-        /* Boss Dragon Styles */
-        .boss-dragon {
-            position: absolute !important;
-            bottom: 210px !important;
-            left: 80% !important;
-            transform: translateX(-50%) !important;
-            image-rendering: pixelated !important;
-            image-rendering: -moz-crisp-edges !important;
-            image-rendering: crisp-edges !important;
-            z-index: 100 !important;
-            width: 120px !important;
-            height: 120px !important;
-            object-fit: contain !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            border: none !important;
-            background: none !important;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8) !important;
-            display: block !important;
-        }
-
-        /* Hide boss dragon when not in room (1,0) - remove all visual effects */
-        .boss-dragon[style*="display: none"],
-        .boss-dragon[style*="display:none"],
-        .boss-dragon:not([src]),
-        .boss-dragon[src=""] {
-            box-shadow: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            filter: none !important;
-            outline: none !important;
-            border: none !important;
-        }
-
-        /* Boss Dialogue Styles */
-        .boss-dialogue {
-            position: absolute !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            background: linear-gradient(135deg, #1a1a2e 0%, #2a2a3e 100%) !important;
-            color: #FFD700 !important;
-            font-size: 24px !important;
-            font-weight: bold !important;
-            padding: 20px 40px !important;
-            border: 4px solid #FFD700 !important;
-            border-radius: 15px !important;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.4) !important;
-            z-index: 300 !important;
-            text-align: center !important;
-            min-width: 300px !important;
-            text-transform: uppercase !important;
-            letter-spacing: 2px !important;
-            font-family: Arial, sans-serif !important;
-            animation: dialoguePulse 0.5s infinite !important;
-        }
-
-        @keyframes dialoguePulse {
-            0%, 100% { 
-                box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.4);
-            }
-            50% { 
-                box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(255, 215, 0, 0.6);
-            }
-        }
-
-        /* Particle Container */
-        .particle-container {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            pointer-events: none !important;
-            z-index: 150 !important;
-            overflow: hidden !important;
-        }
-
-        .particle {
-            position: absolute !important;
-            width: 8px !important;
-            height: 8px !important;
-            background: #FFD700 !important;
-            border-radius: 50% !important;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8) !important;
-            pointer-events: none !important;
-        }
-
-        /* Safe Path Indicator with Golden Glow */
-        .safe-path-indicator {
-            position: absolute !important;
-            width: 130px !important;
-            height: 130px !important;
-            left: 20% !important;
-            top: 0 !important; /* Will be set dynamically via JavaScript */
-            transform: translateX(-50%) !important; /* Only translate X, Y is set via top */
-            border: 3px solid #FFD700 !important;
-            border-radius: 10px !important;
-            box-shadow: 
-                0 0 20px rgba(255, 215, 0, 0.8),
-                0 0 40px rgba(255, 215, 0, 0.6),
-                0 0 60px rgba(255, 215, 0, 0.4),
-                inset 0 0 20px rgba(255, 215, 0, 0.3) !important;
-            background: rgba(255, 215, 0, 0.1) !important;
-            z-index: 50 !important;
-            pointer-events: none !important;
-            animation: safePathPulse 2s ease-in-out infinite !important;
-        }
-
-        @keyframes safePathPulse {
-            0%, 100% {
-                box-shadow: 
-                    0 0 20px rgba(255, 215, 0, 0.8),
-                    0 0 40px rgba(255, 215, 0, 0.6),
-                    0 0 60px rgba(255, 215, 0, 0.4),
-                    inset 0 0 20px rgba(255, 215, 0, 0.3);
-            }
-            50% {
-                box-shadow: 
-                    0 0 30px rgba(255, 215, 0, 1),
-                    0 0 60px rgba(255, 215, 0, 0.8),
-                    0 0 90px rgba(255, 215, 0, 0.6),
-                    inset 0 0 30px rgba(255, 215, 0, 0.5);
-            }
         }
 
         /* Override all dragon-specific classes to ensure uniform size and appearance */
@@ -2777,6 +2997,33 @@
                 margin: 1px 0;
             }
 
+            .difficulty-button {
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            .settings-box {
+                min-width: 90%;
+                max-width: 95%;
+                padding: 20px;
+            }
+
+            .settings-box-header h2 {
+                font-size: 20px;
+            }
+
+            .difficulty-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .difficulty-option-button {
+                width: 100%;
+                min-width: auto;
+            }
+
             .story-arena {
                 flex-direction: column;
                 gap: 4px;
@@ -2889,25 +3136,121 @@
     </style>
 </head>
 <body>
+    <a href="../index.html" class="main-page-corner-link">Go to main page</a>
     <!-- Main Content Section -->
     <main>
         <div class="story-container">
-            <!-- Adventure Game View -->
+            <!-- Selection Area -->
+            <div id="selection-area" class="selection-area">
+                <button id="difficulty-button" class="difficulty-button">GAME DIFFICULTY</button>
+                <div class="story-header">
+                    <h1>ADVENTURE MODE</h1>
+                    <p>Choose your dragon to begin the adventure!</p>
+                </div>
+
+                <div class="story-arena">
+                    <!-- Dragon Selection -->
+                    <div class="story-side">
+                        <h2>Your Dragon</h2>
+                        <select id="dragon-select" class="dragon-selector">
+                            <option value="">-- Choose Your Dragon --</option>
+                            <option value="breezeflight">Breezeflight the Windwhisper</option>
+                            <option value="chaosflare">Chaosflare the Stormbringer</option>
+                            <option value="crystalwing">Crystalwing the Prismkeeper</option>
+                            <option value="earthheart">Earthheart the Stonekeeper</option>
+                            <option value="flamethorn">Flamethorn the Firebringer</option>
+                            <option value="frostbite">Frostbite the Iceweaver</option>
+                            <option value="radiant">Radiant the Sunbeam</option>
+                            <option value="stormwing">Stormwing the Skybreaker</option>
+                            <option value="metalbeak">Metalbeak the Forgeguard</option>
+                            <option value="vineclaw">Vineclaw the Lifegiver</option>
+                            <option value="shadowmaw">Shadowmaw the Nightstalker</option>
+                            <option value="aquaris">Aquaris the Depthcaller</option>
+                        </select>
+                        <div id="dragon-display"></div>
+                    </div>
+                </div>
+
+                <div class="instructions-container">
+                    <h3>📜 How to Play</h3>
+                    <ul>
+                        <li><strong>Movement:</strong> Use <strong>W/A/S/D</strong> keys (or joystick on mobile) to move your dragon</li>
+                        <li><strong>Timer:</strong> A 60-second timer starts when you first move. When it reaches 0, you move back 5 rooms toward the main room (and lose the key if you have it)</li>
+                        <li><strong>Objective:</strong> Find the golden key in one of the rooms and bring it back to the main room</li>
+                        <li><strong>Level Up:</strong> Touch the box in the main room while holding the key to level up. This regenerates all rooms!</li>
+                        <li><strong>Obstacles:</strong> Avoid rocks, crystals, and stalagmites - they block your path</li>
+                        <li><strong class="warning">Lava:</strong> Touch red lava to instantly teleport back to the main room (you'll lose the key if you have it!)</li>
+                        <li><strong>Rooms:</strong> Move to the edges of rooms to explore new areas. Use the map to track your progress</li>
+                        <li><strong>Teleport Button:</strong> Click the "⚡ Main Room" button to instantly return to the starting room, but <strong class="warning">you cannot use it while holding the key!</strong></li>
+                        <li><strong>Save / Load:</strong> Use <strong>Save progress</strong> during an adventure. Saves are kept <strong>per account</strong> when you sign in on the <a href="../index.html">home page</a>; otherwise they use a guest slot on this device. <strong>Continue saved game</strong> appears when a save exists for the current account, or use <strong>Load progress</strong> while playing (replaces current play).</li>
+                    </ul>
+                </div>
+
+                <div class="story-button-container">
+                    <button id="story-start-button" class="story-start-button" disabled>Start Adventure</button>
+                    <button type="button" id="continue-adventure-button" class="story-start-button story-continue-button" hidden>Continue saved game</button>
+                </div>
+                <p id="selection-save-account-line" class="save-account-hint selection-save-hint"></p>
+
+                <div class="back-link-container">
+                    <a href="index.html" class="back-link">← Back to Dragon Lair</a>
+                </div>
+            </div>
+
+            <!-- Settings Box -->
+            <div id="settings-overlay" class="settings-overlay"></div>
+            <div id="settings-box" class="settings-box">
+                <div class="settings-box-header">
+                    <h2>Game Settings</h2>
+                    <button id="settings-close-button" class="settings-close-button">×</button>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3>Difficulty Settings</h3>
+                        <div class="difficulty-buttons">
+                            <button id="difficulty-easy" class="difficulty-option-button">Easy</button>
+                            <button id="difficulty-normal" class="difficulty-option-button active">Normal</button>
+                            <button id="difficulty-hard" class="difficulty-option-button">Hard</button>
+                            <button id="difficulty-custom" class="difficulty-option-button">Custom</button>
+                        </div>
+                        <div id="custom-timer-input-container" class="custom-timer-input-container" style="display: none;">
+                            <input type="number" id="custom-timer-input" class="custom-timer-input" min="1" max="99" placeholder="Enter 1-99" />
+                            <button id="custom-timer-apply" class="custom-timer-apply-button">Apply</button>
+                        </div>
+                        <div id="difficulty-info" class="difficulty-info">Timer is 60 seconds</div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Teleporting with the key</h3>
+                        <div class="difficulty-buttons">
+                            <button id="teleport-yes" class="difficulty-option-button">Yes</button>
+                            <button id="teleport-no" class="difficulty-option-button active">No</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Adventure Game View (hidden initially) -->
             <div id="adventure-view" class="adventure-view">
                 <div class="adventure-header">
-                    <h1>LEVEL 5 CAVE</h1>
+                    <h1>YOUR ADVENTURE</h1>
                     <p id="adventure-dragon-name" style="color: #E0E0E0; font-size: 18px; margin: 10px 0;"></p>
+                    <div class="adventure-save-row">
+                        <button type="button" id="save-progress-button" class="save-progress-button">Save progress</button>
+                        <button type="button" id="load-progress-button" class="save-progress-button secondary">Load progress</button>
+                    </div>
+                    <p id="adventure-save-account-line" class="save-account-hint"></p>
                 </div>
 
                 <div class="cave-container">
                     <div class="cave-background">
-                        <div id="level-display" class="level-display">Level: 5</div>
+                        <div id="level-display" class="level-display">Level: 1</div>
+                        <div id="timer-display" class="timer-display" style="display: block !important; visibility: visible !important; opacity: 1 !important; position: absolute !important; top: 15px !important; left: 50% !important; transform: translateX(-50%) !important; z-index: 200 !important; background: linear-gradient(135deg, #FF4444 0%, #AA0000 100%) !important; color: #FFFFFF !important; font-size: 24px !important; font-weight: bold !important; padding: 10px 25px !important; border: 3px solid #FF6666 !important; border-radius: 8px !important; min-width: 80px !important; text-align: center !important;">60</div>
                         <div class="cave-stalactites"></div>
                         <img id="pixel-dragon" class="pixel-dragon" src="images/icons/aquarius-icon.jpg" alt="Dragon" />
-                        <img id="boss-dragon" class="boss-dragon" src="" alt="" style="display: none !important; visibility: hidden !important; opacity: 0 !important; box-shadow: none !important;" />
-                        <div id="boss-dialogue" class="boss-dialogue" style="display: none;"></div>
-                        <div id="particle-container" class="particle-container"></div>
-                        <div id="safe-path-indicator" class="safe-path-indicator" style="display: none;"></div>
+                        <button id="teleport-main-button" class="teleport-main-button">⚡ Main Room</button>
+                        <button id="level-10-button" class="level-10-button">Level 5</button>
                     </div>
                 </div>
 
@@ -2917,7 +3260,7 @@
                 </div>
 
                 <div class="adventure-actions">
-                    <a href="adventure.html" class="back-to-select-button">Back to Selection</a>
+                    <button id="back-to-select-button" class="back-to-select-button">Back to Selection</button>
                     <a href="index.html" class="back-link">← Back to Dragon Lair</a>
                 </div>
             </div>
@@ -2931,6 +3274,7 @@
         </div>
     </div>
 
+    <script src="../account.js"></script>
     <script>
         // Dragon data with all information
         const dragonData = {
@@ -3177,28 +3521,311 @@
             }
         }
 
-        // Store dragon ID globally for level up redirect
-        let currentDragonId = null;
-
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            // Get dragon ID from URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const dragonId = urlParams.get('dragon');
+            const dragonSelect = document.getElementById('dragon-select');
+            const startButton = document.getElementById('story-start-button');
             
-            if (!dragonId || !dragonData[dragonId]) {
-                // Invalid or missing dragon ID - redirect back to selection
-                alert('Invalid dragon selection. Redirecting to selection page.');
-                window.location.href = 'adventure.html';
-                return;
+            // Settings box functionality
+            const difficultyButton = document.getElementById('difficulty-button');
+            const settingsBox = document.getElementById('settings-box');
+            const settingsOverlay = document.getElementById('settings-overlay');
+            const settingsCloseButton = document.getElementById('settings-close-button');
+            
+            // Open settings box
+            if (difficultyButton) {
+                difficultyButton.addEventListener('click', function() {
+                    settingsBox.classList.add('active');
+                    settingsOverlay.classList.add('active');
+                });
             }
             
-            // Store dragon ID globally
-            currentDragonId = dragonId;
+            // Close settings box
+            function closeSettings() {
+                settingsBox.classList.remove('active');
+                settingsOverlay.classList.remove('active');
+            }
             
-            // Start the adventure with the selected dragon
-            startAdventure(dragonId);
+            if (settingsCloseButton) {
+                settingsCloseButton.addEventListener('click', closeSettings);
+            }
+            
+            if (settingsOverlay) {
+                settingsOverlay.addEventListener('click', closeSettings);
+            }
+            
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && settingsBox.classList.contains('active')) {
+                    closeSettings();
+                }
+            });
+            
+            // Difficulty button handlers
+            const difficultyEasy = document.getElementById('difficulty-easy');
+            const difficultyNormal = document.getElementById('difficulty-normal');
+            const difficultyHard = document.getElementById('difficulty-hard');
+            const difficultyCustom = document.getElementById('difficulty-custom');
+            const customTimerInputContainer = document.getElementById('custom-timer-input-container');
+            const customTimerInput = document.getElementById('custom-timer-input');
+            const customTimerApply = document.getElementById('custom-timer-apply');
+            
+            function setDifficulty(difficulty) {
+                const difficultyInfo = document.getElementById('difficulty-info');
+                
+                // Remove active class from all buttons
+                difficultyEasy.classList.remove('active');
+                difficultyNormal.classList.remove('active');
+                difficultyHard.classList.remove('active');
+                difficultyCustom.classList.remove('active');
+                
+                // Hide custom input container unless custom is selected
+                if (customTimerInputContainer) {
+                    customTimerInputContainer.style.display = 'none';
+                }
+                
+                // Add active class to selected button and update info text
+                if (difficulty === 'easy') {
+                    difficultyEasy.classList.add('active');
+                    if (difficultyInfo) {
+                        difficultyInfo.textContent = 'Timer is 80 seconds';
+                    }
+                } else if (difficulty === 'normal') {
+                    difficultyNormal.classList.add('active');
+                    if (difficultyInfo) {
+                        difficultyInfo.textContent = 'Timer is 60 seconds';
+                    }
+                } else if (difficulty === 'hard') {
+                    difficultyHard.classList.add('active');
+                    if (difficultyInfo) {
+                        difficultyInfo.textContent = 'Timer is 40 seconds';
+                    }
+                } else if (difficulty === 'custom') {
+                    difficultyCustom.classList.add('active');
+                    if (customTimerInputContainer) {
+                        customTimerInputContainer.style.display = 'flex';
+                    }
+                    // Load saved custom value if exists
+                    const savedCustomValue = localStorage.getItem('customTimerValue');
+                    if (customTimerInput && savedCustomValue) {
+                        customTimerInput.value = savedCustomValue;
+                        if (difficultyInfo) {
+                            difficultyInfo.textContent = 'Timer is ' + savedCustomValue + ' seconds';
+                        }
+                    } else {
+                        if (difficultyInfo) {
+                            difficultyInfo.textContent = 'Enter custom timer (1-99)';
+                        }
+                    }
+                }
+                
+                // Store difficulty setting (you can use this later to adjust game mechanics)
+                localStorage.setItem('gameDifficulty', difficulty);
+            }
+            
+            // Handle custom timer apply button
+            if (customTimerApply && customTimerInput) {
+                customTimerApply.addEventListener('click', function() {
+                    const value = parseInt(customTimerInput.value);
+                    const difficultyInfo = document.getElementById('difficulty-info');
+                    
+                    // Validate input (1-99)
+                    if (isNaN(value) || value < 1 || value > 99) {
+                        alert('Please enter a number between 1 and 99');
+                        customTimerInput.focus();
+                        return;
+                    }
+                    
+                    // Save custom value
+                    localStorage.setItem('customTimerValue', value.toString());
+                    localStorage.setItem('gameDifficulty', 'custom');
+                    
+                    // Update info text
+                    if (difficultyInfo) {
+                        difficultyInfo.textContent = 'Timer is ' + value + ' seconds';
+                    }
+                    
+                    // Show success feedback
+                    customTimerInput.style.borderColor = '#00FF00';
+                    setTimeout(function() {
+                        customTimerInput.style.borderColor = '#666666';
+                    }, 500);
+                });
+                
+                // Allow Enter key to apply
+                customTimerInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        customTimerApply.click();
+                    }
+                });
+            }
+            
+            if (difficultyEasy) {
+                difficultyEasy.addEventListener('click', function() {
+                    setDifficulty('easy');
+                });
+            }
+            
+            if (difficultyNormal) {
+                difficultyNormal.addEventListener('click', function() {
+                    setDifficulty('normal');
+                });
+            }
+            
+            if (difficultyHard) {
+                difficultyHard.addEventListener('click', function() {
+                    setDifficulty('hard');
+                });
+            }
+            
+            if (difficultyCustom) {
+                difficultyCustom.addEventListener('click', function() {
+                    setDifficulty('custom');
+                });
+            }
+            
+            // Load saved difficulty on page load
+            const savedDifficulty = localStorage.getItem('gameDifficulty') || 'normal';
+            setDifficulty(savedDifficulty);
+            
+            // Teleport with key button handlers
+            const teleportYes = document.getElementById('teleport-yes');
+            const teleportNo = document.getElementById('teleport-no');
+            
+            function setTeleportWithKey(allow) {
+                // Remove active class from all buttons
+                teleportYes.classList.remove('active');
+                teleportNo.classList.remove('active');
+                
+                // Add active class to selected button
+                if (allow) {
+                    teleportYes.classList.add('active');
+                } else {
+                    teleportNo.classList.add('active');
+                }
+                
+                // Store teleport setting (you can use this later to adjust game mechanics)
+                localStorage.setItem('allowTeleportWithKey', allow ? 'yes' : 'no');
+                
+                // Update teleport button state immediately if game is active
+                updateTeleportButtonState();
+            }
+            
+            if (teleportYes) {
+                teleportYes.addEventListener('click', function() {
+                    setTeleportWithKey(true);
+                });
+            }
+            
+            if (teleportNo) {
+                teleportNo.addEventListener('click', function() {
+                    setTeleportWithKey(false);
+                });
+            }
+            
+            // Load saved teleport setting on page load (default to 'no')
+            const savedTeleportSetting = localStorage.getItem('allowTeleportWithKey') || 'no';
+            setTeleportWithKey(savedTeleportSetting === 'yes');
+            
+            // Dragon selection
+            dragonSelect.addEventListener('change', function() {
+                const selected = this.value;
+                
+                if (selected) {
+                    displayDragon(selected);
+                } else {
+                    document.getElementById('dragon-display').innerHTML = '';
+                }
+                updateStartButton();
+            });
 
+            // Start button
+            startButton.addEventListener('click', function() {
+                const selectedDragon = dragonSelect.value;
+                if (selectedDragon) {
+                    startAdventure(selectedDragon);
+                }
+            });
+
+            // Back to selection button
+            const backToSelectButton = document.getElementById('back-to-select-button');
+            if (backToSelectButton) {
+                backToSelectButton.addEventListener('click', function() {
+                    // Hide adventure view
+                    document.getElementById('adventure-view').classList.remove('active');
+                    // Show selection area
+                    document.getElementById('selection-area').classList.remove('hidden');
+                    // Hide joystick
+                    hideJoystick();
+                    // Reset keys
+                    keysPressed = { w: false, a: false, s: false, d: false };
+                    // Reset joystick
+                    joystickState = { active: false, x: 0, y: 0 };
+                    // Reset room system (this will generate new rooms on next adventure start)
+                    currentRoom = { x: 0, y: 0 };
+                    roomMemory = {};
+                    transitioning = false;
+                    updateMap();
+                    // Clear movement interval and animation frame
+                    if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId);
+                        animationFrameId = null;
+                    }
+                    if (movementInterval) {
+                        clearInterval(movementInterval);
+                        movementInterval = null;
+                    }
+                    // Clear cached references
+                    cachedAdventureView = null;
+                    cachedCaveBackground = null;
+                    cachedPixelDragon = null;
+                    // Stop the timer when going back to selection
+                    stopTimer();
+                    timerStarted = false;
+                });
+            }
+
+            // Teleport to Main Room button
+            const teleportMainButton = document.getElementById('teleport-main-button');
+            if (teleportMainButton) {
+                teleportMainButton.addEventListener('click', function() {
+                    teleportToMainRoom();
+                });
+            }
+
+            // Level 10 button
+            const level10Button = document.getElementById('level-10-button');
+            if (level10Button) {
+                level10Button.addEventListener('click', function() {
+                    // Get dragon ID from current state
+                    let dragonId = currentDragonId;
+                    
+                    // If not stored, try to get from URL parameters
+                    if (!dragonId) {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        dragonId = urlParams.get('dragon');
+                    }
+                    
+                    // If still not found, try to find it from currentDragon
+                    if (!dragonId && currentDragon) {
+                        // Find dragon ID by matching name
+                        for (const id in dragonData) {
+                            if (dragonData[id].name === currentDragon.name) {
+                                dragonId = id;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (dragonId) {
+                        // Redirect to adventure-level5.html with dragon ID and level 5
+                        window.location.href = `adventure-level5.html?dragon=${dragonId}&level=5`;
+                    } else {
+                        console.error('Could not find dragon ID for level 5 teleport');
+                        alert('Error: Could not determine dragon. Please restart the adventure.');
+                    }
+                });
+            }
 
 
             // Update mobile detection on window resize
@@ -3208,12 +3835,43 @@
                 
                 // Show/hide joystick based on mobile state
                 const adventureView = document.getElementById('adventure-view');
-                if (adventureView) {
+                if (adventureView && adventureView.classList.contains('active')) {
                     if (isMobile && !wasMobile) {
                         showJoystick();
                     } else if (!isMobile && wasMobile) {
                         hideJoystick();
                     }
+                }
+            });
+
+            const saveProgressBtn = document.getElementById('save-progress-button');
+            if (saveProgressBtn) {
+                saveProgressBtn.addEventListener('click', function() {
+                    saveAdventureProgress();
+                });
+            }
+            const loadProgressBtn = document.getElementById('load-progress-button');
+            if (loadProgressBtn) {
+                loadProgressBtn.addEventListener('click', function() {
+                    loadAdventureProgressInGame();
+                });
+            }
+            const continueAdventureBtn = document.getElementById('continue-adventure-button');
+            if (continueAdventureBtn) {
+                continueAdventureBtn.addEventListener('click', function() {
+                    const saved = readAdventureSave();
+                    if (saved) {
+                        openAdventureFromSave(saved);
+                    } else {
+                        alert('No saved adventure found.');
+                    }
+                });
+            }
+            refreshContinueSaveButton();
+
+            window.addEventListener('storage', function(ev) {
+                if (ev.key === 'austinziolo_session_v1' || ev.key === null) {
+                    refreshContinueSaveButton();
                 }
             });
         });
@@ -3260,13 +3918,82 @@
         let keyCollected = false;
         
         // Level system
-        let currentLevel = 5; // Level 5 page starts at level 5
+        let currentLevel = 1;
         let lastLevelUpTime = 0; // Track when level was last incremented to prevent rapid increments
         
         // Timer system
         let timerSeconds = 60;
         let timerInterval = null;
         let timerStarted = false; // Track if timer has started
+
+        const ADVENTURE_SAVE_KEY_LEGACY = 'dragonLair_adventure_save_v1';
+
+        function getAdventureSaveStorageKey() {
+            var user = null;
+            try {
+                if (typeof SiteAuth !== 'undefined' && SiteAuth.getCurrentUser) {
+                    user = SiteAuth.getCurrentUser();
+                }
+            } catch (e) {}
+            if (user && String(user).trim()) {
+                return 'dragonLair_adventure_save_v1_acct_' + encodeURIComponent(String(user).trim()).replace(/%/g, '_');
+            }
+            return 'dragonLair_adventure_save_v1_guest';
+        }
+
+        function escapeHtmlForHint(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function updateSaveAccountUI() {
+            var lineAdv = document.getElementById('adventure-save-account-line');
+            var lineSel = document.getElementById('selection-save-account-line');
+            var user = null;
+            try {
+                if (typeof SiteAuth !== 'undefined' && SiteAuth.getCurrentUser) {
+                    user = SiteAuth.getCurrentUser();
+                }
+            } catch (e) {}
+            var html;
+            if (user) {
+                html = 'Saves are stored for <strong>' + escapeHtmlForHint(user) + '</strong> on this device. <a href="../index.html">Account</a>';
+            } else {
+                html = '<a href="../index.html">Sign in</a> on the home page to tie saves to your account. Until then, progress uses a <strong>guest</strong> slot on this browser.';
+            }
+            if (lineAdv) {
+                lineAdv.innerHTML = html;
+            }
+            if (lineSel) {
+                lineSel.innerHTML = html;
+            }
+        }
+
+        // Function to get timer duration based on difficulty setting
+        function getTimerDuration() {
+            // Get difficulty from localStorage, default to 'normal' if not set
+            const difficulty = localStorage.getItem('gameDifficulty') || 'normal';
+            
+            // Return timer duration based on difficulty
+            if (difficulty === 'easy') {
+                return 80;
+            } else if (difficulty === 'hard') {
+                return 40;
+            } else if (difficulty === 'custom') {
+                // Get custom timer value, default to 60 if not set or invalid
+                const customValue = parseInt(localStorage.getItem('customTimerValue'));
+                if (customValue && customValue >= 1 && customValue <= 99) {
+                    return customValue;
+                }
+                return 60; // Fallback to 60 if custom value is invalid
+            } else {
+                // Default to normal (60 seconds)
+                return 60;
+            }
+        }
 
         // Joystick state
         let joystickState = {
@@ -3283,11 +4010,7 @@
 
         // Store current dragon for room display
         let currentDragon = null;
-        let bossDragonId = null; // Store randomly selected boss dragon ID
-        let bossDialoguePlayed = false; // Track if dialogue sequence has been played
-        let bossDialogueComplete = false; // Track if dialogue sequence is completely finished
-        let movingLava = []; // Array to store moving lava obstacles in room (1,0)
-        let safeZonePosition = null; // Store random safe zone position {x: percentage, y: pixels from bottom}
+        let currentDragonId = null; // Store dragon ID for navigation
 
         // Function to start the adventure
         function startAdventure(dragonId) {
@@ -3302,18 +4025,69 @@
             currentRoom = { x: 0, y: 0 };
             transitioning = false;
             
-            // Set level to 5 (this is the level 5 page)
-            currentLevel = 5;
+            // Reset level system
+            currentLevel = 1;
             keyCollected = false;
             lastLevelUpTime = 0;
             updateLevelDisplay();
+            updateTeleportButtonState(); // Update teleport button state
             
-            // Timer disabled on level 5 page
+            // Reset timer state (don't start it yet - wait for first movement)
             timerStarted = false;
             stopTimer();
-            timerSeconds = 60;
+            timerSeconds = getTimerDuration();
+            updateTimerDisplay();
             
             currentDragon = dragon;
+            currentDragonId = dragonId; // Store dragon ID
+
+            // Hide selection area
+            const selectionArea = document.getElementById('selection-area');
+            if (selectionArea) {
+                selectionArea.classList.add('hidden');
+            }
+            
+            // Show adventure view
+            const adventureView = document.getElementById('adventure-view');
+            if (adventureView) {
+                adventureView.classList.add('active');
+                adventureView.style.display = 'block';
+                adventureView.style.visibility = 'visible';
+                adventureView.style.opacity = '1';
+            }
+            
+            // Force timer display to be visible immediately and after delays
+            function ensureTimerVisible() {
+                const timerDisplay = document.getElementById('timer-display');
+                if (timerDisplay) {
+                    timerDisplay.style.display = 'block';
+                    timerDisplay.style.visibility = 'visible';
+                    timerDisplay.style.opacity = '1';
+                    timerDisplay.style.position = 'absolute';
+                    timerDisplay.style.top = '15px';
+                    timerDisplay.style.left = '50%';
+                    timerDisplay.style.transform = 'translateX(-50%)';
+                    timerDisplay.style.zIndex = '200';
+                    timerDisplay.style.background = 'linear-gradient(135deg, #FF4444 0%, #AA0000 100%)';
+                    timerDisplay.style.color = '#FFFFFF';
+                    timerDisplay.style.fontSize = '24px';
+                    timerDisplay.style.fontWeight = 'bold';
+                    timerDisplay.style.padding = '10px 25px';
+                    timerDisplay.style.border = '3px solid #FF6666';
+                    timerDisplay.style.borderRadius = '8px';
+                    timerDisplay.style.minWidth = '80px';
+                    timerDisplay.style.textAlign = 'center';
+                    console.log('Timer display forced visible');
+                } else {
+                    console.error('Timer display element not found in DOM');
+                }
+            }
+            
+            // Try immediately and after delays to ensure it shows
+            ensureTimerVisible();
+            setTimeout(ensureTimerVisible, 50);
+            setTimeout(ensureTimerVisible, 100);
+            setTimeout(ensureTimerVisible, 200);
 
             // Update dragon name and room info
             const dragonNameElement = document.getElementById('adventure-dragon-name');
@@ -3362,9 +4136,6 @@
                 loadRoom(currentRoom);
                 updateMap();
                 
-                // Ensure boss dragon is hidden on initial load (room 0,0)
-                hideBossDragon();
-                
                 // Reset position to center of cave (check for collision first)
                 let spawnX = 50;
                 let spawnY = 100;
@@ -3396,6 +4167,7 @@
             
             // Update teleport button state on adventure start
             updateTeleportButtonState();
+            updateSaveAccountUI();
         }
 
         // Function to cache DOM references
@@ -3434,7 +4206,7 @@
             keyDownHandler = function(event) {
                 const key = event.key.toLowerCase();
                 if (key === 'w' || key === 'a' || key === 's' || key === 'd') {
-                    if (cachedAdventureView) {
+                    if (cachedAdventureView && cachedAdventureView.classList.contains('active')) {
                         keysPressed[key] = true;
                         event.preventDefault();
                     }
@@ -3461,8 +4233,8 @@
 
             // Movement loop using requestAnimationFrame for better performance
             function movementLoop() {
-                // Check if adventure view exists
-                if (!cachedAdventureView) {
+                // Check if adventure view is active (only check every 30 frames to reduce overhead)
+                if (!cachedAdventureView || !cachedAdventureView.classList.contains('active')) {
                     animationFrameId = null;
                     return;
                 }
@@ -3480,7 +4252,7 @@
                             cachedCaveHeight = cachedCaveBackground.offsetHeight;
                         } else {
                             animationFrameId = requestAnimationFrame(movementLoop);
-                            return;
+                    return;
                         }
                     }
                     lastDimensionCheck = now;
@@ -3496,11 +4268,10 @@
                 if (!timerStarted) {
                     const hasMovementInput = (joystickState.active && isMobile && (Math.abs(joystickState.x) > 0.1 || Math.abs(joystickState.y) > 0.1)) ||
                                            (keysPressed.w || keysPressed.a || keysPressed.s || keysPressed.d);
-                    // Timer disabled on level 5 page
-                    // if (hasMovementInput) {
-                    //     startTimer();
-                    //     timerStarted = true;
-                    // }
+                    if (hasMovementInput) {
+                        startTimer();
+                        timerStarted = true;
+                    }
                 }
 
                 // Check if using joystick (mobile) or keyboard
@@ -3541,8 +4312,8 @@
                                 transitionToRoom('down');
                             }
                         }
-                        // Move left (joystick X is negative) - disabled in room (1,0)
-                        if (joystickX < 0 && !(currentRoom.x === 1 && currentRoom.y === 0)) {
+                        // Move left (joystick X is negative)
+                        if (joystickX < 0) {
                             if (dragonPosition.x > 3) {
                                 const newX = dragonPosition.x + (moveSpeed * normalizedSpeed * joystickX * 100) / cachedCaveWidth;
                                 if (!checkCollision(newX, dragonPosition.y)) {
@@ -3554,8 +4325,8 @@
                                 transitionToRoom('left');
                             }
                         }
-                        // Move right (joystick X is positive) - disabled in room (1,0)
-                        if (joystickX > 0 && !(currentRoom.x === 1 && currentRoom.y === 0)) {
+                        // Move right (joystick X is positive)
+                        if (joystickX > 0) {
                             if (dragonPosition.x < 97) {
                                 const newX = dragonPosition.x + (moveSpeed * normalizedSpeed * joystickX * 100) / cachedCaveWidth;
                                 if (!checkCollision(newX, dragonPosition.y)) {
@@ -3596,8 +4367,8 @@
                             transitionToRoom('down');
                         }
                     }
-                    // A - Move left (decrease x percentage) - disabled in room (1,0)
-                    if (keysPressed.a && !(currentRoom.x === 1 && currentRoom.y === 0)) {
+                    // A - Move left (decrease x percentage)
+                    if (keysPressed.a) {
                         if (dragonPosition.x > 3) {
                             const newX = dragonPosition.x - (moveSpeed * 100) / cachedCaveWidth;
                             if (!checkCollision(newX, dragonPosition.y)) {
@@ -3609,8 +4380,8 @@
                             transitionToRoom('left');
                         }
                     }
-                    // D - Move right (increase x percentage) - disabled in room (1,0)
-                    if (keysPressed.d && !(currentRoom.x === 1 && currentRoom.y === 0)) {
+                    // D - Move right (increase x percentage)
+                    if (keysPressed.d) {
                         if (dragonPosition.x < 97) {
                             const newX = dragonPosition.x + (moveSpeed * 100) / cachedCaveWidth;
                             if (!checkCollision(newX, dragonPosition.y)) {
@@ -3627,9 +4398,6 @@
                 if (moved) {
                     updateDragonPosition();
                 }
-                
-                // Update moving lava positions
-                updateMovingLava();
                 
                 // Continue animation loop
                 animationFrameId = requestAnimationFrame(movementLoop);
@@ -3659,31 +4427,13 @@
             }
             
             // Update key position if collected (throttle to every other frame)
-            // Only call if key is actually collected to avoid moving uncollected keys
             if (keyCollected && (Math.floor(Date.now() / 16) % 2 === 0)) {
                 updateKeyPosition();
-            } else if (!keyCollected) {
-                // If key is not collected, ensure it stays at its original position
-                // This prevents the key from following the dragon
-                const keyEl = document.getElementById('adventure-key');
-                if (keyEl) {
-                    const roomKey = getRoomKey(currentRoom);
-                    const room = roomMemory[roomKey];
-                    if (room && room.key && room.key.x !== undefined && room.key.y !== undefined) {
-                        // Only update if position is wrong (to avoid unnecessary DOM updates)
-                        const currentLeft = parseFloat(keyEl.style.left) || 0;
-                        const currentBottom = parseFloat(keyEl.style.bottom) || 0;
-                        if (Math.abs(currentLeft - room.key.x) > 1 || Math.abs(currentBottom - room.key.y) > 1) {
-                            keyEl.style.left = room.key.x + '%';
-                            keyEl.style.bottom = room.key.y + 'px';
-                        }
-                    }
-                }
             }
             
             // Check for level up (throttle to every 10 frames to reduce overhead)
             if (Math.floor(Date.now() / 16) % 10 === 0) {
-                checkLevelUp();
+            checkLevelUp();
             }
         }
         
@@ -3703,6 +4453,11 @@
                 cachedTimerDisplay = document.getElementById('timer-display');
             }
             if (cachedTimerDisplay) {
+                // Force visibility every time we update
+                cachedTimerDisplay.style.display = 'block';
+                cachedTimerDisplay.style.visibility = 'visible';
+                cachedTimerDisplay.style.opacity = '1';
+                
                 cachedTimerDisplay.textContent = timerSeconds;
                 
                 // Update styling based on time remaining
@@ -3712,6 +4467,8 @@
                 } else if (timerSeconds <= 30) {
                     cachedTimerDisplay.classList.add('warning');
                 }
+            } else {
+                console.error('Timer display element not found in updateTimerDisplay');
             }
         }
         
@@ -3722,8 +4479,8 @@
                 clearInterval(timerInterval);
             }
             
-            // Reset timer to 60 seconds
-            timerSeconds = 60;
+            // Reset timer based on current level (80 seconds for levels 1-2, 60 for others)
+            timerSeconds = getTimerDuration();
             updateTimerDisplay();
             
             // Start countdown
@@ -3754,6 +4511,236 @@
                 clearInterval(timerInterval);
                 timerInterval = null;
             }
+        }
+
+        function resumeTimerCountdown() {
+            if (!timerStarted) {
+                return;
+            }
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            updateTimerDisplay();
+            timerInterval = setInterval(function() {
+                if (timerSeconds === 2) {
+                    stopTimer();
+                    timerSeconds = 1;
+                    updateTimerDisplay();
+                    resetToLevelOne();
+                    return;
+                }
+                timerSeconds--;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function validateAdventureSave(data) {
+            if (!data || data.v !== 1) {
+                return false;
+            }
+            if (!data.currentDragonId || !dragonData[data.currentDragonId]) {
+                return false;
+            }
+            if (!data.roomMemory || typeof data.roomMemory !== 'object') {
+                return false;
+            }
+            if (!data.currentRoom || typeof data.currentRoom.x !== 'number' || typeof data.currentRoom.y !== 'number') {
+                return false;
+            }
+            if (!data.dragonPosition || typeof data.dragonPosition.x !== 'number' || typeof data.dragonPosition.y !== 'number') {
+                return false;
+            }
+            return true;
+        }
+
+        function buildAdventureSaveObject() {
+            return {
+                v: 1,
+                savedAt: Date.now(),
+                currentDragonId: currentDragonId,
+                sessionSeed: sessionSeed,
+                roomMemory: JSON.parse(JSON.stringify(roomMemory)),
+                currentRoom: { x: currentRoom.x, y: currentRoom.y },
+                dragonPosition: { x: dragonPosition.x, y: dragonPosition.y },
+                keyCollected: !!keyCollected,
+                currentLevel: currentLevel,
+                lastLevelUpTime: lastLevelUpTime,
+                timerSeconds: timerSeconds,
+                timerStarted: !!timerStarted
+            };
+        }
+
+        function readAdventureSave() {
+            var keys = [getAdventureSaveStorageKey()];
+            var user = null;
+            try {
+                if (typeof SiteAuth !== 'undefined' && SiteAuth.getCurrentUser) {
+                    user = SiteAuth.getCurrentUser();
+                }
+            } catch (e) {}
+            if (!user) {
+                keys.push(ADVENTURE_SAVE_KEY_LEGACY);
+            }
+            for (var ki = 0; ki < keys.length; ki++) {
+                try {
+                    var raw = localStorage.getItem(keys[ki]);
+                    if (!raw) {
+                        continue;
+                    }
+                    var data = JSON.parse(raw);
+                    if (validateAdventureSave(data)) {
+                        return data;
+                    }
+                } catch (e) {
+                    /* ignore */
+                }
+            }
+            return null;
+        }
+
+        function refreshContinueSaveButton() {
+            const btn = document.getElementById('continue-adventure-button');
+            if (btn) {
+                btn.hidden = !readAdventureSave();
+            }
+            updateSaveAccountUI();
+        }
+
+        function saveAdventureProgress() {
+            const adv = document.getElementById('adventure-view');
+            if (!adv || !adv.classList.contains('active')) {
+                alert('Start an adventure before saving.');
+                return;
+            }
+            if (!currentDragonId) {
+                return;
+            }
+            try {
+                const key = getAdventureSaveStorageKey();
+                localStorage.setItem(key, JSON.stringify(buildAdventureSaveObject()));
+                if (key.indexOf('_guest') !== -1) {
+                    try {
+                        localStorage.removeItem(ADVENTURE_SAVE_KEY_LEGACY);
+                    } catch (e2) {
+                        /* ignore */
+                    }
+                }
+                var who = null;
+                try {
+                    if (typeof SiteAuth !== 'undefined' && SiteAuth.getCurrentUser) {
+                        who = SiteAuth.getCurrentUser();
+                    }
+                } catch (e3) {}
+                alert(who ? ('Progress saved for ' + who + ' on this device.') : 'Progress saved (guest) on this device.');
+                refreshContinueSaveButton();
+            } catch (e) {
+                alert('Could not save (storage may be full or disabled).');
+            }
+        }
+
+        function setPixelDragonForAdventure(dragonId, dragonName) {
+            const pixelDragon = document.getElementById('pixel-dragon');
+            if (!pixelDragon) {
+                return;
+            }
+            const dragonIcons = {
+                breezeflight: 'images/icons/breezeflight-icon.jpg',
+                chaosflare: 'images/icons/chacosflare-icon.jpg',
+                crystalwing: 'images/icons/crystalwing-icon.jpg',
+                earthheart: 'images/icons/earthheart-icon.jpg',
+                flamethorn: 'images/icons/flamethorn-icon.jpg',
+                frostbite: 'images/icons/frostbite-icon.jpg',
+                metalbeak: 'images/icons/metalbeak-icon.jpg',
+                aquaris: 'images/icons/aquarius-icon.jpg',
+                radiant: 'images/icons/aquarius-icon.jpg',
+                stormwing: 'images/icons/aquarius-icon.jpg',
+                vineclaw: 'images/icons/aquarius-icon.jpg',
+                shadowmaw: 'images/icons/aquarius-icon.jpg'
+            };
+            pixelDragon.src = dragonIcons[dragonId] || 'images/icons/aquarius-icon.jpg';
+            pixelDragon.alt = dragonName || dragonId;
+            pixelDragon.style.display = 'block';
+            pixelDragon.style.visibility = 'visible';
+            pixelDragon.style.opacity = '1';
+            pixelDragon.style.zIndex = '100';
+            pixelDragon.style.position = 'absolute';
+        }
+
+        function applySavedAdventureState(data) {
+            if (!validateAdventureSave(data)) {
+                return false;
+            }
+            const dragonId = data.currentDragonId;
+            const dragon = dragonData[dragonId];
+            stopTimer();
+
+            sessionSeed = data.sessionSeed;
+            roomMemory = JSON.parse(JSON.stringify(data.roomMemory));
+            currentRoom = { x: data.currentRoom.x, y: data.currentRoom.y };
+            dragonPosition = { x: data.dragonPosition.x, y: data.dragonPosition.y };
+            keyCollected = !!data.keyCollected;
+            currentLevel = Math.max(1, parseInt(data.currentLevel, 10) || 1);
+            lastLevelUpTime = typeof data.lastLevelUpTime === 'number' ? data.lastLevelUpTime : 0;
+            timerSeconds = typeof data.timerSeconds === 'number' ? data.timerSeconds : getTimerDuration();
+            timerStarted = !!data.timerStarted;
+            currentDragon = dragon;
+            currentDragonId = dragonId;
+
+            transitioning = false;
+            spawnProtected = false;
+
+            setPixelDragonForAdventure(dragonId, dragon.name);
+            cachedCaveBackground = document.querySelector('.cave-background');
+            loadRoom(currentRoom);
+            updateDragonPosition();
+            updateLevelDisplay();
+            updateTimerDisplay();
+            updateMap();
+            updateRoomDisplay();
+            updateTeleportButtonState();
+            if (keyCollected) {
+                updateKeyPosition();
+            }
+            resumeTimerCountdown();
+            return true;
+        }
+
+        function openAdventureFromSave(data) {
+            if (!validateAdventureSave(data)) {
+                alert('Save data is missing or invalid.');
+                return;
+            }
+            const selectionArea = document.getElementById('selection-area');
+            if (selectionArea) {
+                selectionArea.classList.add('hidden');
+            }
+            const adventureView = document.getElementById('adventure-view');
+            if (adventureView) {
+                adventureView.classList.add('active');
+                adventureView.style.display = 'block';
+                adventureView.style.visibility = 'visible';
+                adventureView.style.opacity = '1';
+            }
+            applySavedAdventureState(data);
+            if (isMobile) {
+                showJoystick();
+            }
+            setTimeout(function() {
+                setupMovementControls();
+            }, 100);
+            updateSaveAccountUI();
+        }
+
+        function loadAdventureProgressInGame() {
+            const data = readAdventureSave();
+            if (!data) {
+                alert('No saved adventure on this device.');
+                return;
+            }
+            if (!confirm('Load saved game? You will lose any progress since the last save.')) {
+                return;
+            }
+            applySavedAdventureState(data);
         }
         
         // Function to move back 5 rooms when timer expires
@@ -3920,7 +4907,7 @@
             }, 10);
             
             // Reset timer display but don't start it yet (wait for next movement)
-            timerSeconds = 60;
+            timerSeconds = getTimerDuration();
             updateTimerDisplay();
             
             // Show visual feedback that timer expired
@@ -3989,11 +4976,74 @@
                 // Prevent rapid level increments (only once per second)
                 const now = Date.now();
                 if (now - lastLevelUpTime > 1000) {
-                    // Level up! Redirect back to adventure.html at level 6
-                    if (currentDragonId) {
-                        // Redirect back to adventure page with dragon ID and level 6
-                        window.location.href = 'adventure.html?dragon=' + encodeURIComponent(currentDragonId) + '&level=6';
-                        return;
+                    // Level up!
+                    currentLevel++;
+                    lastLevelUpTime = now;
+                    updateLevelDisplay();
+                    
+                    // Check if we've reached level 5 - teleport to level 5 page
+                    if (currentLevel === 5) {
+                        // Get dragon ID from current state
+                        let dragonId = currentDragonId;
+                        
+                        // If not stored, try to get from URL parameters
+                        if (!dragonId) {
+                            const urlParams = new URLSearchParams(window.location.search);
+                            dragonId = urlParams.get('dragon');
+                        }
+                        
+                        // If still not found, try to find it from currentDragon
+                        if (!dragonId && currentDragon) {
+                            // Find dragon ID by matching name
+                            for (const id in dragonData) {
+                                if (dragonData[id].name === currentDragon.name) {
+                                    dragonId = id;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        if (dragonId) {
+                            // Redirect to adventure-level5.html with dragon ID and level 5
+                            window.location.href = `adventure-level5.html?dragon=${dragonId}&level=5`;
+                            return;
+                        } else {
+                            console.error('Could not find dragon ID for level 5 teleport');
+                        }
+                    }
+                    
+                    // Reset timer on level up (but don't start until next movement)
+                    stopTimer();
+                    timerStarted = false;
+                    timerSeconds = getTimerDuration();
+                    updateTimerDisplay();
+                    
+                    // Regenerate session seed to change all rooms
+                    sessionSeed = Math.floor(Math.random() * 1000000000);
+                    
+                    // Clear room memory to force regeneration of all rooms
+                    roomMemory = {};
+                    
+                    // Reset key collection (key will be in a new room)
+                    keyCollected = false;
+                    updateTeleportButtonState(); // Re-enable teleport button
+                    
+                    // Remove the key from display
+                    const keyEl = document.getElementById('adventure-key');
+                    if (keyEl) {
+                        keyEl.remove();
+                    }
+                    
+                    // Reload current room (main room) with new seed
+                    loadRoom(currentRoom);
+                    updateMap();
+                    
+                    // Visual feedback
+                    if (boxEl) {
+                        boxEl.style.boxShadow = '0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8)';
+                        setTimeout(function() {
+                            boxEl.style.boxShadow = '';
+                        }, 500);
                     }
                 }
             }
@@ -4001,21 +5051,6 @@
         
         // Function to update key position when collected
         function updateKeyPosition() {
-            // Only update key position if it's been collected
-            if (!keyCollected) {
-                // Make sure key is at its original position if not collected
-                const keyEl = document.getElementById('adventure-key');
-                if (keyEl) {
-                    const roomKey = getRoomKey(currentRoom);
-                    const room = roomMemory[roomKey];
-                    if (room && room.key && room.key.x !== undefined && room.key.y !== undefined) {
-                        keyEl.style.left = room.key.x + '%';
-                        keyEl.style.bottom = room.key.y + 'px';
-                    }
-                }
-                return;
-            }
-            
             const keyEl = document.getElementById('adventure-key');
             const pixelDragon = document.getElementById('pixel-dragon');
             
@@ -4029,8 +5064,26 @@
         
         // Function to update teleport button state based on key collection
         function updateTeleportButtonState() {
-            // Teleport button removed on level 5 page - function kept for compatibility
-            // No-op function
+            const teleportButton = document.getElementById('teleport-main-button');
+            if (teleportButton) {
+                // Check if teleporting with key is allowed
+                const allowTeleportWithKey = localStorage.getItem('allowTeleportWithKey') || 'no';
+                const canTeleportWithKey = allowTeleportWithKey === 'yes';
+                
+                if (keyCollected && !canTeleportWithKey) {
+                    // Disable teleport if player has key and setting is "no"
+                    teleportButton.disabled = true;
+                    teleportButton.style.opacity = '0.5';
+                    teleportButton.style.cursor = 'not-allowed';
+                    teleportButton.title = 'Cannot teleport while holding the key!';
+                } else {
+                    // Enable teleport if no key or setting allows teleporting with key
+                    teleportButton.disabled = false;
+                    teleportButton.style.opacity = '1';
+                    teleportButton.style.cursor = 'pointer';
+                    teleportButton.title = 'Teleport to Main Room';
+                }
+            }
         }
 
         // Room system functions
@@ -4057,12 +5110,166 @@
             const bgIndex = Math.floor(rng() * backgrounds.length);
             const background = backgrounds[bgIndex];
             
-            // No path mechanic in level 5 - rooms are open
-            const clearPath = null;
+            // Generate a clear path through the room with turns (L-shaped path)
+            // Path goes from the wall closest to main room to the wall farthest from main room
+            // Path is 120px wide (enough for 80px dragon with buffer)
+            const caveWidthPx = 1200; // approximate width
+            const caveHeightPx = 500; // approximate height
+            const pathWidth = 120; // Path width in pixels (enough for dragon + buffer)
+            const pathWidthPercent = (pathWidth / caveWidthPx) * 100; // ~10%
             
-            // Generate obstacles (Level 5 page: no obstacles in any room)
+            let clearPath = null;
+            
+            // Determine entry direction based on room position relative to main room (0,0)
+            // Rooms are on axes only (x=0 OR y=0), so we can determine the entry wall
+            if (roomCoord.y > 0) {
+                // Room is above main room - entered from bottom, path should go bottom to top (vertical with turn)
+                // L-shaped: go up partway, then turn left or right, then continue to top
+                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% up the room
+                const firstSegmentX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X for first segment
+                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn left (-1) or right (1)
+                const turnAmount = rng() * 30 + 20; // Turn 20-50% of width
+                const secondSegmentX = Math.max(pathWidthPercent / 2, Math.min(100 - pathWidthPercent / 2, firstSegmentX + turnDirection * turnAmount));
+                
+                clearPath = {
+                    type: 'lshape',
+                    segments: [
+                        {
+                            type: 'vertical',
+                            x: firstSegmentX, // X position in percentage
+                            width: pathWidthPercent,
+                            minY: 0,
+                            maxY: caveHeightPx * turnPoint // From bottom to turn point
+                        },
+                        {
+                            type: 'horizontal',
+                            y: caveHeightPx * turnPoint, // Y position at turn point
+                            width: pathWidth,
+                            minX: Math.min(firstSegmentX, secondSegmentX) - pathWidthPercent / 2,
+                            maxX: Math.max(firstSegmentX, secondSegmentX) + pathWidthPercent / 2 // Horizontal segment for turn
+                        },
+                        {
+                            type: 'vertical',
+                            x: secondSegmentX, // X position in percentage
+                            width: pathWidthPercent,
+                            minY: caveHeightPx * turnPoint,
+                            maxY: caveHeightPx // From turn point to top
+                        }
+                    ]
+                };
+            } else if (roomCoord.y < 0) {
+                // Room is below main room - entered from top, path should go top to bottom (vertical with turn)
+                // L-shaped: go down partway, then turn left or right, then continue to bottom
+                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% down the room
+                const firstSegmentX = rng() * (100 - pathWidthPercent) + pathWidthPercent / 2; // Random X for first segment
+                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn left (-1) or right (1)
+                const turnAmount = rng() * 30 + 20; // Turn 20-50% of width
+                const secondSegmentX = Math.max(pathWidthPercent / 2, Math.min(100 - pathWidthPercent / 2, firstSegmentX + turnDirection * turnAmount));
+                
+                clearPath = {
+                    type: 'lshape',
+                    segments: [
+                        {
+                            type: 'vertical',
+                            x: firstSegmentX, // X position in percentage
+                            width: pathWidthPercent,
+                            minY: caveHeightPx * turnPoint,
+                            maxY: caveHeightPx // From top to turn point
+                        },
+                        {
+                            type: 'horizontal',
+                            y: caveHeightPx * turnPoint, // Y position at turn point
+                            width: pathWidth,
+                            minX: Math.min(firstSegmentX, secondSegmentX) - pathWidthPercent / 2,
+                            maxX: Math.max(firstSegmentX, secondSegmentX) + pathWidthPercent / 2 // Horizontal segment for turn
+                        },
+                        {
+                            type: 'vertical',
+                            x: secondSegmentX, // X position in percentage
+                            width: pathWidthPercent,
+                            minY: 0,
+                            maxY: caveHeightPx * turnPoint // From turn point to bottom
+                        }
+                    ]
+                };
+            } else if (roomCoord.x > 0) {
+                // Room is to the right of main room - entered from left, path should go left to right (horizontal with turn)
+                // L-shaped: go right partway, then turn up or down, then continue to right
+                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% across the room
+                const firstSegmentY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y for first segment
+                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn up (1) or down (-1)
+                const turnAmount = rng() * 150 + 100; // Turn 100-250px
+                const secondSegmentY = Math.max(pathWidth / 2, Math.min(caveHeightPx - pathWidth / 2, firstSegmentY + turnDirection * turnAmount));
+                
+                clearPath = {
+                    type: 'lshape',
+                    segments: [
+                        {
+                            type: 'horizontal',
+                            y: firstSegmentY, // Y position in pixels from bottom
+                            width: pathWidth,
+                            minX: 0,
+                            maxX: turnPoint * 100 // From left to turn point
+                        },
+                        {
+                            type: 'vertical',
+                            x: turnPoint * 100, // X position at turn point
+                            width: pathWidthPercent,
+                            minY: Math.min(firstSegmentY, secondSegmentY) - pathWidth / 2,
+                            maxY: Math.max(firstSegmentY, secondSegmentY) + pathWidth / 2 // Vertical segment for turn
+                        },
+                        {
+                            type: 'horizontal',
+                            y: secondSegmentY, // Y position in pixels from bottom
+                            width: pathWidth,
+                            minX: turnPoint * 100,
+                            maxX: 100 // From turn point to right
+                        }
+                    ]
+                };
+            } else if (roomCoord.x < 0) {
+                // Room is to the left of main room - entered from right, path should go right to left (horizontal with turn)
+                // L-shaped: go left partway, then turn up or down, then continue to left
+                const turnPoint = rng() * 0.4 + 0.3; // Turn between 30% and 70% across the room
+                const firstSegmentY = rng() * (caveHeightPx - pathWidth) + pathWidth / 2; // Random Y for first segment
+                const turnDirection = rng() > 0.5 ? 1 : -1; // Turn up (1) or down (-1)
+                const turnAmount = rng() * 150 + 100; // Turn 100-250px
+                const secondSegmentY = Math.max(pathWidth / 2, Math.min(caveHeightPx - pathWidth / 2, firstSegmentY + turnDirection * turnAmount));
+                
+                clearPath = {
+                    type: 'lshape',
+                    segments: [
+                        {
+                            type: 'horizontal',
+                            y: firstSegmentY, // Y position in pixels from bottom
+                            width: pathWidth,
+                            minX: turnPoint * 100,
+                            maxX: 100 // From right to turn point
+                        },
+                        {
+                            type: 'vertical',
+                            x: turnPoint * 100, // X position at turn point
+                            width: pathWidthPercent,
+                            minY: Math.min(firstSegmentY, secondSegmentY) - pathWidth / 2,
+                            maxY: Math.max(firstSegmentY, secondSegmentY) + pathWidth / 2 // Vertical segment for turn
+                        },
+                        {
+                            type: 'horizontal',
+                            y: secondSegmentY, // Y position in pixels from bottom
+                            width: pathWidth,
+                            minX: 0,
+                            maxX: turnPoint * 100 // From turn point to left
+                        }
+                    ]
+                };
+            } else {
+                // Main room (0,0) - no path needed (no obstacles)
+                clearPath = null;
+            }
+            
+            // Generate obstacles (10-50 obstacles per room, excluding main room)
             const obstacles = [];
-            const numObstacles = 0; // No obstacles on level 5 page
+            const numObstacles = roomCoord.x === 0 && roomCoord.y === 0 ? 0 : Math.floor(rng() * 41) + 10;
             const obstacleTypes = ['rock', 'crystal', 'stalagmite', 'lava'];
             let lavaCount = 0; // Track number of lava obstacles
             const maxLava = 10; // Maximum lava obstacles per room
@@ -4190,21 +5397,87 @@
                 }
             }
             
-            // Generate a key (Level 5 page: Key is always in room (2,0) at the center)
+            // Generate a key on the clear path (only in one randomly selected room)
             let key = null;
-            if (roomCoord.x === 2 && roomCoord.y === 0) {
-                // Key spawns in the middle of the room
-                key = {
-                    x: 50, // 50% - center horizontally
-                    y: 250 // 250px from bottom - center vertically
-                };
+            if (clearPath && roomCoord.x !== 0 && roomCoord.y !== 0) {
+                // Determine which room should have the key based on session seed
+                // Get all valid room coordinates
+                const validRooms = [];
+                for (let x = -MAX_ROOMS; x <= MAX_ROOMS; x++) {
+                    for (let y = -MAX_ROOMS; y <= MAX_ROOMS; y++) {
+                        const coord = { x: x, y: y };
+                        if ((x === 0 || y === 0) && !(x === 0 && y === 0)) {
+                            validRooms.push(coord);
+                        }
+                    }
+                }
+                
+                // Use session seed to deterministically select one room for the key
+                const keyRoomSeed = sessionSeed * 7919; // Use a prime multiplier
+                const keyRoomIndex = Math.floor((keyRoomSeed % 1000000) / (1000000 / validRooms.length));
+                const keyRoom = validRooms[Math.min(keyRoomIndex, validRooms.length - 1)];
+                
+                // Only generate key if this is the selected room
+                if (roomCoord.x === keyRoom.x && roomCoord.y === keyRoom.y) {
+                    // Find a random position on the clear path
+                    let keyX, keyY;
+                    const caveWidthPx = 1200;
+                    const caveHeightPx = 500;
+                    
+                    if (clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                        // For L-shaped paths, randomly select one of the segments
+                        const segmentIndex = Math.floor(rng() * clearPath.segments.length);
+                        const segment = clearPath.segments[segmentIndex];
+                        
+                        if (segment.type === 'horizontal') {
+                            // Random position along horizontal segment, but avoid edges
+                            const minDistancePercent = (50 / caveWidthPx) * 100; // 50px as percentage
+                            const safeMinX = Math.max(segment.minX, minDistancePercent);
+                            const safeMaxX = Math.min(segment.maxX, 100 - minDistancePercent);
+                            const safeSegmentLength = Math.max(0, safeMaxX - safeMinX);
+                            if (safeSegmentLength > 0) {
+                                keyX = safeMinX + rng() * safeSegmentLength;
+                            keyY = segment.y; // Use the segment's Y position
+                            }
+                        } else if (segment.type === 'vertical') {
+                            // Random position along vertical segment, but avoid edges
+                            keyX = segment.x; // Use the segment's X position
+                            const minDistancePx = 50; // 50px minimum
+                            const safeMinY = Math.max(segment.minY, minDistancePx);
+                            const safeMaxY = Math.min(segment.maxY, caveHeightPx - minDistancePx);
+                            const safeSegmentLength = Math.max(0, safeMaxY - safeMinY);
+                            if (safeSegmentLength > 0) {
+                                keyY = safeMinY + rng() * safeSegmentLength;
+                            }
+                        }
+                    } else if (clearPath.type === 'horizontal') {
+                        // Random position along horizontal path, but avoid edges
+                        const minDistancePercent = (50 / caveWidthPx) * 100; // 50px as percentage
+                        keyX = minDistancePercent + rng() * (100 - 2 * minDistancePercent); // Random X position with margins
+                        keyY = clearPath.y; // Use the path's Y position
+                    } else if (clearPath.type === 'vertical') {
+                        // Random position along vertical path, but avoid edges
+                        keyX = clearPath.x; // Use the path's X position
+                        const minDistancePx = 50; // 50px minimum
+                        keyY = minDistancePx + rng() * (caveHeightPx - 2 * minDistancePx); // Random Y position with margins
+                    }
+                    
+                    if (keyX !== undefined && keyY !== undefined) {
+                        // Ensure key is at least 50px away from walls
+                        const clampedPos = clampKeyPosition(keyX, keyY, caveWidthPx, caveHeightPx);
+                        key = {
+                            x: clampedPos.x,
+                            y: clampedPos.y
+                        };
+                    }
+                }
             }
             
             return {
                 seed: seed,
                 background: background,
-                obstacles: [], // Level 5 page: always empty obstacles array
-                clearPath: null, // No path mechanic in level 5
+                obstacles: obstacles,
+                clearPath: clearPath, // Store the clear path
                 key: key, // Store the key position
                 visited: false
             };
@@ -4309,13 +5582,8 @@
             
             const room = roomMemory[roomKey];
             
-            // Level 5 page: Always clear obstacles
-            room.obstacles = [];
-            roomMemory[roomKey].obstacles = [];
-            
             // Ensure room has obstacles if it's not the main room, and regenerate if paths are blocked
-            // Level 5 page: Skip obstacle generation
-            if (false && (roomCoord.x !== 0 || roomCoord.y !== 0) && 
+            if ((roomCoord.x !== 0 || roomCoord.y !== 0) && 
                 (!room.obstacles || room.obstacles.length < 10 || !room.clearPath || pathsBlocked(room.obstacles || [], room.clearPath))) {
                 // Regenerate obstacles - first ensure we have a clear path
                 // If room doesn't have a clear path, regenerate the entire room state
@@ -4329,7 +5597,7 @@
                 const seed = ((roomCoord.x * 1000 + roomCoord.y) * 12345) + sessionSeed;
                 const rng = seededRandom(seed);
                 const obstacles = [];
-                const numObstacles = 0; // Level 5 page: no obstacles
+                const numObstacles = Math.floor(rng() * 41) + 10; // 10-50 obstacles
                 const obstacleTypes = ['rock', 'crystal', 'stalagmite', 'lava'];
                 let lavaCount = 0; // Track number of lava obstacles
                 const maxLava = 10; // Maximum lava obstacles per room
@@ -4439,13 +5707,65 @@
                 
                 // Preserve the key if it exists, or regenerate if missing (only if this room should have the key)
                 // Note: We preserve the key even when obstacles are regenerated
-                // Level 5 page: Key is always in room (2,0) at the center
-                if (!room.key && roomCoord.x === 2 && roomCoord.y === 0) {
-                    // Key spawns in the middle of the room
-                    room.key = {
-                        x: 50, // 50% - center horizontally
-                        y: 250 // 250px from bottom - center vertically
-                    };
+                if (!room.key && clearPath) {
+                    // Determine which room should have the key based on session seed
+                    const validRooms = [];
+                    for (let x = -MAX_ROOMS; x <= MAX_ROOMS; x++) {
+                        for (let y = -MAX_ROOMS; y <= MAX_ROOMS; y++) {
+                            const coord = { x: x, y: y };
+                            if ((x === 0 || y === 0) && !(x === 0 && y === 0)) {
+                                validRooms.push(coord);
+                            }
+                        }
+                    }
+                    
+                    // Use session seed to deterministically select one room for the key
+                    const keyRoomSeed = sessionSeed * 7919; // Use a prime multiplier
+                    const keyRoomIndex = Math.floor((keyRoomSeed % 1000000) / (1000000 / validRooms.length));
+                    const keyRoom = validRooms[Math.min(keyRoomIndex, validRooms.length - 1)];
+                    
+                    // Only generate key if this is the selected room
+                    if (roomCoord.x === keyRoom.x && roomCoord.y === keyRoom.y) {
+                        // Generate a key on the clear path
+                        let keyX, keyY;
+                        const caveWidthPx = 1200;
+                        const caveHeightPx = 500;
+                        
+                        if (clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                            // For L-shaped paths, randomly select one of the segments
+                            const segmentIndex = Math.floor(rng() * clearPath.segments.length);
+                            const segment = clearPath.segments[segmentIndex];
+                            
+                            if (segment.type === 'horizontal') {
+                                // Random position along horizontal segment
+                                const segmentLength = segment.maxX - segment.minX;
+                                keyX = segment.minX + rng() * segmentLength;
+                                keyY = segment.y; // Use the segment's Y position
+                            } else if (segment.type === 'vertical') {
+                                // Random position along vertical segment
+                                keyX = segment.x; // Use the segment's X position
+                                const segmentLength = segment.maxY - segment.minY;
+                                keyY = segment.minY + rng() * segmentLength;
+                            }
+                        } else if (clearPath.type === 'horizontal') {
+                            // Random position along horizontal path
+                            keyX = rng() * 100; // Random X position (0-100%)
+                            keyY = clearPath.y; // Use the path's Y position
+                        } else if (clearPath.type === 'vertical') {
+                            // Random position along vertical path
+                            keyX = clearPath.x; // Use the path's X position
+                            keyY = rng() * caveHeightPx; // Random Y position (0-500px)
+                        }
+                        
+                        if (keyX !== undefined && keyY !== undefined) {
+                            // Ensure key is at least 50px away from walls
+                            const clampedPos = clampKeyPosition(keyX, keyY, caveWidthPx, caveHeightPx);
+                            room.key = {
+                                x: clampedPos.x,
+                                y: clampedPos.y
+                            };
+                        }
+                    }
                 }
             }
             
@@ -4464,8 +5784,8 @@
                 caveBackground.style.backgroundColor = room.background.base;
             }
             
-            // Render obstacles for this room (Level 5 page: always empty)
-            renderObstacles([]);
+            // Render obstacles for this room
+            renderObstacles(room.obstacles || []);
             
             // Render box ONLY in main room, hide it in other rooms
             if (roomCoord.x === 0 && roomCoord.y === 0) {
@@ -4477,57 +5797,63 @@
             
             // Always render key if it exists (even if collected, it should follow the dragon)
             // Also ensure key is generated if it should exist but doesn't
-            // Level 5 page: Key is always in room (2,0) at the center
-            if (!room.key && roomCoord.x === 2 && roomCoord.y === 0) {
-                // Key spawns in the middle of the room
-                room.key = {
-                    x: 50, // 50% - center horizontally
-                    y: 250 // 250px from bottom - center vertically
-                };
-            }
-            
-            // Handle key rendering based on collection state
-            if (keyCollected) {
-                // Key is collected - always render it following the dragon
-                // Use the current room's key data if available, or create a placeholder
-                renderKey(room.key || { x: dragonPosition.x, y: dragonPosition.y });
-            } else {
-                // Key is not collected - only render if this room has a key
-                if (room.key) {
-                    renderKey(room.key);
-                } else {
-                    // Remove key if this room doesn't have one
-                    const keyEl = document.querySelector('.key');
-                    if (keyEl) {
-                        keyEl.remove();
+            const clearPath = room.clearPath;
+            if (!room.key && clearPath && (roomCoord.x !== 0 || roomCoord.y !== 0)) {
+                // Key should exist but doesn't - regenerate it
+                const seed = ((roomCoord.x * 1000 + roomCoord.y) * 12345) + sessionSeed;
+                const rng = seededRandom(seed);
+                
+                // Determine which room should have the key based on session seed
+                const validRooms = [];
+                for (let x = -MAX_ROOMS; x <= MAX_ROOMS; x++) {
+                    for (let y = -MAX_ROOMS; y <= MAX_ROOMS; y++) {
+                        const coord = { x: x, y: y };
+                        if ((x === 0 || y === 0) && !(x === 0 && y === 0)) {
+                            validRooms.push(coord);
+                        }
+                    }
+                }
+                
+                // Use session seed to deterministically select one room for the key
+                const keyRoomSeed = sessionSeed * 7919;
+                const keyRoomIndex = Math.floor((keyRoomSeed % 1000000) / (1000000 / validRooms.length));
+                const keyRoom = validRooms[Math.min(keyRoomIndex, validRooms.length - 1)];
+                
+                // Only generate key if this is the selected room
+                if (roomCoord.x === keyRoom.x && roomCoord.y === keyRoom.y) {
+                    let keyX, keyY;
+                    const caveWidthPx = 1200;
+                    const caveHeightPx = 500;
+                    
+                    if (clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                        const segmentIndex = Math.floor(rng() * clearPath.segments.length);
+                        const segment = clearPath.segments[segmentIndex];
+                        
+                        if (segment.type === 'horizontal') {
+                            const segmentLength = segment.maxX - segment.minX;
+                            keyX = segment.minX + rng() * segmentLength;
+                            keyY = segment.y;
+                        } else if (segment.type === 'vertical') {
+                            keyX = segment.x;
+                            const segmentLength = segment.maxY - segment.minY;
+                            keyY = segment.minY + rng() * segmentLength;
+                        }
+                    } else if (clearPath.type === 'horizontal') {
+                        keyX = rng() * 100;
+                        keyY = clearPath.y;
+                    } else if (clearPath.type === 'vertical') {
+                        keyX = clearPath.x;
+                        keyY = rng() * caveHeightPx;
+                    }
+                    
+                    if (keyX !== undefined && keyY !== undefined) {
+                        room.key = { x: keyX, y: keyY };
                     }
                 }
             }
             
-            // Render boss dragon ONLY in room (1,0), hide in all other rooms including (0,0)
-            if (roomCoord.x === 1 && roomCoord.y === 0) {
-                renderBossDragon();
-                // Reset safe zone position when entering room (1,0) to generate new random position
-                safeZonePosition = null;
-                // Play dialogue sequence when entering room (1,0) for the first time
-                if (!bossDialoguePlayed) {
-                    playBossDialogueSequence();
-                }
-                // If dialogue is complete, ensure lava is active
-                if (bossDialogueComplete) {
-                    startMovingLava();
-                }
-                // Update safe path indicator
-                updateSafePathIndicator();
-            } else {
-                // Explicitly hide boss dragon in room (0,0) and all other rooms
-                hideBossDragon();
-                // Hide dialogue when leaving room (1,0)
-                hideDialogue();
-                // Clear moving lava when leaving room (1,0)
-                clearMovingLava();
-                // Hide safe path indicator
-                updateSafePathIndicator();
+            if (room.key) {
+                renderKey(room.key);
             }
             
             room.visited = true;
@@ -4628,595 +5954,6 @@
             }
         }
 
-        // Function to render boss dragon in room (1,0)
-        function renderBossDragon() {
-            const bossDragonEl = document.getElementById('boss-dragon');
-            if (!bossDragonEl) return;
-            
-            // If boss dragon hasn't been selected yet, randomly select one
-            if (!bossDragonId) {
-                const dragonIds = Object.keys(dragonData);
-                const randomIndex = Math.floor(Math.random() * dragonIds.length);
-                bossDragonId = dragonIds[randomIndex];
-            }
-            
-            // Map dragon IDs to their icon images
-            const dragonIcons = {
-                'breezeflight': 'images/icons/breezeflight-icon.jpg',
-                'chaosflare': 'images/icons/chacosflare-icon.jpg',
-                'crystalwing': 'images/icons/crystalwing-icon.jpg',
-                'earthheart': 'images/icons/earthheart-icon.jpg',
-                'flamethorn': 'images/icons/flamethorn-icon.jpg',
-                'frostbite': 'images/icons/frostbite-icon.jpg',
-                'metalbeak': 'images/icons/metalbeak-icon.jpg',
-                'aquaris': 'images/icons/aquarius-icon.jpg',
-                'radiant': 'images/icons/aquarius-icon.jpg',
-                'stormwing': 'images/icons/aquarius-icon.jpg',
-                'vineclaw': 'images/icons/aquarius-icon.jpg',
-                'shadowmaw': 'images/icons/aquarius-icon.jpg'
-            };
-            
-            // Set the boss dragon image
-            const iconPath = dragonIcons[bossDragonId] || 'images/icons/aquarius-icon.jpg';
-            bossDragonEl.src = iconPath;
-            bossDragonEl.alt = 'Boss Dragon';
-            bossDragonEl.className = 'boss-dragon';
-            
-            // Force visibility with inline styles
-            const caveBackground = document.querySelector('.cave-background');
-            const caveHeight = caveBackground ? caveBackground.offsetHeight : 500;
-            const centerY = caveHeight / 2; // Center vertically (250px for 500px height)
-            
-            bossDragonEl.style.display = 'block';
-            bossDragonEl.style.visibility = 'visible';
-            bossDragonEl.style.opacity = '1';
-            bossDragonEl.style.position = 'absolute';
-            bossDragonEl.style.bottom = centerY + 'px'; // Center vertically
-            bossDragonEl.style.left = '80%';
-            bossDragonEl.style.transform = 'translateX(-50%)';
-            bossDragonEl.style.zIndex = '100';
-            bossDragonEl.style.width = '120px';
-            bossDragonEl.style.height = '120px';
-            bossDragonEl.style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.8)';
-            
-            console.log('Boss dragon rendered:', bossDragonId, iconPath, 'at', centerY + 'px from bottom');
-        }
-
-        // Function to hide boss dragon
-        function hideBossDragon() {
-            const bossDragonEl = document.getElementById('boss-dragon');
-            if (bossDragonEl) {
-                bossDragonEl.style.setProperty('display', 'none', 'important');
-                bossDragonEl.style.setProperty('visibility', 'hidden', 'important');
-                bossDragonEl.style.setProperty('opacity', '0', 'important');
-                bossDragonEl.style.setProperty('box-shadow', 'none', 'important');
-                bossDragonEl.style.setProperty('filter', 'none', 'important');
-                bossDragonEl.style.setProperty('outline', 'none', 'important');
-                bossDragonEl.style.setProperty('border', 'none', 'important');
-                bossDragonEl.alt = '';
-                bossDragonEl.src = '';
-                bossDragonEl.removeAttribute('src');
-            }
-        }
-
-        // Function to show dialogue
-        function showDialogue(text) {
-            const dialogueEl = document.getElementById('boss-dialogue');
-            if (!dialogueEl) return;
-            
-            dialogueEl.textContent = text;
-            dialogueEl.style.display = 'block';
-            dialogueEl.style.visibility = 'visible';
-            dialogueEl.style.opacity = '1';
-        }
-
-        // Function to hide dialogue
-        function hideDialogue() {
-            const dialogueEl = document.getElementById('boss-dialogue');
-            if (!dialogueEl) return;
-            
-            dialogueEl.style.display = 'none';
-            dialogueEl.style.visibility = 'hidden';
-            dialogueEl.style.opacity = '0';
-            dialogueEl.textContent = '';
-        }
-
-        // Function to create particle effects
-        function createParticleEffects(x, y) {
-            const particleContainer = document.getElementById('particle-container');
-            if (!particleContainer) return;
-            
-            const numParticles = 50;
-            const particles = [];
-            
-            for (let i = 0; i < numParticles; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                
-                const angle = (Math.PI * 2 * i) / numParticles;
-                const speed = 2 + Math.random() * 3;
-                const distance = 50 + Math.random() * 100;
-                
-                particle.style.left = x + 'px';
-                particle.style.bottom = y + 'px';
-                
-                particleContainer.appendChild(particle);
-                
-                // Animate particle
-                let currentX = x;
-                let currentY = y;
-                let vx = Math.cos(angle) * speed;
-                let vy = Math.sin(angle) * speed;
-                let opacity = 1;
-                
-                const animate = () => {
-                    currentX += vx;
-                    currentY += vy;
-                    opacity -= 0.02;
-                    
-                    particle.style.left = currentX + 'px';
-                    particle.style.bottom = currentY + 'px';
-                    particle.style.opacity = opacity;
-                    
-                    if (opacity > 0) {
-                        requestAnimationFrame(animate);
-                    } else {
-                        particle.remove();
-                    }
-                };
-                
-                requestAnimationFrame(animate);
-            }
-        }
-
-        // Function to transform boss dragon
-        function transformBossDragon() {
-            const bossDragonEl = document.getElementById('boss-dragon');
-            if (!bossDragonEl) return;
-            
-            // Get current position for particle effects - center of boss dragon
-            const caveBackground = document.querySelector('.cave-background');
-            if (!caveBackground) return;
-            
-            const caveWidth = caveBackground.offsetWidth;
-            const caveHeight = caveBackground.offsetHeight;
-            
-            // Boss dragon is at 80% from left, centered vertically
-            const bossX = (caveWidth * 0.8);
-            const bossY = caveHeight / 2; // Center vertically
-            
-            // Create particle effects at boss dragon center
-            createParticleEffects(bossX, bossY);
-            
-            // Select a new random dragon (different from current)
-            const dragonIds = Object.keys(dragonData);
-            let newBossDragonId;
-            do {
-                const randomIndex = Math.floor(Math.random() * dragonIds.length);
-                newBossDragonId = dragonIds[randomIndex];
-            } while (newBossDragonId === bossDragonId && dragonIds.length > 1);
-            
-            bossDragonId = newBossDragonId;
-            
-            // Map dragon IDs to their icon images
-            const dragonIcons = {
-                'breezeflight': 'images/icons/breezeflight-icon.jpg',
-                'chaosflare': 'images/icons/chacosflare-icon.jpg',
-                'crystalwing': 'images/icons/crystalwing-icon.jpg',
-                'earthheart': 'images/icons/earthheart-icon.jpg',
-                'flamethorn': 'images/icons/flamethorn-icon.jpg',
-                'frostbite': 'images/icons/frostbite-icon.jpg',
-                'metalbeak': 'images/icons/metalbeak-icon.jpg',
-                'aquaris': 'images/icons/aquarius-icon.jpg',
-                'radiant': 'images/icons/aquarius-icon.jpg',
-                'stormwing': 'images/icons/aquarius-icon.jpg',
-                'vineclaw': 'images/icons/aquarius-icon.jpg',
-                'shadowmaw': 'images/icons/aquarius-icon.jpg'
-            };
-            
-            // Update boss dragon image
-            const iconPath = dragonIcons[bossDragonId] || 'images/icons/aquarius-icon.jpg';
-            bossDragonEl.src = iconPath;
-        }
-
-        // Function to generate random safe zone position
-        function generateRandomSafeZone() {
-            const caveBackground = document.querySelector('.cave-background');
-            if (!caveBackground) {
-                console.log('generateRandomSafeZone: cave background not found, retrying...');
-                // Retry after a short delay if cave background isn't ready
-                setTimeout(() => {
-                    generateRandomSafeZone();
-                }, 100);
-                return;
-            }
-            
-            const caveWidth = caveBackground.offsetWidth;
-            const caveHeight = caveBackground.offsetHeight;
-            
-            // If dimensions are 0, retry
-            if (caveWidth === 0 || caveHeight === 0) {
-                console.log('generateRandomSafeZone: cave dimensions are 0, retrying...', { caveWidth, caveHeight });
-                setTimeout(() => {
-                    generateRandomSafeZone();
-                }, 100);
-                return;
-            }
-            
-            const safePathSize = 130;
-            
-            console.log('generateRandomSafeZone: cave dimensions', { caveWidth, caveHeight });
-            
-            // Generate random position within bounds (leaving margin for safe path size)
-            // X: between 10% and 90% (leaving room for 130px path)
-            // Y: between 10% and 90% of height (leaving room for 130px path)
-            const minXPercent = 10;
-            const maxXPercent = 90;
-            const minYFromBottom = safePathSize / 2 + 20; // Leave margin from bottom
-            const maxYFromBottom = caveHeight - safePathSize / 2 - 20; // Leave margin from top
-            
-            // Ensure valid range
-            if (maxYFromBottom <= minYFromBottom) {
-                // Fallback to center if range is invalid
-                safeZonePosition = {
-                    x: 50,
-                    y: caveHeight / 2
-                };
-            } else {
-                const randomXPercent = minXPercent + Math.random() * (maxXPercent - minXPercent);
-                const randomYFromBottom = minYFromBottom + Math.random() * (maxYFromBottom - minYFromBottom);
-                
-                safeZonePosition = {
-                    x: randomXPercent,
-                    y: randomYFromBottom
-                };
-            }
-            
-            console.log('generateRandomSafeZone: generated position', safeZonePosition);
-        }
-        
-        // Function to show/hide safe path indicator
-        function updateSafePathIndicator() {
-            const safePathEl = document.getElementById('safe-path-indicator');
-            if (!safePathEl) return;
-            
-            // Only show in room (1,0) after dialogue is complete
-            if (currentRoom.x === 1 && currentRoom.y === 0 && bossDialogueComplete) {
-                // Generate random safe zone if not already set
-                if (!safeZonePosition) {
-                    generateRandomSafeZone();
-                }
-                
-                const caveBackground = document.querySelector('.cave-background');
-                if (caveBackground && safeZonePosition) {
-                    const caveHeight = caveBackground.offsetHeight;
-                    // Safe zone Y is stored as pixels from bottom
-                    // Convert to top positioning: top = caveHeight - safeZonePosition.y - 65 (half of 130px)
-                    const safePathTop = caveHeight - safeZonePosition.y - 65;
-                    
-                    safePathEl.style.left = safeZonePosition.x + '%';
-                    safePathEl.style.top = safePathTop + 'px';
-                    safePathEl.style.transform = 'translateX(-50%)'; // Only translate X, Y is set via top
-                    safePathEl.style.display = 'block';
-                    safePathEl.style.visibility = 'visible';
-                    safePathEl.style.opacity = '1';
-                } else {
-                    // Even if position isn't ready, show the element (it will update when position is set)
-                    safePathEl.style.display = 'block';
-                    safePathEl.style.visibility = 'visible';
-                    safePathEl.style.opacity = '1';
-                }
-            } else {
-                safePathEl.style.display = 'none';
-                safePathEl.style.visibility = 'hidden';
-                safePathEl.style.opacity = '0';
-            }
-        }
-        
-        // Function to start moving lava in room (1,0)
-        function startMovingLava() {
-            console.log('startMovingLava called', { currentRoom, bossDialogueComplete });
-            
-            // Only start lava in room (1,0) after dialogue is complete
-            if (currentRoom.x !== 1 || currentRoom.y !== 0 || !bossDialogueComplete) {
-                console.log('startMovingLava: conditions not met', { 
-                    x: currentRoom.x, 
-                    y: currentRoom.y, 
-                    bossDialogueComplete 
-                });
-                return;
-            }
-            
-            console.log('startMovingLava: starting lava spawn');
-            
-            // Clear any existing lava first (but preserve safe zone position)
-            movingLava = [];
-            const clearRoomKey = getRoomKey(currentRoom);
-            const clearRoom = roomMemory[clearRoomKey];
-            if (clearRoom && clearRoom.obstacles) {
-                clearRoom.obstacles = clearRoom.obstacles.filter(obs => obs.type !== 'lava');
-                renderObstacles(clearRoom.obstacles);
-            }
-            
-            // Generate random safe zone if not already set
-            if (!safeZonePosition) {
-                console.log('startMovingLava: generating random safe zone');
-                generateRandomSafeZone();
-                console.log('startMovingLava: safe zone generated', safeZonePosition);
-            }
-            
-            // Show safe path indicator
-            updateSafePathIndicator();
-            
-            const caveBackground = document.querySelector('.cave-background');
-            if (!caveBackground) return;
-            
-            const caveWidth = caveBackground.offsetWidth;
-            const caveHeight = caveBackground.offsetHeight;
-            
-            // Create multiple lava obstacles that will move towards the player
-            // Ensure there's always a 130px x 130px safe path
-            const numLava = 8; // Number of lava obstacles
-            const lavaSize = 40; // Size of each lava obstacle
-            const safePathSize = 130; // Minimum safe path size
-            
-            // Calculate safe zone using random position
-            if (!safeZonePosition) {
-                generateRandomSafeZone();
-            }
-            const safeZoneCenterX = (safeZonePosition.x / 100) * caveWidth; // Convert percentage to pixels
-            const safeZoneCenterY = caveHeight - safeZonePosition.y; // Convert from bottom to top coordinates
-            const safeZoneLeft = safeZoneCenterX - safePathSize / 2;
-            const safeZoneRight = safeZoneCenterX + safePathSize / 2;
-            const safeZoneTop = safeZoneCenterY + safePathSize / 2;
-            const safeZoneBottom = safeZoneCenterY - safePathSize / 2;
-            
-            // Get room state
-            const roomKey = getRoomKey(currentRoom);
-            if (!roomMemory[roomKey]) {
-                roomMemory[roomKey] = generateRoomState(currentRoom);
-            }
-            const room = roomMemory[roomKey];
-            
-            // Initialize obstacles array if needed
-            if (!room.obstacles) {
-                room.obstacles = [];
-            }
-            
-            // Create lava obstacles all grouped together in the middle, avoiding the safe zone
-            const centerX = caveWidth / 2; // Center of room horizontally
-            const centerY = caveHeight / 2; // Center of room vertically
-            
-            // Position all lava in a tight group in the middle
-            // Arrange them in a grid pattern around the center, avoiding safe zone
-            const gridSize = Math.ceil(Math.sqrt(numLava)); // Grid dimensions
-            const spacing = lavaSize + 5; // Spacing between lava obstacles
-            
-            let lavaIndex = 0;
-            for (let row = 0; row < gridSize && lavaIndex < numLava; row++) {
-                for (let col = 0; col < gridSize && lavaIndex < numLava; col++) {
-                    // Calculate position in grid
-                    const offsetX = (col - (gridSize - 1) / 2) * spacing;
-                    const offsetY = (row - (gridSize - 1) / 2) * spacing;
-                    
-                    let lavaX = centerX + offsetX;
-                    let lavaY = centerY + offsetY;
-                    
-                    // Ensure lava doesn't spawn in safe zone
-                    // If it would be in safe zone, move it away
-                    if (lavaX > safeZoneLeft - lavaSize && lavaX < safeZoneRight + lavaSize &&
-                        lavaY > safeZoneBottom - lavaSize && lavaY < safeZoneTop + lavaSize) {
-                        // Move to the right of safe zone
-                        lavaX = safeZoneRight + lavaSize + 10;
-                    }
-                    
-                    // Ensure lava is within bounds
-                    lavaX = Math.max(lavaSize, Math.min(caveWidth - lavaSize, lavaX));
-                    lavaY = Math.max(lavaSize, Math.min(caveHeight - lavaSize, lavaY));
-                    
-                    // Convert to percentage and pixel coordinates
-                    const lavaXPercent = (lavaX / caveWidth) * 100;
-                    const lavaYPixels = caveHeight - lavaY;
-                    
-                    const lavaObstacle = {
-                        type: 'lava',
-                        x: lavaXPercent,
-                        y: lavaYPixels,
-                        width: lavaSize,
-                        height: lavaSize,
-                        pixelX: lavaX,
-                        pixelY: lavaY,
-                        speed: 0.5 + Math.random() * 0.5 // Random speed between 0.5 and 1.0
-                    };
-                    
-                    room.obstacles.push(lavaObstacle);
-                    movingLava.push(lavaObstacle);
-                    lavaIndex++;
-                }
-            }
-            
-            // Render the lava obstacles
-            console.log('startMovingLava: rendering obstacles', room.obstacles.length, 'obstacles');
-            renderObstacles(room.obstacles);
-            console.log('startMovingLava: completed, movingLava.length =', movingLava.length);
-        }
-        
-        // Function to clear moving lava
-        function clearMovingLava() {
-            movingLava = [];
-            
-            // Remove lava from room obstacles
-            if (currentRoom.x === 1 && currentRoom.y === 0) {
-                const roomKey = getRoomKey(currentRoom);
-                const room = roomMemory[roomKey];
-                if (room && room.obstacles) {
-                    room.obstacles = room.obstacles.filter(obs => obs.type !== 'lava');
-                    renderObstacles(room.obstacles);
-                }
-            }
-            
-            // Reset safe zone position when leaving room
-            safeZonePosition = null;
-            
-            // Hide safe path indicator
-            updateSafePathIndicator();
-        }
-        
-        // Function to update moving lava positions (called in movement loop)
-        function updateMovingLava() {
-            // Only update lava in room (1,0) after dialogue is complete
-            if (currentRoom.x !== 1 || currentRoom.y !== 0 || !bossDialogueComplete || movingLava.length === 0) {
-                return;
-            }
-            
-            const caveBackground = document.querySelector('.cave-background');
-            if (!caveBackground) return;
-            
-            const caveWidth = caveBackground.offsetWidth;
-            const caveHeight = caveBackground.offsetHeight;
-            
-            // Get player position in pixels
-            const playerX = (dragonPosition.x / 100) * caveWidth;
-            const playerY = caveHeight - dragonPosition.y;
-            
-            // Calculate safe zone using random position
-            if (!safeZonePosition) {
-                generateRandomSafeZone();
-            }
-            const safePathSize = 130;
-            const safeZoneCenterX = (safeZonePosition.x / 100) * caveWidth; // Convert percentage to pixels
-            const safeZoneCenterY = caveHeight - safeZonePosition.y; // Convert from bottom to top coordinates
-            const safeZoneLeft = safeZoneCenterX - safePathSize / 2;
-            const safeZoneRight = safeZoneCenterX + safePathSize / 2;
-            const safeZoneTop = safeZoneCenterY + safePathSize / 2;
-            const safeZoneBottom = safeZoneCenterY - safePathSize / 2;
-            
-            // Update each lava obstacle to move towards player
-            // Use a reverse loop to safely remove items while iterating
-            for (let i = movingLava.length - 1; i >= 0; i--) {
-                const lava = movingLava[i];
-                
-                // Calculate direction to player
-                const dx = playerX - lava.pixelX;
-                const dy = playerY - lava.pixelY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                // Check if lava is touching the safe zone - if so, delete it
-                const lavaRadius = lava.width / 2;
-                const lavaLeft = lava.pixelX - lavaRadius;
-                const lavaRight = lava.pixelX + lavaRadius;
-                const lavaTop = lava.pixelY + lavaRadius;
-                const lavaBottom = lava.pixelY - lavaRadius;
-                
-                // Check collision with safe zone
-                if (lavaRight > safeZoneLeft && lavaLeft < safeZoneRight &&
-                    lavaTop > safeZoneBottom && lavaBottom < safeZoneTop) {
-                    // Lava is touching safe zone - delete it
-                    const roomKey = getRoomKey(currentRoom);
-                    const room = roomMemory[roomKey];
-                    if (room && room.obstacles) {
-                        const obstacleIndex = room.obstacles.findIndex(obs => 
-                            obs.type === 'lava' && obs === lava
-                        );
-                        if (obstacleIndex !== -1) {
-                            room.obstacles.splice(obstacleIndex, 1);
-                        }
-                    }
-                    movingLava.splice(i, 1);
-                    continue; // Skip to next lava
-                }
-                
-                // Normalize direction and apply speed
-                if (distance > 0) {
-                    const moveX = (dx / distance) * lava.speed;
-                    const moveY = (dy / distance) * lava.speed;
-                    
-                    // Calculate new position
-                    let newX = lava.pixelX + moveX;
-                    let newY = lava.pixelY + moveY;
-                    
-                    // Keep lava within bounds
-                    newX = Math.max(lava.width / 2, Math.min(caveWidth - lava.width / 2, newX));
-                    newY = Math.max(lava.height / 2, Math.min(caveHeight - lava.height / 2, newY));
-                    
-                    // Update pixel position
-                    lava.pixelX = newX;
-                    lava.pixelY = newY;
-                    
-                    // Convert back to percentage and pixel coordinates
-                    lava.x = (lava.pixelX / caveWidth) * 100;
-                    lava.y = caveHeight - lava.pixelY;
-                    
-                    // Update obstacle in room memory
-                    const roomKey = getRoomKey(currentRoom);
-                    const room = roomMemory[roomKey];
-                    if (room && room.obstacles) {
-                        const obstacleIndex = room.obstacles.findIndex(obs => 
-                            obs.type === 'lava' && obs === lava
-                        );
-                        if (obstacleIndex !== -1) {
-                            room.obstacles[obstacleIndex].x = lava.x;
-                            room.obstacles[obstacleIndex].y = lava.y;
-                        }
-                    }
-                }
-            }
-            
-            // Re-render obstacles with updated positions
-            const roomKey = getRoomKey(currentRoom);
-            const room = roomMemory[roomKey];
-            if (room && room.obstacles) {
-                renderObstacles(room.obstacles);
-            }
-        }
-        
-        // Function to play boss dialogue sequence
-        function playBossDialogueSequence() {
-            if (bossDialoguePlayed) return; // Only play once
-            bossDialoguePlayed = true;
-            
-            // Wait 5 seconds before starting the dialogue sequence
-            setTimeout(() => {
-                // Sequence: "I'VE BEEN EXPECTING YOU"
-                showDialogue("I'VE BEEN EXPECTING YOU");
-                setTimeout(() => {
-                    hideDialogue();
-                    
-                    // Sequence: "WELCOME TO MY CAVE"
-                    setTimeout(() => {
-                        showDialogue("WELCOME TO MY CAVE");
-                        setTimeout(() => {
-                            hideDialogue();
-                            
-                            // Sequence: "I AM THE SHAPESHIFTER"
-                            setTimeout(() => {
-                                showDialogue("I AM THE SHAPESHIFTER");
-                                setTimeout(() => {
-                                    hideDialogue();
-                                    
-                                    // Transform boss dragon with particle effects
-                                    setTimeout(() => {
-                                        transformBossDragon();
-                                        
-                                        // Final dialogue: "PREPARE TO DIE"
-                                        setTimeout(() => {
-                                            showDialogue("PREPARE TO DIE");
-                                            // Hide after 5 seconds and start lava
-                                            setTimeout(() => {
-                                                hideDialogue();
-                                                bossDialogueComplete = true;
-                                                startMovingLava();
-                                            }, 5000);
-                                        }, 500);
-                                    }, 300);
-                                }, 5000);
-                            }, 300);
-                        }, 5000);
-                    }, 300);
-                }, 5000);
-            }, 5000);
-        }
-
         function checkCollision(newX, newY) {
             // Use cached reference
             if (!cachedCaveBackground) {
@@ -5226,41 +5963,7 @@
             
             const roomKey = getRoomKey(currentRoom);
             const room = roomMemory[roomKey];
-            if (!room) return false;
-            
-            // Check collision with key first (if not collected) - this needs to happen even with no obstacles
-            if (!keyCollected && room.key && room.key.x !== undefined && room.key.y !== undefined) {
-                const dragonWidth = 80;
-                const dragonHeight = 80;
-                const caveWidth = cachedCaveBackground.offsetWidth;
-                const caveHeight = cachedCaveBackground.offsetHeight;
-                
-                // Convert dragon position to pixels
-                const dragonLeft = (newX / 100) * caveWidth - dragonWidth / 2;
-                const dragonRight = dragonLeft + dragonWidth;
-                const dragonTop = caveHeight - newY - dragonHeight;
-                const dragonBottom = dragonTop + dragonHeight;
-                
-                const keySize = 30;
-                const keyLeft = (room.key.x / 100) * caveWidth - keySize / 2;
-                const keyRight = keyLeft + keySize;
-                const keyTop = caveHeight - room.key.y - keySize;
-                const keyBottom = keyTop + keySize;
-                
-                // Check for overlap with key
-                if (dragonLeft < keyRight && dragonRight > keyLeft &&
-                    dragonTop < keyBottom && dragonBottom > keyTop) {
-                    // Key collected!
-                    keyCollected = true;
-                    // Update key position to follow dragon
-                    renderKey(room.key);
-                    // Update teleport button state
-                    updateTeleportButtonState();
-                }
-            }
-            
-            // Early return if no obstacles to check
-            if (!room.obstacles || room.obstacles.length === 0) return false;
+            if (!room || !room.obstacles || room.obstacles.length === 0) return false;
             
             const dragonWidth = 80;
             const dragonHeight = 80;
@@ -5299,28 +6002,12 @@
                 // Full collision check only for nearby obstacles
                 if (dragonLeft < obstacleRight && dragonRight > obstacleLeft &&
                     dragonTop < obstacleBottom && dragonBottom > obstacleTop) {
-                    // Special handling for lava - delete lava and teleport to main room
+                    // Special handling for lava - teleport to main room and reset key
                     if (obstacle.type === 'lava') {
-                        // Remove this specific lava obstacle
-                        const roomKey = getRoomKey(currentRoom);
-                        const room = roomMemory[roomKey];
-                        if (room && room.obstacles) {
-                            // Find and remove this lava obstacle
-                            const lavaIndex = room.obstacles.indexOf(obstacle);
-                            if (lavaIndex !== -1) {
-                                room.obstacles.splice(lavaIndex, 1);
-                            }
-                        }
-                        
-                        // Remove from movingLava array
-                        const movingLavaIndex = movingLava.indexOf(obstacle);
-                        if (movingLavaIndex !== -1) {
-                            movingLava.splice(movingLavaIndex, 1);
-                        }
-                        
-                        // Re-render obstacles without the deleted lava
-                        if (room && room.obstacles) {
-                            renderObstacles(room.obstacles);
+                        // Don't teleport if we're in spawn protection period
+                        if (spawnProtected) {
+                            // Just return collision, don't teleport
+                            return true;
                         }
                         
                         // Reset key collection
@@ -5333,33 +6020,33 @@
                             keyEl.remove();
                         }
                         
-                        // Clear all moving lava
-                        clearMovingLava();
-                        
-                        // Teleport to main room (bypass key check for lava collision)
-                        if (currentRoom.x !== 0 || currentRoom.y !== 0) {
-                            // Prevent transition during teleport
-                            if (transitioning) {
-                                transitioning = false;
-                            }
-                            
-                            // Set current room to main room
-                            currentRoom = { x: 0, y: 0 };
-                            
-                            // Load main room
-                            loadRoom(currentRoom);
-                            
-                            // Reset spawn position
-                            const caveBackground = document.querySelector('.cave-background');
-                            const caveHeight = caveBackground ? caveBackground.offsetHeight : 500;
-                            dragonPosition = { x: 50, y: caveHeight / 2 };
-                            updateDragonPosition();
-                        }
+                        // Teleport to main room
+                        teleportToMainRoom();
                         
                         // Return false to allow movement (teleport handles position)
                         return false;
                     }
                     return true; // Collision detected for other obstacles
+                }
+            }
+            
+            // Check collision with key (if not collected)
+            if (!keyCollected && room.key && room.key.x !== undefined && room.key.y !== undefined) {
+                const keySize = 30;
+                const keyLeft = (room.key.x / 100) * caveWidth - keySize / 2;
+                const keyRight = keyLeft + keySize;
+                const keyTop = caveHeight - room.key.y - keySize;
+                const keyBottom = keyTop + keySize;
+                
+                // Check for overlap with key
+                if (dragonLeft < keyRight && dragonRight > keyLeft &&
+                    dragonTop < keyBottom && dragonBottom > keyTop) {
+                    // Key collected!
+                    keyCollected = true;
+                    // Update key position to follow dragon
+                    renderKey(room.key);
+                    // Update teleport button state
+                    updateTeleportButtonState();
                 }
             }
             
@@ -5459,7 +6146,7 @@
             
             return false; // No collision
         }
-        
+
         function findSafeSpawnPosition(initialX, initialY, direction, caveWidth, caveHeight) {
             // Check if initial position is safe (no collision AND at least 100px from lava)
             if (!checkCollisionForSpawn(initialX, initialY) && isSafeFromLava(initialX, initialY, caveWidth, caveHeight)) {
@@ -5567,8 +6254,12 @@
                 return; // Already in main room
             }
 
-            // Prevent teleport if player has the key
-            if (keyCollected) {
+            // Check if teleporting with key is allowed
+            const allowTeleportWithKey = localStorage.getItem('allowTeleportWithKey') || 'no';
+            const canTeleportWithKey = allowTeleportWithKey === 'yes';
+
+            // Prevent teleport if player has the key and setting is "no"
+            if (keyCollected && !canTeleportWithKey) {
                 // Show visual feedback that teleport is blocked
                 const teleportButton = document.getElementById('teleport-main-button');
                 if (teleportButton) {
@@ -5616,8 +6307,13 @@
         }
 
         function isValidRoom(roomCoord) {
-            // Level 5 page: Only allow main room (0,0), room (1,0), and room (2,0)
-            return (roomCoord.x === 0 && roomCoord.y === 0) || (roomCoord.x === 1 && roomCoord.y === 0) || (roomCoord.x === 2 && roomCoord.y === 0);
+            // Only allow rooms that are branches from main room (on axes: x=0 OR y=0)
+            // Main room (0,0) is always valid
+            if (roomCoord.x === 0 && roomCoord.y === 0) {
+                return true;
+            }
+            // Rooms on axes are valid (x=0 OR y=0, but not both non-zero)
+            return (roomCoord.x === 0 || roomCoord.y === 0);
         }
 
         function canMoveInDirection(direction) {
@@ -5641,14 +6337,24 @@
                     return false;
             }
             
-            // Check if the new room is valid (only (0,0) and (1,0) allowed on level 5 page)
+            // Check if the new room is valid and within bounds
             if (!isValidRoom(newRoom)) {
                 return false;
             }
             
-            // Level 5 page: Only allow movement to (0,0), (1,0), and (2,0)
-            // No bounds check needed since isValidRoom already restricts it
-            return true;
+            // Check bounds (within 3 rooms from center)
+            switch(direction) {
+                case 'up':
+                    return newRoom.y <= MAX_ROOMS;
+                case 'down':
+                    return newRoom.y >= -MAX_ROOMS;
+                case 'left':
+                    return newRoom.x >= -MAX_ROOMS;
+                case 'right':
+                    return newRoom.x <= MAX_ROOMS;
+                default:
+                    return false;
+            }
         }
 
         function transitionToRoom(direction) {
@@ -5701,41 +6407,89 @@
             updateMap();
             updateRoomDisplay();
             
-            // Position dragon in the room (no path mechanic - open rooms)
+            // Position dragon on the clear path at the entry point
             const caveBackground = document.querySelector('.cave-background');
             if (caveBackground) {
                 const caveWidth = caveBackground.offsetWidth;
                 const caveHeight = caveBackground.offsetHeight;
                 
+                // Get the room's clear path
+                const room = roomMemory[roomKey];
+                const clearPath = room ? room.clearPath : null;
+                
                 let spawnX, spawnY;
                 
-                // Default spawn position based on entry direction
-                if (direction === 'up') {
-                    // Entered from bottom
-                    spawnX = 50;
-                    spawnY = 30;
-                } else if (direction === 'down') {
-                    // Entered from top
-                    spawnX = 50;
-                    spawnY = caveHeight - 110;
-                } else if (direction === 'right') {
-                    // Entered from left
-                    spawnX = 5;
-                    spawnY = caveHeight / 2;
-                } else if (direction === 'left') {
-                    // Entered from right
-                    spawnX = 95;
-                    spawnY = caveHeight / 2;
+                if (clearPath) {
+                    // Spawn on the clear path at the entry end
+                    if (clearPath.type === 'lshape' && clearPath.segments && clearPath.segments.length > 0) {
+                        // L-shaped path: spawn on first segment at entry end
+                        const firstSegment = clearPath.segments[0];
+                        if (firstSegment.type === 'vertical') {
+                            // First segment is vertical: spawn at entry end based on direction
+                            spawnX = firstSegment.x; // Use the segment's X position (percentage)
+                            if (direction === 'up') {
+                                // Entered from bottom, spawn at bottom of path
+                                spawnY = 30; // Near bottom edge
+                            } else if (direction === 'down') {
+                                // Entered from top, spawn at top of path
+                                spawnY = caveHeight - 110; // Near top edge
+                            } else {
+                                // Default to bottom of segment
+                                spawnY = firstSegment.minY + 30;
+                            }
+                        } else if (firstSegment.type === 'horizontal') {
+                            // First segment is horizontal: spawn at entry end based on direction
+                            spawnY = firstSegment.y; // Use the segment's Y position (pixels from bottom)
+                            if (direction === 'right') {
+                                // Entered from left, spawn at left of path
+                                spawnX = 5; // Near left edge
+                            } else if (direction === 'left') {
+                                // Entered from right, spawn at right of path
+                                spawnX = 95; // Near right edge
+                            } else {
+                                // Default to left of segment
+                                spawnX = firstSegment.minX + 2;
+                            }
+                        } else {
+                            // Unknown segment type - use default
+                            spawnX = 50;
+                            spawnY = 100;
+                        }
+                    } else if (clearPath.type === 'vertical') {
+                        // Vertical path: spawn at entry end based on direction
+                        spawnX = clearPath.x; // Use the path's X position (percentage)
+                        if (direction === 'up') {
+                            // Entered from bottom, spawn at bottom of path
+                            spawnY = 30; // Near bottom edge
+                        } else if (direction === 'down') {
+                            // Entered from top, spawn at top of path
+                            spawnY = caveHeight - 110; // Near top edge
+                        } else {
+                            // Default to center of path
+                            spawnY = caveHeight / 2;
+                        }
+                    } else if (clearPath.type === 'horizontal') {
+                        // Horizontal path: spawn at entry end based on direction
+                        spawnY = clearPath.y; // Use the path's Y position (pixels from bottom)
+                        if (direction === 'right') {
+                            // Entered from left, spawn at left of path
+                            spawnX = 5; // Near left edge
+                        } else if (direction === 'left') {
+                            // Entered from right, spawn at right of path
+                            spawnX = 95; // Near right edge
+                        } else {
+                            // Default to center of path
+                            spawnX = 50;
+                        }
+                    } else {
+                        // Unknown path type - use default
+                        spawnX = 50;
+                        spawnY = 100;
+                    }
                 } else {
-                    // Default to center
+                    // No clear path (main room) - use default spawn
                     spawnX = 50;
-                    spawnY = caveHeight / 2;
-                }
-                
-                // Special handling for room (1,0) - center but slightly to the left
-                if (currentRoom.x === 1 && currentRoom.y === 0) {
-                    spawnX = 20; // More to the left (20% instead of 50%)
-                    spawnY = caveHeight / 2; // Center vertically
+                    spawnY = 100;
                 }
                 
                 // Check for collision and find a safe spawn position
@@ -5778,20 +6532,14 @@
             // Clear existing map
             mapGrid.innerHTML = '';
 
-            // Level 5 page: Only show main room (0,0), room (1,0), and room (2,0)
-            // Create a simple 3-room grid
-            const allowedRooms = [
-                { x: 0, y: 0 },
-                { x: 1, y: 0 },
-                { x: 2, y: 0 }
-            ];
-            
-            // Create grid cells for allowed rooms only
-            for (let y = 0; y >= 0; y--) {
-                for (let x = 0; x <= 2; x++) {
+            // Create 7x7 grid (from -3 to +3 in both directions)
+            // Note: Grid is displayed with Y inverted (top row is highest Y)
+            // Only show rooms that are branches from main room (on axes)
+            for (let y = MAX_ROOMS; y >= -MAX_ROOMS; y--) {
+                for (let x = -MAX_ROOMS; x <= MAX_ROOMS; x++) {
                     const roomCoord = { x: x, y: y };
                     
-                    // Only show valid rooms
+                    // Only show valid rooms (branches from main room)
                     if (!isValidRoom(roomCoord)) {
                         // Create empty cell for invalid rooms
                         const cell = document.createElement('div');
