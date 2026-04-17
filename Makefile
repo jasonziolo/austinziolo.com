@@ -15,6 +15,10 @@ save:
 	@echo "Save complete!"
 
 deploy:
+ifeq ($(OS),Windows_NT)
+	@powershell -NoProfile -ExecutionPolicy Bypass -File deploy.ps1 "$(MESSAGE)"
+else
 	@bash deploy.sh "$(MESSAGE)"
+endif
 
 
